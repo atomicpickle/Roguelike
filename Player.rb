@@ -1,0 +1,402 @@
+=begin
+
+@levelUP sets to true after a player has leveled. Needs display logic fetch
+
+
+Commands reference
+Player.set_name("name")
+Player.set_race(:race)
+Player.add_gold(value)
+Player.remove_gold(value)
+Player.add_exp(value)           #adds exp, then does level up checking
+Player.read_stat(:stat)         #stats symbols :hp :mp :atk :def :spd, returns attack + perm added atk
+Player.final_stat(:stat)        #reports final stat (atk + added_atk + Weapon + Armor)
+Player.add_bonus_stat(:stat, value)
+Player.add_stat(:stat, value)
+Player.rem_stat(:stat, value)
+Player.set_stat(:stat, value)
+Player.equip_weapon(id, hand)   #hand = 1 for left, 2 for right, 3 for 2handed weapon
+Player.unequip_weapon(id, hand)
+Player.equip_armor(id)
+Player.unequip_armor
+Player.learn_spell(id)
+Player.add_item(:type, id)     #item_type = :weapon, :armor, :item, item_id = key value for item in DB
+Player.remove_item(:type, id)
+Player.damage(:type, value) # :hp or :mp
+=end
+class Player
+  attr_reader :playername
+  attr_reader :race
+  attr_reader :level
+  attr_reader :gold
+  attr_reader :exp
+  attr_reader :damage_taken
+  attr_accessor :levelUP
+  attr_accessor :total_damage
+
+  def initialize
+    @bag = {}
+    @bag['weapons'] = []
+    @bag['armor'] = []
+    #items db hash key = array index, value = amount
+    @bag['items'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    @equip = {}
+    @equip['weapon'] = [10, 2]
+    @equip['armor'] = [2]
+    @spells = []
+    @gold = 0
+    @exp = 0
+    @level = 0
+    @levelUP = false
+    @total_damage = 0
+    @damage_taken = 0
+    @race = :ghost
+    @playername = ""
+    #add extra stat vars for permanent stat bonuses
+    @hp = 1; @mhp = 1
+    @mp = 0; @mmp = 0
+    @attack = 1
+    @defense = 1
+    @speed = 1
+    #for added perm stats on top of level based stats
+    @added_stats = {}
+    @added_stats[:hp] = 0
+    @added_stats[:mp] = 0
+    @added_stats[:atk] = 0
+    @added_stats[:def] = 0
+    @added_stats[:spd] = 0
+  end
+
+  def read_cur_hpmp(type=:hp)
+    return @hp if type == :hp
+    return @mp if type == :mp
+  end
+
+   # type: :hp or :mp
+  def damage(type, value)
+    @hp -= value if type == :hp
+    @damage_taken += value if type == :hp
+    @hp = 0 if @hp < 0
+    @mp -= value if type == :mp
+    @mp = 0 if @mp < 0
+  end
+
+  # TYPES: :hp, :mp, :full
+  def heal(type, value=0)
+    if type == :hp
+      @hp = read_stat(:hp) if @hp + value >= read_stat(:hp)
+      @hp += value
+    elsif type == :mp
+      @mp = read_stat(:mp) if @mp + value >= read_stat(:mp)
+      @mp += value
+    elsif :full
+      @hp = read_stat(:hp)
+      @mp = read_stat(:mp)
+    end
+  end
+
+  def finish_setup(race, name, lvl=0)
+    set_name(name)
+    set_race(race)
+    lvlarray = Game_DB.level_stats_array(@race, lvl)
+    set_stat(:hp, lvlarray[0])
+    set_stat(:mp, lvlarray[1])
+    set_stat(:atk, lvlarray[2])
+    set_stat(:def, lvlarray[3])
+    set_stat(:spd, lvlarray[4])
+    learn_spell(lvlarray[5]) if lvlarray[5] != nil
+    @hp = read_stat(:hp)
+    @mp = read_stat(:mp)
+    @total_damage = 0 if @total_damage == nil
+    @damage_taken = 0 if @damage_taken == nil
+  end
+
+  # item = :left, :right, :armor
+  # Return ItemName: +xx Attack +xx Speed
+  def get_equipment_text(item)
+    equip = {}
+    equip[:weapons] = @equip['weapon']
+    equip[:armor] = @equip['armor']
+    if item == :left
+      name = Game_DB.weapons_array(equip[:weapons][0], 0)
+      attk = Game_DB.weapons_array(equip[:weapons][0], 1)
+      attk.to_s
+      stake = [name, attk]
+      return stake
+    end
+    if item == :right
+      name = Game_DB.weapons_array(equip[:weapons][1], 0)
+      attk = Game_DB.weapons_array(equip[:weapons][1], 1)
+      attk.to_s
+      stake = [name, attk]
+      return stake
+    end
+    if item == :armor
+      name = Game_DB.armor_array(equip[:armor][0], 0)
+      defs = Game_DB.armor_array(equip[:armor][0], 1)
+      defs.to_s
+      stake = [name, defs]
+      return stake
+    end
+  end
+
+  def set_name(name)
+    @playername = name if name.is_a? String
+  end
+
+  #races: :ghost, :dwarf, :human, :elf, :animal, :demon
+  def set_race(r)
+    @race = r if r.is_a? Symbol
+  end
+
+  def add_gold(amount)
+    @gold += amount
+  end
+
+  def remove_gold(amount)
+    @gold -= amount
+    @gold = 0 if @gold < 0
+  end
+
+  def add_exp(a)
+    @exp += a
+    level_up_chk
+  end
+
+  # level array [ mhp, mmp, atk, def, spd, spell] 0..5
+  # exp array   [amount, total] 0..1
+  #stats symbols :hp :mp :atk :def :spd
+  def level_up_chk
+    return if @level >= 10
+    lvlnext = @level + 1
+    nextlvlary = Game_DB.level_stats_array(@race, lvlnext)
+    expnext = Game_DB.experience_array(lvlnext)
+    if @exp >= expnext[1]
+      level_up(true)
+      set_stat(:hp, nextlvlary[0])
+      set_stat(:mp, nextlvlary[1])
+      set_stat(:atk, nextlvlary[2])
+      set_stat(:def, nextlvlary[3])
+      set_stat(:spd, nextlvlary[4])
+      learn_spell(nextlvlary[5]) if nextlvlary[5] != nil
+      @levelUP = true
+    end
+  end
+
+  def level_up(bool)
+    @level += 1 if bool
+  end
+
+  #reports stat total (atk + added_atk)
+  #stats symbols :hp :mp :atk :def :spd
+  def read_stat(stat)
+    var = @mhp + @added_stats[stat] if stat == :hp
+    var = @mmp + @added_stats[stat] if stat == :mp
+    var = @attack + @added_stats[stat] if stat == :atk
+    var = @defense + @added_stats[stat] if stat == :def
+    var = @speed + @added_stats[stat] if stat == :spd
+    return var
+  end
+
+  #reports final stat (atk + added_atk + Weapon + Armor)
+  #stats symbols :hp :mp :atk :def :spd
+  def final_stat(stat)
+    var = read_stat(stat)
+    return var unless stat == :atk || stat == :def || stat == :spd #reports max hp OR mp
+    if stat == :atk
+      lh = @equip['weapon'][0]
+      rh = @equip['weapon'][1]
+      return var if lh == 0 && rh == 0 #no equip, return attak power
+      if lh != 0 #fetch left hand equip attack Power
+        weap = Game_DB.weapons_array(lh)
+        power = weap[1]
+        left = var + power
+        if rh != lh && rh != 0 #two 1 handed weaps equipped?
+          weap = Game_DB.weapons_array(rh)
+          power = weap[1]
+          right = var + power
+          result = left + right  #return attack of both weaps
+          return result
+        end
+        result = left
+        return result #only left hand equipped or 2 handed, return attack power
+      end
+    end
+    #return total defense stats + armor
+    if stat == :def
+      armor = @equip['armor'][0]
+      return var if armor == 0
+      fetch = Game_DB.armor_array(armor)
+      armrdef = fetch[1]
+      result = var + armrdef
+      return result
+    end
+    #return total speed stats + weapon + armor
+    if stat == :spd
+      lh = @equip['weapon'][0]
+      rh = @equip['weapon'][1]
+      armor = @equip['armor'][0]
+      wspd = 0; aspd = 0 #containers used for final values
+      if lh == rh #2 handed weapon
+        weap = Game_DB.weapons_array(lh)
+        wspd = weap[2]
+      elsif lh != 0 || rh != 0 #left or right handed, or two one handed weaps
+        weap1 = 0; weap2 = 0
+        weap1 = Game_DB.weapons_array(lh) unless lh == 0
+        weap2 = Game_DB.weapons_array(rh) unless rh == 0
+        wspd += weap1[2] unless lh == 0
+        wspd += weap2[2] unless rh == 0
+      end
+      if armor != 0
+        arm = Game_DB.armor_array(armor)
+        aspd = arm[2]
+      else
+        aspd = 0
+      end
+      result = var + aspd + wspd
+      return result
+    end
+  end
+
+
+  #stats symbols :hp :mp :atk :def :spd
+  def add_bonus_stat(stat, amount)
+    return if stat == nil || amount == nil
+    @added_stats[stat] += amount
+  end
+
+  #stats symbols :hp :mp :atk :def :spd
+  def add_stat(stat, amount)
+    return if stat == nil
+    @mhp += amount if stat == :hp
+    @mmp += amount if stat == :mp
+    @attack += amount if stat == :atk
+    @defense += amount if stat == :def
+    @speed += amount if stat == :spd
+  end
+  #stats symbols :hp :mp :atk :def :spd
+  def rem_stat(stat, amount)
+    return if stat == nil
+    @mhp -= amount if stat == :hp
+    @mmp -= amount if stat == :mp
+    @attack -= amount if stat == :atk
+    @defense -= amount if stat == :def
+    @speed -= amount if stat == :spd
+  end
+  #stats symbols :hp :mp :atk :def :spd
+  def set_stat(stat, amount)
+    return if stat == nil
+    @mhp = amount if stat == :hp
+    @mmp = amount if stat == :mp
+    @attack = amount if stat == :atk
+    @defense = amount if stat == :def
+    @speed = amount if stat == :spd
+  end
+
+  #hand = 1 for left, 2 for right, 3 for 2handed weapon
+  def equip_weapon(weaponid, hand)
+    return if hand <= 0 && hand >= 4 || hand == nil
+    return unless @bag['weapons'].include? weaponid
+    if hand == 1 # left hand
+      unequip_weapon(hand)
+      remove_item(:weapon, weaponid)
+      @equip['weapon'][0] = weaponid
+    elsif hand == 2 #right hand
+      unequip_weapon(hand)
+      remove_item(:weapon, weaponid)
+      @equip['weapon'][1] = weaponid
+    elsif hand == 3 #2 handed
+      unequip_weapon(hand)
+      remove_item(:weapon, weaponid)
+      @equip['weapon'][0] = weaponid
+      @equip['weapon'][1] = weaponid
+    end
+  end
+
+  #hand = 1 for left, 2 for right, 3 for 2handed weapon
+  def unequip_weapon(hand)
+    return if hand <= 0 && hand >= 4 || hand == nil
+    if hand == 1 # left hand
+      if @equip['weapon'][0] != 0
+        add_item(:weapon, @equip['weapon'][0])
+        @equip['weapon'][0] = 0
+      end
+    elsif hand == 2 #right hand
+      if @equip['weapon'][1] != 0
+        add_item(:weapon, @equip['weapon'][1])
+        @equip['weapon'][1] = 0
+      end
+    elsif hand == 3 #2 handed
+      if @equip['weapon'][0] != 0 && @equip['weapon'][1] != 0
+        add_item(:weapon, @equip['weapon'][0])
+        @equip['weapon'][0] = 0; @equip['weapon'][1] = 0
+      end
+    end
+  end
+
+  def equip_armor(armorid)
+    unequip_armor
+    remove_item(:armor, armorid)
+    @equip['armor'][0] = armorid
+  end
+
+  def unequip_armor
+    if @equip['armor'][0] != 0
+      add_item(:armor, @equip['armor'][0])
+      @equip['armor'][0] = 0
+    end
+  end
+
+  #spell id = key for spell db hash
+  def learn_spell(spellid)
+    @spells << spellid unless @spells.include? spellid
+  end
+
+  def spells_learned
+    return @spells
+  end
+
+
+
+  #item_type = :weapon, :armor, :item, item_id = key value for item in DB
+  def add_item(item_type, item_id)
+    return if item_type == nil || item_id == nil
+    if item_type == :weapon
+      @bag['weapons'] << item_id unless @bag['weapons'].include? item_id
+    elsif item_type == :armor
+      @bag['armor'] << item_id unless @bag['armor'].include? item_id
+    elsif item_type == :item
+      @bag['items'][item_id] += 1
+    end
+
+  end
+
+  #item_type = :weapon, :armor, :item, item_id = key value for item in DB
+  def remove_item(item_type, item_id)
+    return if item_type == nil || item_id == nil
+    if item_type == :weapon
+      if @bag['weapons'].include? item_id
+        @bag['weapons'].reject! do |e|
+          e == item_id
+        end
+      end
+    elsif item_type == :armor
+      if @bag['armor'].include? item_id
+        @bag['armor'].reject! do |e|
+          e == item_id
+        end
+      end
+    elsif item_type == :item
+      @bag['items'][item_id] -= 1 if @bag['items'][item_id] >= 1
+    end
+
+  end
+
+
+
+
+
+
+
+
+end

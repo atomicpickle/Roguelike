@@ -1,0 +1,45 @@
+--- !ruby/object:Player
+bag:
+  weapons: []
+  armor: []
+  items:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+equip:
+  weapon:
+  - 10
+  - 2
+  armor:
+  - 2
+spells: []
+gold: 1
+exp: 2
+level: 0
+levelUP: false
+total_damage: 16
+damage_taken: 0
+race: :dwarf
+playername: fsdfd
+hp: 14
+mhp: 14
+mp: 0
+mmp: 0
+attack: 2
+defense: 1
+speed: 1
+added_stats:
+  :hp: 0
+  :mp: 0
+  :atk: 0
+  :def: 0
+  :spd: 0
+0
+: 265
