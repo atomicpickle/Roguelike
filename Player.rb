@@ -41,8 +41,8 @@ class Player
     #items db hash key = array index, value = amount
     @bag['items'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     @equip = {}
-    @equip['weapon'] = [10, 2]
-    @equip['armor'] = [2]
+    @equip['weapon'] = [2, 0]
+    @equip['armor'] = [1]
     @spells = []
     @gold = 0
     @exp = 0

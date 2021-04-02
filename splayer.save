@@ -15,19 +15,19 @@ bag:
   - 0
 equip:
   weapon:
-  - 10
   - 2
+  - 0
   armor:
-  - 2
+  - 1
 spells: []
-gold: 1
-exp: 2
+gold: 0
+exp: 0
 level: 0
 levelUP: false
-total_damage: 16
+total_damage: 0
 damage_taken: 0
 race: :dwarf
-playername: fsdfd
+playername: Geoff
 hp: 14
 mhp: 14
 mp: 0
@@ -41,5 +41,3 @@ added_stats:
   :atk: 0
   :def: 0
   :spd: 0
-0
-: 265

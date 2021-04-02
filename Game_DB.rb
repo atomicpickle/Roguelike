@@ -272,17 +272,17 @@ module Game_DB
   def populate_weapons_db
     #             [Weapon name,              atk, spd, 2hand,  cost]
     @weapons[0] = ["Fists",                    0,  0, false,      0]
-    @weapons[10]= ["Large Pike",               2,  5, false,     10]
-    @weapons[1] = ["Wooden Sword",             4,  5, false,     26]
-    @weapons[11]= ["Mage-Staff",               3,  8, false,     70]
+    @weapons[10]= ["Pole",                     2,  3, false,     10]
+    @weapons[1] = ["Wooden Sword",             4,  5, false,     25]
+    @weapons[11]= ["Mage-Staff",               3,  8,  true,     70]
     @weapons[2] = ["Wooden Club",              6,  5, false,     60]
     @weapons[3] = ["Iron Hatchet",            11,  5, false,    120]
     @weapons[4] = ["Iron Lance",              24,  2,  true,    250]
     @weapons[5] = ["Iron Sword",              32,  4, false,    500]
     @weapons[11]= ["Sage-Staff",              20, 18,  true,    875]
     @weapons[6] = ["Steel Sword",             46,  5, false,   2500]
-    @weapons[7] = ["Broadsword",              82,  2,  true,   8000]
-    @weapons[8] = ["Bastard Sword",          175,  4, false,  12500]
+    @weapons[7] = ["Broadsword",              82,  3,  true,   8000]
+    @weapons[8] = ["Bastard Sword",          175,  7, false,  12500]
   end
 
   def populate_armor_db
@@ -290,12 +290,12 @@ module Game_DB
     @armors[0] = ["Silk Surong",               0,   0,            0]
     @armors[1] = ["Cloth Shirt",               1,   3,           10]
     @armors[10]= ["Mage's Robe",               2,   8,           10]
-    @armors[2] = ["Dragon Skin Jacket",       12,   3,           90]
-    @armors[3] = ["Chainmail Armor",          28,   2,          550]
-    @armors[11]= ["Sagely Magikal Robes",     32,  19,         1275]
-    @armors[4] = ["Studded Armor",            45,   3,         1500]
-    @armors[5] = ["Half Plate Armor",         80,   2,         5000]
-    @armors[6] = ["Bastard Armor",           186,   3,        11500]
+    @armors[2] = ["Dragon Skin Jacket",       12,   4,           90]
+    @armors[3] = ["Chainmail Armor",          28,   5,          550]
+    @armors[11]= ["Sagely Magikal Robes",     32,  19,         1300]
+    @armors[4] = ["Studded Armor",            45,   6,         1500]
+    @armors[5] = ["Half Plate Armor",         80,   4,         5000]
+    @armors[6] = ["Bastard Armor",           186,   7,        11500]
   end
 
   def populate_items_db
@@ -324,8 +324,8 @@ module Game_DB
     @spells[3] = ["Shock",                false,   [15, 36],    3,   "Electricity shoots from your mouth and strikes"]
     @spells[12]= ["Blow You From A-Far",  false,   [19, 46],    9,   "Blizard swirls up around your target"]
     @spells[4] = ["Fireball",             false,  [24, 125],    9,   "A Fireball pops into existance and strikes"]
-    @spells[14] = ["Earth-Swallow",        false, [169, 269],   14,   "Earth opens and crushes your target"]
-    @spells[12]= ["Cheeta's Foot",        false,     [0, 0],   10,   "Speed Jumps Slightly +7 to +69 for whole battle"]
+    @spells[14] =["Earth-Swallow",        false, [169, 269],   14,   "Earth opens and crushes your target"]
+    @spells[12]= ["Cheetas Foot",        false,     [0, 0],   10,   "Speed Jumps Slightly +7 to +69 for whole battle"]
     @spells[5] = ["Bolt",                 false, [104, 144],   13,   "Electricity shoots from all of your orifices and strikes"]
     @spells[6] = ["Wall of Fire",         false,  [66, 333],   21,   "A Wall of Fire emerges and envelopes everything"]
   end

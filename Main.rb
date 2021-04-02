@@ -56,10 +56,12 @@ class Game_Main
   end
 
   def process_game_file_save
-    save_file = File.open("splayer.save", "r+")
+    File.delete("splayer.save") if File.exists?("splayer.save")
+    File.delete("sworld.save") if File.exists?("sworld.save")
+    save_file = File.new("splayer.save", "w")
     save_file.write @player.to_yaml
     save_file.close
-    save_file = File.open("sworld.save", "r+")
+    save_file = File.new("sworld.save", "w")
     save_file.write @location.to_json
     save_file.close
     pa "#{Game_DB.tx(:other, 8)}", :green, :bright
