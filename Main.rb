@@ -77,7 +77,7 @@ class Game_Main
     @location = locdata
     @player = Player.new
     @player = yaml_player
-    @player.finish_setup(@player.race, @player.playername, @player.level)
+    @player.finish_reload
     pa "SAVE FILE LOADED! Player Name: #{@player.playername}, Race: #{@player.race}, Level: #{@player.level}, Gold: #{@player.gold}", :cyan
     pa "#{Game_DB.tx(:other, 7)}"
     key = gets

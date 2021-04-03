@@ -36,10 +36,11 @@ class Player
 
   def initialize
     @bag = {}
-    @bag['weapons'] = []
-    @bag['armor'] = []
-    #items db hash key = array index, value = amount
-    @bag['items'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    # @bag[:weapons][key_id] = amount
+    # key id is item id. amount is 0 if player has none
+    @bag[:weapons] = {}
+    @bag[:armor] = {}
+    @bag[:items] = {}
     @equip = {}
     @equip['weapon'] = [2, 0]
     @equip['armor'] = [1]
@@ -109,6 +110,45 @@ class Player
     @mp = read_stat(:mp)
     @total_damage = 0 if @total_damage == nil
     @damage_taken = 0 if @damage_taken == nil
+    format_bag
+  end
+
+  def finish_reload
+    lvlarray = Game_DB.level_stats_array(@race, @level)
+    set_stat(:hp, lvlarray[0])
+    set_stat(:mp, lvlarray[1])
+    set_stat(:atk, lvlarray[2])
+    set_stat(:def, lvlarray[3])
+    set_stat(:spd, lvlarray[4])
+    learn_spell(lvlarray[5]) if lvlarray[5] != nil
+    @hp = read_stat(:hp)
+    @mp = read_stat(:mp)
+    @total_damage = 0 if @total_damage == nil
+    @damage_taken = 0 if @damage_taken == nil
+    re_format_bag
+  end
+
+  # @bag[:weapons], @bag[:armor]
+  # @bag[:weapons][key_id] = amount
+  def format_bag
+    all_weaps = Game_DB.weapons_array
+    all_armor = Game_DB.armor_array
+    all_items = Game_DB.items_array
+    all_weaps.each_key {|key| @bag[:weapons][key] = 0}
+    all_armor.each_key {|key| @bag[:armor][key] = 0}
+    all_items.each_key {|key| @bag[:items][key] = 0}
+    pa "Bag formatted! #{@bag}"
+    inputttt = gets
+  end
+
+  #if new items are added after a game is saved, this will reformat the bag on game load
+  def re_format_bag
+    all_weaps = Game_DB.weapons_array
+    all_armor = Game_DB.armor_array
+    all_items = Game_DB.items_array
+    all_weaps.each_key {|key| @bag[:weapons][key] = 0 unless @bag[:weapons].has_key?(key)}
+    all_armor.each_key {|key| @bag[:armor][key] = 0 unless @bag[:armor].has_key?(key)}
+    all_items.each_key {|key| @bag[:items][key] = 0 unless @bag[:items].has_key?(key)}
   end
 
   # item = :left, :right, :armor
@@ -293,10 +333,21 @@ class Player
     @speed = amount if stat == :spd
   end
 
+  #spell id = key for spell db hash
+  def learn_spell(spellid)
+    @spells << spellid unless @spells.include? spellid
+  end
+
+  def spells_learned
+    return @spells
+  end
+
+  # @bag[:weapons], @bag[:armor]
+  # @bag[:weapons][key_id] = amount
   #hand = 1 for left, 2 for right, 3 for 2handed weapon
   def equip_weapon(weaponid, hand)
     return if hand <= 0 && hand >= 4 || hand == nil
-    return unless @bag['weapons'].include? weaponid
+    return unless @bag[:weapons][weapon_id] > 0
     if hand == 1 # left hand
       unequip_weapon(hand)
       remove_item(:weapon, weaponid)
@@ -347,26 +398,17 @@ class Player
     end
   end
 
-  #spell id = key for spell db hash
-  def learn_spell(spellid)
-    @spells << spellid unless @spells.include? spellid
-  end
-
-  def spells_learned
-    return @spells
-  end
-
-
-
+  # @bag[:weapons], @bag[:armor]
+  # @bag[:weapons][key_id] = amount
   #item_type = :weapon, :armor, :item, item_id = key value for item in DB
   def add_item(item_type, item_id)
     return if item_type == nil || item_id == nil
     if item_type == :weapon
-      @bag['weapons'] << item_id unless @bag['weapons'].include? item_id
+      @bag[:weapons][item_id] += 1
     elsif item_type == :armor
-      @bag['armor'] << item_id unless @bag['armor'].include? item_id
+      @bag[:armor][item_id] += 1
     elsif item_type == :item
-      @bag['items'][item_id] += 1
+      @bag[:items][item_id] += 1
     end
 
   end
@@ -375,23 +417,20 @@ class Player
   def remove_item(item_type, item_id)
     return if item_type == nil || item_id == nil
     if item_type == :weapon
-      if @bag['weapons'].include? item_id
-        @bag['weapons'].reject! do |e|
-          e == item_id
-        end
-      end
+      @bag[:weapons][item_id] -= 1 unless @bag[:weapons][item_id] <= 0
     elsif item_type == :armor
-      if @bag['armor'].include? item_id
-        @bag['armor'].reject! do |e|
-          e == item_id
-        end
-      end
+      @bag[:armor][item_id] -= 1 unless @bag[:armor][item_id] <= 0
     elsif item_type == :item
-      @bag['items'][item_id] -= 1 if @bag['items'][item_id] >= 1
+      @bag[:items][item_id] -= 1 unless @bag[:items][item_id] <= 0
     end
-
   end
 
+  #returns the appropriate item types, :weapons, :armor, :items
+  def read_item_bag(type=:items)
+    return @bag[:weapons] if type == :weapons
+    return @bag[:armor] if type == :armor 
+    return @bag[:items] if type == :items
+  end
 
 
 

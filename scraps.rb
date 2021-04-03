@@ -22,3 +22,9 @@ end
   pa "\r#{ ' ' *text2.size}"
   sleep 0.01
 end
+
+h = { "a" => 100, "b" => 200 }
+h.each {|key, value| puts "#{key} is #{value}" }
+
+h = { "a" => 100, "b" => 200 }
+h.each_key {|key| puts key }
