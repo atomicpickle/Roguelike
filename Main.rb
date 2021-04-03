@@ -564,19 +564,19 @@ class Game_Main
           end
           case keyb
           when 2 #enemy 1
-            start_battle(@enemies[:wandering][0]) if @enemies[:wandering].length >= 1
+            start_battle(@enemies[:wandering][0]) unless @enemies[:wandering][0] == nil
             break
           when 3 #enemy 2
-            start_battle(@enemies[:wandering][1]) if @enemies[:wandering].length >= 2
+            start_battle(@enemies[:wandering][1]) unless @enemies[:wandering][1] == nil
             break
           when 4 #enemy 3
-            start_battle(@enemies[:wandering][2]) if @enemies[:wandering].length >= 3
+            start_battle(@enemies[:wandering][2]) unless @enemies[:wandering][2] == nil
             break
           when 5 #enemy 4
-            start_battle(@enemies[:wandering][3]) if @enemies[:wandering].length >= 4
+            start_battle(@enemies[:wandering][3]) unless @enemies[:wandering][3] == nil
             break
           when 6 #enemy 5
-            start_battle(@enemies[:wandering][4]) if @enemies[:wandering].length == 5
+            start_battle(@enemies[:wandering][4]) unless @enemies[:wandering][4] == nil
             break
           end
         end
@@ -636,26 +636,26 @@ class Game_Main
     if @submenu[0] #player stats display
       pa "#{Game_DB.tx(:other, 2)}", :blue
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "                  Name:  #{@player.playername}", :blue, :bright
-      pa "                  Race:  #{@player.race}", :blue, :bright
-      pa "                  Level: #{@player.level}", :blue, :bright
-      pa "                  Exp:   #{@player.exp}/#{@stats[6]}", :blue, :bright
-      pa "#{Game_DB.tx(:other, 0)}"
-      pa "                  HP:    #{@stats[1]}/#{@stats[2]}", :blue, :bright
-      pa "                  MP:    #{@stats[3]}/#{@stats[4]}", :blue, :bright
-      pa "#{Game_DB.tx(:other, 0)}"
-      pa "                  Strength: #{@player.read_stat(:atk)}                    Left Hand: #{equiptextdata[:left][0]} +#{equiptextdata[:left][1]} Attack", :red, :bright
-      pa "                  Attack Power: #{@player.final_stat(:atk)}                Right Hand: #{equiptextdata[:right][0]} +#{equiptextdata[:right][1]} Attack", :red, :bright
-      pa "                  Total Damage Done: #{@player.total_damage}", :red
-      pa "#{Game_DB.tx(:other, 0)}"
-      pa "                  Defense: #{@player.read_stat(:def)}                      Armor: #{equiptextdata[:armor][0]} +#{equiptextdata[:armor][1]} Defense", :green, :bright
+      pa "                  Name:          #{@player.playername}", :blue, :bright
+      pa "                  Race:          #{@player.race}", :blue, :bright
+      pa "                  Level:         #{@player.level}", :blue, :bright
+      pa "                  Exp:           #{@player.exp}/#{@stats[6]}", :blue, :bright
+      pa "                  HP:            #{@stats[1]}/#{@stats[2]}", :blue, :bright
+      pa "                  MP:            #{@stats[3]}/#{@stats[4]}", :blue, :bright
+      pa "                  Strength:      #{@player.read_stat(:atk)}", :red, :bright
+      pa "                  Attack Power:  #{@player.final_stat(:atk)}", :red, :bright
+      pa "                  Defense:       #{@player.read_stat(:def)}", :green, :bright
       pa "                  Defense Power: #{@player.final_stat(:def)}", :green, :bright
+      pa "                  Speed:         #{@player.read_stat(:spd)}", :yellow, :bright
+      pa "                  Total Speed:   #{@player.final_stat(:spd)}", :yellow, :bright
+      pa "                  Spells Known:  #{@player.spells_learned}", :yellow, :bright
+      pa "                  Equipment:", :magenta
+      pa "                    Left Hand  : #{equiptextdata[:left][0]} +#{equiptextdata[:left][1]} Attack, +#{equiptextdata[:left][2]} Speed", :magenta, :bright
+      pa "                    Right Hand : #{equiptextdata[:right][0]} +#{equiptextdata[:right][1]} Attack, +#{equiptextdata[:right][2]} Speed", :magenta, :bright
+      pa "                    Armor      : #{equiptextdata[:armor][0]} +#{equiptextdata[:armor][1]} Defense, +#{equiptextdata[:armor][2]} Speed", :magenta, :bright
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "                  Total Damage Done:  #{@player.total_damage}", :red
       pa "                  Total Damage Taken: #{@player.damage_taken}", :green
-      pa "#{Game_DB.tx(:other, 0)}"
-      pa "                  Speed: #{@player.read_stat(:spd)}", :yellow, :bright
-      pa "                  Total Speed: #{@player.final_stat(:spd)}", :yellow, :bright
-      pa "#{Game_DB.tx(:other, 0)}"
-      pa "                  Spells Known: #{@player.spells_learned}", :yellow, :bright
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 3)}"

@@ -160,22 +160,25 @@ class Player
     if item == :left
       name = Game_DB.weapons_array(equip[:weapons][0], 0)
       attk = Game_DB.weapons_array(equip[:weapons][0], 1)
-      attk.to_s
-      stake = [name, attk]
+      spd = Game_DB.weapons_array(equip[:weapons][0], 2)
+      attk.to_s; spd.to_s
+      stake = [name, attk, spd]
       return stake
     end
     if item == :right
       name = Game_DB.weapons_array(equip[:weapons][1], 0)
       attk = Game_DB.weapons_array(equip[:weapons][1], 1)
-      attk.to_s
-      stake = [name, attk]
+      spd = Game_DB.weapons_array(equip[:weapons][1], 2)
+      attk.to_s; spd.to_s
+      stake = [name, attk, spd]
       return stake
     end
     if item == :armor
       name = Game_DB.armor_array(equip[:armor][0], 0)
       defs = Game_DB.armor_array(equip[:armor][0], 1)
-      defs.to_s
-      stake = [name, defs]
+      spd = Game_DB.armor_array(equip[:armor][0], 2)
+      defs.to_s; spd.to_s
+      stake = [name, defs, spd]
       return stake
     end
   end
@@ -428,7 +431,7 @@ class Player
   #returns the appropriate item types, :weapons, :armor, :items
   def read_item_bag(type=:items)
     return @bag[:weapons] if type == :weapons
-    return @bag[:armor] if type == :armor 
+    return @bag[:armor] if type == :armor
     return @bag[:items] if type == :items
   end
 

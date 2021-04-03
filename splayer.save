@@ -38,9 +38,9 @@ bag:
 equip:
   weapon:
   - 2
-  - 0
+  - 4
   armor:
-  - 1
+  - 3
 spells: []
 gold: 0
 exp: 0
