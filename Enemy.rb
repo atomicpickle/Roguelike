@@ -32,6 +32,12 @@ class Enemy
     @turn = turn
   end
 
+  def dropinfo(read_chance=false)
+    return @drops if !read_chance
+    return @dropchance if read_chance
+  end
+
+
   #stats symbols :race :lvl :hp :mhp :mp :mmp :atk :def :spd :exp :gold :drops :droprate :spells :spellchance
   def read_stat(stat=:race)
     return @race if stat == :race

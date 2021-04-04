@@ -409,6 +409,15 @@ class Game_Main
       pa "                    You have gained #{@enemy.read_stat(:exp)} Experience Points!", :green
       pa "                    You have gained #{@enemy.read_stat(:gold)} Gold!", :yellow
       pa "#{Game_DB.tx(:other, 0)}"
+      dropinfo = @enemy.dropinfo
+      dropchance = @enemy.dropinfo(true)
+      dice = rand(1..100); dice2 = rand(1..10)
+      if dice <= dropchance
+        id = dropinfo[0] if dice2 <= 7
+        id = dropinfo[1] if dice2 > 7
+        @player.add_item(:item, id)
+        pa "                    #{@enemy.read_name} dropped an item! You found 1x #{Game_DB.items_array(id, 0)}", :yellow, :bright
+      end
       pa "#{Game_DB.tx(:other, 0)}"
       pa "                           #{Game_DB.tx(:other, 7)}"
       user_cur = Game_DB.level_stats_array(@player.race, @player.level)
