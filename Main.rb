@@ -177,6 +177,28 @@ class Game_Main
       end
       clr
       draw_stats_main
+    elsif color == :green
+      ticks.times do
+        clr
+        draw_stats_main
+        flasher += 1
+        pa "\n"
+        pa "\n"
+        pa "\n"
+        pa "\r#{flashbar}", :green, :bright if flasher.even?
+        pa "\r#{flashbar}", :green if flasher.even?
+        pa "\r#{flashbar}", :green if flasher.even?
+        pa "\r#{flashbar}", :green if flasher.even?
+        pa "\n"
+        pa "\n"
+        pa "\r#{flashbar}", :green if flasher.odd?
+        pa "\r#{flashbar}", :green if flasher.odd?
+        pa "\r#{flashbar}", :green if flasher.odd?
+        pa "\r#{flashbar}", :green, :bright if flasher.odd?
+        sleep 0.01
+      end
+      clr
+      draw_stats_main
     end
   end
 
@@ -229,13 +251,47 @@ class Game_Main
         process_battle_attack(false, true, spellid)
         break
       when "i" #item
-        #
+        item = use_item_battle
+        if item == 0 #no item used
+          break
+        else # item was used
+          process_battle_attack
+          break
+        end
         break
       when "r" #run
         process_battle_escape
         break
       end
     end
+  end
+
+  def use_item_battle
+    clr
+    draw_stats_main
+    bag = @player.read_item_bag(:items)
+    pa "#{Game_DB.tx(:other, 0)}"
+    pa "ITEMS"
+    pa "Inventory:"
+    bag.each {|id, amt| pa "  (#{id}) #{Game_DB.items_array(id, 0)} x #{amt} #{Game_DB.items_array(id, 8)}" if amt > 0}
+    pa "#{Game_DB.tx(:other, 0)}"
+    pa "Use which item? (choose number or 0 to cancel)"
+    pa "You can use items even if you dont need them."
+    pa "#{Game_DB.tx(:other, 0)}"
+    key = 0
+    loop do
+      key = gets.chomp.to_i
+      break if bag.key?(key) == false
+      break if key == 0
+      if bag.key?(key) && bag[key] > 0
+        draw_flash(:green, 6)
+        @player.use_item(key)
+        key = gets
+        @enemyturn = true
+        break
+      end
+    end
+    return key
   end
 
   #return spell id
@@ -1092,41 +1148,25 @@ class Game_Main
       end
       @itemmenu[1] = false
     elsif @itemmenu[2] #items screen selected
+      clr
+      draw_stats_main
       bag = @player.read_item_bag(:items)
       pa "#{Game_DB.tx(:other, 0)}"
       pa "ITEMS"
       pa "Inventory:"
       bag.each {|id, amt| pa "  (#{id}) #{Game_DB.items_array(id, 0)} x #{amt} #{Game_DB.items_array(id, 8)}" if amt > 0}
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "#{Game_DB.tx(:cmd, 25)}" #1 use item, 4 back
-      pa "#{Game_DB.tx(:cmd, 26)}"
+      pa "Use which item? (choose number or 0 to cancel)"
+      pa "You can use items even if you dont need them."
       pa "#{Game_DB.tx(:other, 0)}"
       loop do
         key = gets.chomp.to_i
-        case key
-        when 1 #selected use item
-          clr
-          draw_stats_main
-          pa "#{Game_DB.tx(:other, 0)}"
-          pa "ITEMS"
-          pa "Inventory:"
-          bag.each {|id, amt| pa "  (#{id}) #{Game_DB.items_array(id, 0)} x #{amt} #{Game_DB.items_array(id, 8)}" if amt > 0}
-          pa "#{Game_DB.tx(:other, 0)}"
-          pa "Use which item? (choose number or 0 to cancel)"
-          pa "You can use items even if you dont need them."
-          loop do
-            key = gets.chomp.to_i
-            break if bag.key?(key) == false
-            break if key == 0
-            if bag.key?(key) && bag[key] > 0
-              @player.use_item(key)
-              key = gets
-              break
-            end
-          end
-          break
-        when 4 #selected back
-          @itemmenu[2] = false
+        break if bag.key?(key) == false
+        break if key == 0
+        if bag.key?(key) && bag[key] > 0
+          draw_flash(:green, 6)
+          @player.use_item(key)
+          key = gets
           break
         end
       end
