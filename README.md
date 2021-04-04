@@ -7,6 +7,7 @@
   - shop system
   - spell usage (for enemies)
   - arena battles
+  - enemy item drops
 
 completed
   - spell usage and logic (for players, in or out of battle)
