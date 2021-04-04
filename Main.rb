@@ -46,8 +46,8 @@ class Game_Main
     # used as enemy class object for battles
     @enemy = 0
     @enemyturn = false
-    # hit first [0] == enemy is about to strike first, [1] == enemy has struck first already
-    @enemyhitfirst = [false, false]
+    # hit first did the enemy hit a first strike attack?
+    @enemyhitfirst = false
     # used for update method function
     @update = false
     # Used to navigate the player menu [stats, bag, spells, save game, exit game]
@@ -284,6 +284,7 @@ class Game_Main
         pa "                      #{Game_DB.tx(:other, 7)}"
         key = gets
         @enemyturn = false
+        @enemyhitfirst = true
       else
         #enemy attacks!
         draw_flash(:red, 2)
@@ -348,7 +349,8 @@ class Game_Main
         end
       end
       key = gets
-      @enemyturn = true unless efs == true
+      @enemyturn = true unless @enemyhitfirst
+      @enemyhitfirst = false
     end
     process_alive_checking
   end

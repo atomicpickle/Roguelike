@@ -47,23 +47,24 @@ spells:
 - 2
 - 6
 - 4
-gold: 293
-exp: 270
-level: 3
+- 3
+gold: 619
+exp: 558
+level: 4
 levelUP: false
-total_damage: 343
-damage_taken: 144
+total_damage: 441
+damage_taken: 252
 race: :elf
 playername: Vash
-hp: 25
-mhp: 25
-mp: 27
-mmp: 44
-attack: 2
-defense: 3
+hp: 20
+mhp: 32
+mp: 28
+mmp: 60
+attack: 3
+defense: 4
 speed: 3
 added_stats:
-  :hp: 0
+  :hp: -1
   :mp: 0
   :atk: 0
   :def: 0
