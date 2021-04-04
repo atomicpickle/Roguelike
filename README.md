@@ -8,6 +8,7 @@
   - spell usage (for enemies)
   - arena battles
   - enemy item drops
+  - item usage in battle
 
 completed
   - spell usage and logic (for players, in or out of battle)
