@@ -5,10 +5,11 @@
  
  in progress (not ordered)
   - shop system
-  - spell usage and logic
+  - spell usage (for enemies)
   - arena battles
 
 completed
+  - spell usage and logic (for players, in or out of battle)
   - item system
   - equipment system 
   - battle system 
