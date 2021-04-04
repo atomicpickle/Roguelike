@@ -185,6 +185,34 @@ module Game_DB
     return val
   end
 
+  def calc_spell_damage(range, plvl, edef, elvl, heal=false)
+    if heal == false #attack spell
+      b1 = plvl - elvl; b1 = 0 if b1 < 0
+      sel = rand(range[0]..range[1])
+      b2 = rand(1..10)
+      res = 0
+      if b1 > 0 #player higher level
+        en1 = edef * 0.30; en1.to_i
+        en2 = rand(0..b2)
+        en3 = en1 + en2
+        res = sel - en3
+      else # player same or lower level
+        en1 = edef * 0.50; en1.to_i
+        en2 = rand(0..b2)
+        en3 = en1 + en2
+        res = sel - en3
+      end
+      return res.to_i
+    elsif heal == true #heal spell
+      lvc = plvl / 2; lvc = 0 if lvc < 0
+      rn = rand(0..lvc) if lvc > 0
+      rn = 0 if lvc <= 0
+      rn2 = rand(range[0]..range[1])
+      res = rn2 + rn
+      return res
+    end
+  end
+
   #current damage calc formula being used
   def calc_damage_alt2(atk, lvl, defend, lvl2, mob=false)
     base = atk - defend
@@ -321,7 +349,7 @@ module Game_DB
     @items[7]  = ["Angels Tear",            0,    0,     5,    0,     0,     0,     2500,    "Permanently increases HP up to -2 to +5"]
     @items[8]  = ["Necromancer's Eye",      0,    0,     0,    5,     0,     0,     3000,    "Permanently increases MP up to -2 to +5"]
     @items[9]  = ["Dragon's Testicle",      0,    0,     0,    0,     6,     0,     3500,    "Permanently increases ATTACK up to -2 to +6"]
-    @items[10]  =["Fairy Semen",            0,    0,     0,    0,     0,     6,     3500,    "Permanently increases DEFENSE up to -2 to +6"]
+    @items[10] = ["Fairy Dust",             0,    0,     0,    0,     0,     6,     3500,    "Permanently increases DEFENSE up to -2 to +6"]
     @items[11] = ["Godsperm",               0,    0,    10,   10,    10,    10,     9001,    "Permanently increases HP, MP, ATK, DEF up to -1 to +10"]
   end
 

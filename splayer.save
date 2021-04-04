@@ -38,25 +38,26 @@ bag:
     11: 0
 equip:
   weapon:
-  - 2
-  - 0
+  - 8
+  - 8
   armor:
-  - 1
+  - 3
 spells:
 - 1
 - 2
-gold: 14
-exp: 16
-level: 1
+- 6
+gold: 79
+exp: 73
+level: 2
 levelUP: false
-total_damage: 61
-damage_taken: 29
+total_damage: 213
+damage_taken: 48
 race: :elf
 playername: Vash
-hp: 15
-mhp: 15
-mp: 13
-mmp: 13
+hp: 19
+mhp: 19
+mp: 32
+mmp: 32
 attack: 2
 defense: 2
 speed: 2

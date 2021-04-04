@@ -134,7 +134,27 @@ class Game_Main
       clr
       draw_stats_main
     elsif color == :blue
-      #
+      ticks.times do
+        clr
+        draw_stats_main
+        flasher += 1
+        pa "\n"
+        pa "\n"
+        pa "\n"
+        pa "\r#{flashbar}", :blue, :bright if flasher.even?
+        pa "\r#{flashbar}", :blue if flasher.even?
+        pa "\r#{flashbar}", :blue if flasher.even?
+        pa "\r#{flashbar}", :blue if flasher.even?
+        pa "\n"
+        pa "\n"
+        pa "\r#{flashbar}", :blue if flasher.odd?
+        pa "\r#{flashbar}", :blue if flasher.odd?
+        pa "\r#{flashbar}", :blue if flasher.odd?
+        pa "\r#{flashbar}", :blue, :bright if flasher.odd?
+        sleep 0.01
+      end
+      clr
+      draw_stats_main
     elsif color == :level
       ticks.times do
         clr
@@ -202,7 +222,11 @@ class Game_Main
         process_battle_attack
         break
       when "s"  #spell
-        #
+        enemyfs = Game_DB.battle_enemy_hit_first(@enemy.read_stat(:spd), @player.final_stat(:spd))
+        spellid = spell_selection
+        break if spellid == 0
+        process_battle_attack(enemyfs, true, spellid)
+        process_battle_attack(false, true, spellid)
         break
       when "i" #item
         #
@@ -214,15 +238,37 @@ class Game_Main
     end
   end
 
-  def process_battle_attack(enemy_first_strike=false)
+  #return spell id
+  def spell_selection
+    spells = @player.spells_learned
+    return nil if spells.length < 1
+    clr
+    draw_stats_main
+    spells.each do |e|
+      pa "(#{e}): #{Game_DB.spellbook(e, 0)}"
+      pa "   > Cost: #{Game_DB.spellbook(e, 3)} MP"
+      pa "   > Info: #{Game_DB.spellbook(e, 4)}"
+    end
+    pa "Select a spell by using its (ID). Press (0) to cancel."
+    loop do
+      key = gets.chomp.to_i
+      if spells.include?(key)
+        #matching spell selected
+        return key
+      elsif key == 0
+        return 0
+      end
+    end
+  end
+
+  def process_battle_attack(enemy_first_strike=false, player_spell=false, spellid=0)
     return if @enemy == 0
-    draw_flash(:red, 2)
     efs = enemy_first_strike
     if @enemyturn == true || efs == true #force turn true on first strike attack ????
       # enemy attacks:
       if efs == true
         #enemy attacks first!
-        draw_flash(:red, 4)
+        draw_flash(:red, 6)
         pa "#{Game_DB.tx(:other, 0)}"
         pa "#{Game_DB.tx(:other, 0)}"
         pa "             #{@enemy.read_name} out maneuvers YOU and STRIKES FIRST!!!", :red
@@ -240,6 +286,7 @@ class Game_Main
         @enemyturn = false
       else
         #enemy attacks!
+        draw_flash(:red, 2)
         amount = Game_DB.calc_damage_alt2(@enemy.read_stat(:atk), @enemy.read_stat(:lvl), @player.final_stat(:def), @player.level, true)
         @player.damage(:hp, amount)
         pa "#{Game_DB.tx(:other, 0)}"
@@ -255,24 +302,53 @@ class Game_Main
       end
     else
       # player attacks!
-      #player attacking active enemy
-      playeratk = @player.final_stat(:atk)
-      playerlvl = @player.level
-      enemydef = @enemy.read_stat(:def)
-      enemylvl = @enemy.read_stat(:lvl)
-      amount = Game_DB.calc_damage_alt2(playeratk, playerlvl, enemydef, enemylvl)
-      @enemy.damage(amount)
-      @player.total_damage += amount
-      pa "#{Game_DB.tx(:other, 0)}"
-      pa "#{Game_DB.tx(:other, 0)}"
-      pa "#{Game_DB.tx(:other, 0)}"
-      pa "             SMACK!!! YOU attacked #{@enemy.read_name} and did #{amount} damage!!!", :red
-      pa "#{Game_DB.tx(:other, 0)}"
-      pa "#{Game_DB.tx(:other, 0)}"
-      pa "#{Game_DB.tx(:other, 0)}"
-      pa "                      #{Game_DB.tx(:other, 7)}"
+      if player_spell == false
+        #player attacking active enemy
+        draw_flash(:red, 2)
+        playeratk = @player.final_stat(:atk)
+        playerlvl = @player.level
+        enemydef = @enemy.read_stat(:def)
+        enemylvl = @enemy.read_stat(:lvl)
+        amount = Game_DB.calc_damage_alt2(playeratk, playerlvl, enemydef, enemylvl)
+        @enemy.damage(amount)
+        @player.total_damage += amount
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "             SMACK!!! YOU attacked #{@enemy.read_name} and did #{amount} damage!!!", :red
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "                      #{Game_DB.tx(:other, 7)}"
+      else
+        # player casting spell!
+        # calc_spell_damage(range, plvl, edef, elvl, heal=false)
+        draw_flash(:blue, 6); healing = false
+        curmp = @player.read_cur_hpmp(:mp)
+        spcost = Game_DB.spellbook(spellid, 3)
+        sprange = Game_DB.spellbook(spellid, 2)
+        healing = true if spellid == 1 || spellid == 2
+        if spcost <= curmp
+          amount = Game_DB.calc_spell_damage(sprange, @player.level, @enemy.read_stat(:def), @enemy.read_stat(:lvl), healing)
+          @enemy.damage(amount) if !healing
+          @player.heal(:hp, amount) if healing
+          @player.damage(:mp, Game_DB.spellbook(spellid, 3))
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "#{Game_DB.tx(:other, 0)}"
+          if healing
+            pa "             You cast the spell #{Game_DB.spellbook(spellid, 0)} and healed #{amount} HP!!!!", :green
+            pa "             #{Game_DB.spellbook(spellid, 4)}", :green
+          else
+            pa "             You cast the spell #{Game_DB.spellbook(spellid, 0)} and did #{amount} damage!!!!", :red, :bright
+            pa "             #{Game_DB.spellbook(spellid, 4)}", :red, :bright
+          end
+        else
+           pa "              You try to cast a spell without enough MP and waste your turn!", :magenta, :bright
+        end
+      end
       key = gets
-      @enemyturn = true
+      @enemyturn = true unless efs == true
     end
     process_alive_checking
   end
@@ -332,9 +408,9 @@ class Game_Main
       pa "#{Game_DB.tx(:other, 0)}"
       pa "                           #{Game_DB.tx(:other, 7)}"
       user_cur = Game_DB.level_stats_array(@player.race, @player.level)
+      user_new = Game_DB.level_stats_array(@player.race, @player.level+1)
       @player.add_exp(@enemy.read_stat(:exp))
       @player.add_gold(@enemy.read_stat(:gold))
-      user_new = Game_DB.level_stats_array(@player.race, @player.level)
       key = gets
       if @player.levelUP
         @player.levelUP = false
@@ -349,7 +425,7 @@ class Game_Main
         pa "                    Speed:   #{user_cur[4]} => #{user_new[4]}", :yellow, :bright
         pa "#{Game_DB.tx(:other, 0)}"
         if user_new[4] != nil #new spell learned
-          spname = Game_DB.spellbook(user_new[4], 0)
+          spname = Game_DB.spellbook(user_new[5], 0)
           pa "                    You learned the spell #{spname}!", :yellow
         end
         pa "#{Game_DB.tx(:other, 0)}"
@@ -744,7 +820,29 @@ class Game_Main
         end
       end
     elsif @submenu[2] #player Spells
-      #
+      spellid = spell_selection
+      sparray = Game_DB.spellbook[spellid]
+      curmp = @player.read_cur_hpmp(:mp)
+      cost = sparray[3]
+      if spellid != 0
+        if spellid == 1 || spellid == 2
+          #heal
+          if cost <= curmp
+            draw_flash(:blue, 6); healing = false
+            sprange = Game_DB.spellbook(spellid, 2)
+            amount = Game_DB.calc_spell_damage(sprange, @player.level, 0, 0, true)
+            @player.heal(:hp, amount)
+            @player.damage(:mp, Game_DB.spellbook(spellid, 3))
+            pa " You cast the spell #{Game_DB.spellbook(spellid, 0)} and healed #{amount} HP!!!!", :green
+          else
+            pa " You try to cast the spell but don't have enough mp!", :magenta, :bright
+          end
+        else
+          #damage
+          pa " Would sure be a waste to cast that spell with no target...", :green
+        end
+        key = gets
+      end
       @submenu[2] = false
     elsif @submenu[3] #player save game
       #
@@ -769,7 +867,6 @@ class Game_Main
           @submenu[3] = false
           break
         end
-
       end
     elsif @submenu[4] #player exit game
       pa "#{Game_DB.tx(:other, 0)}"

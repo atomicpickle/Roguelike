@@ -38,8 +38,8 @@ class Player
     @bag[:armor] = {}
     @bag[:items] = {}
     @equip = {}
-    @equip['weapon'] = [2, 0]
-    @equip['armor'] = [1]
+    @equip['weapon'] = [1, 0]
+    @equip['armor'] = [0]
     @spells = []
     @gold = 0
     @exp = 0
@@ -81,11 +81,13 @@ class Player
   # TYPES: :hp, :mp, :full
   def heal(type, value=0)
     if type == :hp
-      @hp = read_stat(:hp) if @hp + value >= read_stat(:hp)
-      @hp += value
+      mxc = @hp + value
+      @hp = read_stat(:hp) if mxc >= read_stat(:hp)
+      @hp += value if mxc < read_stat(:hp)
     elsif type == :mp
-      @mp = read_stat(:mp) if @mp + value >= read_stat(:mp)
-      @mp += value
+      mxc = @mp + value
+      @mp = read_stat(:mp) if mxc >= read_stat(:mp)
+      @mp += value if mxc < read_stat(:mp)
     elsif :full
       @hp = read_stat(:hp)
       @mp = read_stat(:mp)
