@@ -390,7 +390,11 @@ class Game_Main
     draw_stats_main
     if @player.read_cur_hpmp(:hp) <= 0
       #player dead!
-      pa "GAME OVER MAN YER DEAD!", :red
+      pa "#{Game_DB.tx(:other, 14)}", :red
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "                  Name: #{@player.playername}, Race: #{@player.race}, Level: #{@player.level}", :red, :bright
+      pa "                  Total Damage Done:  #{@player.total_damage}", :red
+      pa "                  Total Damage Taken: #{@player.damage_taken}", :red
       key = gets
       exit
     elsif @enemy.alive? == false
