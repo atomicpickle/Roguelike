@@ -778,7 +778,7 @@ class Game_Main
           pa "Inventory: "
           bag.each {|id, amt| pa "(#{id}) #{Game_DB.weapons_array(id, 0)}   x #{amt}" if amt > 0}
           pa "#{Game_DB.tx(:other, 0)}"
-          pa "Equip which weapon? (choose number, (0) or invalid item to cancel)"
+          pa "Equip which weapon? (choose number, or (0) to cancel)"
           loop do
             key = gets.chomp.to_i
             break if bag.key?(key) == false
@@ -807,7 +807,6 @@ class Game_Main
               break
             end
           end
-
           break
         when 2 #unequip
           clr
@@ -827,15 +826,23 @@ class Game_Main
             break if key == 0
             break if key > 2
             if key == 1
-              @player.unequip_weapon(1)
-              @player.unequip_weapon(2) if twohd
-              pa "You unequipped your weapon from your Left hand and placed it in your bag"
+              if @player.get_equipment_id(:lh) != 0
+                @player.unequip_weapon(1)
+                @player.unequip_weapon(2) if twohd
+                pa "You unequipped your weapon from your Left hand and placed it in your bag"
+              else
+                pa "You can't unequip your Fists..."
+              end
               key = gets
               break
             elsif key == 2
-              @player.unequip_weapon(2)
-              @player.unequip_weapon(1) if twohd
-              pa "You unequipped your weapon from your Right hand and placed it in your bag"
+              if @player.get_equipment_id(:rh) != 0
+                @player.unequip_weapon(2)
+                @player.unequip_weapon(1) if twohd
+                pa "You unequipped your weapon from your Right hand and placed it in your bag"
+              else
+                pa "You can't unequip your Fists..."
+              end
               key = gets
               break
             end
@@ -848,8 +855,79 @@ class Game_Main
       end
       @itemmenu[0] = false
     elsif @itemmenu[1] #armor screen selected
-      #
+      bag = @player.read_item_bag(:armor)
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "ARMOR"
+      pa "Equipped:"
+      pa "    BODY:  #{equiptextdata[:armor][0]}, +#{equiptextdata[:armor][1]} Defense, +#{equiptextdata[:armor][2]} Speed"
+      pa "Inventory: "
+      bag.each {|id, amt| pa "(#{id}) #{Game_DB.armor_array(id, 0)}   x #{amt}" if amt > 0}
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:cmd, 21)}" #1 equip, 2 unequip, 4 back
+      pa "#{Game_DB.tx(:cmd, 22)}"
+      pa "#{Game_DB.tx(:cmd, 26)}"
+      loop do
+        key = gets.chomp.to_i
+        case key
+        when 1 #equip armor
+          clr
+          draw_stats_main
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "ARMOR"
+          pa "Equipped:"
+          pa "    BODY:  #{equiptextdata[:armor][0]}, +#{equiptextdata[:armor][1]} Defense, +#{equiptextdata[:armor][2]} Speed"
+          pa "Inventory: "
+          bag.each {|id, amt| pa "(#{id}) #{Game_DB.armor_array(id, 0)}   x #{amt}" if amt > 0}
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "Equip which Armor? (choose numer, or (0 to cancel))"
+          loop do
+            key = gets.chomp.to_i
+            break if bag.key?(key) == false
+            break if key == 0
+            if bag.key?(key) && bag[key] > 0
+              @player.equip_armor(key)
+              pa "Armor #{@player.get_equipment_text(:armor)[0]} has been equipped!"
+              key = gets
+              break
+            end
+          end
+          break
+        when 2 #unequip armor
+          clr
+          draw_stats_main
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "ARMOR"
+          pa "Equipped:"
+          pa "    BODY:  #{equiptextdata[:armor][0]}, +#{equiptextdata[:armor][1]} Defense, +#{equiptextdata[:armor][2]} Speed"
+          pa "Inventory: "
+          bag.each {|id, amt| pa "(#{id}) #{Game_DB.armor_array(id, 0)}   x #{amt}" if amt > 0}
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "Unequip your armor? Are you sure?"
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "#{Game_DB.tx(:cmd, 16)}" # 1 = yes, 2 = no
+          pa "#{Game_DB.tx(:cmd, 17)}"
+          loop do
+            key = gets.chomp.to_i
+            break if key == 2 || key != 1
+            if key == 1
+              if @player.get_equipment_id(:ar) != 0
+                @player.unequip_armor
+                pa "You unequipped your armor and placed it in your bag"
+              else
+                pa "You cant unequip your underwear."
+              end
+              key = gets
+              break
+            end
+          end
+          break
+        when 4 #back
+          @itemmenu[1] = false
+          break
+        end
+      end
       @itemmenu[1] = false
+      pa "hit bottom of armor method"
     elsif @itemmenu[2] #items screen selected
       #
       @itemmenu[2] = false

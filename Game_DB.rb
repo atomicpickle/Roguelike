@@ -288,7 +288,7 @@ module Game_DB
     @weapons[3] = ["Mage-Staff   ",            3,   8,  true,     70]
     @weapons[4] = ["Wooden Club  ",            6,   5, false,     60]
     @weapons[5] = ["Iron Hatchet ",            11,  5, false,    120]
-    @weapons[6] = ["Iron Lance   ",            24,  2,  true,    250]
+    @weapons[6] = ["Iron Lance   ",            32,  2,  true,    250]
     @weapons[7] = ["Iron Sword   ",            32,  4, false,    500]
     @weapons[8] = ["Sage-Staff   ",            20, 18,  true,    875]
     @weapons[9] = ["Steel Sword  ",            46,  5, false,   2500]
@@ -298,7 +298,7 @@ module Game_DB
 
   def populate_armor_db
     #            [Armor Name,                def, spd,         cost]
-    @armors[0] = ["Silk Surong  ",             0,   0,            0]
+    @armors[0] = ["Underwear    ",             0,   1,            0]
     @armors[1] = ["Cloth Shirt  ",             1,   3,           10]
     @armors[2]=  ["Mage's Robe  ",             2,   8,           10]
     @armors[3] = ["Leather Armor",            12,   4,           90]

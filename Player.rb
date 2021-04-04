@@ -261,7 +261,7 @@ class Player
         weap = Game_DB.weapons_array(lh)
         power = weap[1]
         left = var + power
-        if rh != lh && rh != 0 #two 1 handed weaps equipped?
+        if !weap[3] && rh != 0 #two 1 handed weaps equipped?
           weap = Game_DB.weapons_array(rh)
           power = weap[1]
           right = var + power
