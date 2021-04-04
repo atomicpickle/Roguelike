@@ -311,17 +311,18 @@ module Game_DB
 
   def populate_items_db
     #           [Item Name,              +HP,  +MP,  +PHP, +PMP, +PATK, +PDEF,     cost,    Item Description]
-    @items[0]  = ["Mugwart Root",          25,    0,     0,    0,     0,     0,       12,    "Heals +25 HP"]
-    @items[1]  = ["Vervain Flower",         0,   25,     0,    0,     0,     0,       30,    "Heals +25 MP"]
-    @items[2]  = ["Rose-Hipp Potion",     120,    0,     0,    0,     0,     0,       75,    "Heals +120 HP"]
-    @items[3]  = ["Wolfsbane Potion",       0,   80,     0,    0,     0,     0,      120,    "Heals +100 MP"]
-    @items[4]  = ["White Orchid Potion",  400,    0,     0,    0,     0,     0,      300,    "Heals +400 HP"]
-    @items[5]  = ["Night-Shade Elixer",   500,  250,     0,    0,     0,     0,     1000,    "Heals +500 HP and +250 MP"]
-    @items[6]  = ["Angels Tear",            0,    0,     5,    0,     0,     0,     2500,    "Permanently increases HP up to -2 to +5"]
-    @items[7]  = ["Necromancer's Eye",      0,    0,     0,    4,     0,     0,     3000,    "Permanently increases MP up to -1 to +4"]
-    @items[8]  = ["Dragon's Testicle",      0,    0,     0,    0,     5,     0,     3500,    "Permanently increases ATTACK up to +0 to +5"]
-    @items[9]  = ["Fairy Semen",            0,    0,     0,    0,     0,     5,     3500,    "Permanently increases DEFENSE up to +0 to +5"]
-    @items[10] = ["Godsperm",               0,    0,    10,   10,    10,    10,     9001,    "Permanently increases HP, MP, ATK, DEF up to +0 to +10"]
+    @items[0]  = ["Missingo",               0,    0,     0,    0,     0,     0,        0,    "..."]
+    @items[1]  = ["Mugwart Root",          25,    0,     0,    0,     0,     0,       12,    "Heals +25 HP"]
+    @items[2]  = ["Vervain Flower",         0,   25,     0,    0,     0,     0,       30,    "Heals +25 MP"]
+    @items[3]  = ["Rose-Hipp Potion",     120,    0,     0,    0,     0,     0,       75,    "Heals +120 HP"]
+    @items[4]  = ["Wolfsbane Potion",       0,   80,     0,    0,     0,     0,      120,    "Heals +100 MP"]
+    @items[5]  = ["White Orchid Potion",  400,    0,     0,    0,     0,     0,      300,    "Heals +400 HP"]
+    @items[6]  = ["Night-Shade Elixer",   500,  250,     0,    0,     0,     0,     1000,    "Heals +500 HP and +250 MP"]
+    @items[7]  = ["Angels Tear",            0,    0,     5,    0,     0,     0,     2500,    "Permanently increases HP up to -2 to +5"]
+    @items[8]  = ["Necromancer's Eye",      0,    0,     0,    5,     0,     0,     3000,    "Permanently increases MP up to -2 to +5"]
+    @items[9]  = ["Dragon's Testicle",      0,    0,     0,    0,     6,     0,     3500,    "Permanently increases ATTACK up to -2 to +6"]
+    @items[10]  = ["Fairy Semen",            0,    0,     0,    0,     0,     6,     3500,    "Permanently increases DEFENSE up to -2 to +6"]
+    @items[11] = ["Godsperm",               0,    0,    10,   10,    10,    10,     9001,    "Permanently increases HP, MP, ATK, DEF up to -1 to +10"]
   end
 
   def populate_spells_db

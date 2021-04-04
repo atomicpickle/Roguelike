@@ -96,6 +96,66 @@ class Player
     end
   end
 
+  #stats symbols :hp :mp :atk :def :spd    add_bonus_stat(stat, amount)
+  def use_item(id)
+    remove_item(:item, id)
+    array = Game_DB.items_array(id)
+    if id == 1
+      heal(:hp, array[1])
+      pa "You used 1x #{array[0]} and recovered #{array[1]} HP!"
+    elsif id == 2
+      heal(:mp, array[2])
+      pa "You used 1x #{array[0]} and recovered #{array[2]} MP!"
+    elsif id == 3
+      heal(:hp, array[1])
+      pa "You used 1x #{array[0]} and recovered #{array[1]} HP!"
+    elsif id == 4
+      heal(:mp, array[2])
+      pa "You used 1x #{array[0]} and recovered #{array[2]} MP!"
+    elsif id == 5
+      heal(:hp, array[1])
+      pa "You used 1x #{array[0]} and recovered #{array[1]} HP!"
+    elsif id == 6
+      heal(:hp, array[1])
+      heal(:mp, array[2])
+      pa "You used 1x #{array[0]} and recovered #{array[1]} HP and #{array[2]} MP!"
+    elsif id == 7
+      res = rand(-2..array[3])
+      add_bonus_stat(:hp, res)
+      pa "You used 1x #{array[0]} and your MAX HP was INCREASED by #{res}!" if res >= 0
+      pa "You used 1x #{array[0]} and your MAX HP was DECREASED by #{res}!" if res < 0
+    elsif id == 8
+      res = rand(-2..array[4])
+      add_bonus_stat(:mp, res)
+      pa "You used 1x #{array[0]} and your MAX MP was INCREASED by #{res}!" if res >= 0
+      pa "You used 1x #{array[0]} and your MAX MP was DECREASED by #{res}!" if res < 0
+    elsif id == 9
+      res = rand(-2..array[5])
+      add_bonus_stat(:atk, res)
+      pa "You used 1x #{array[0]} and your ATTACK was INCREASED by #{res}!" if res >= 0
+      pa "You used 1x #{array[0]} and your ATTACK was DECREASED by #{res}!" if res < 0
+    elsif id == 10
+      res = rand(-2..array[6])
+      add_bonus_stat(:def, res)
+      pa "You used 1x #{array[0]} and your DEFENSE was INCREASED by #{res}!" if res >= 0
+      pa "You used 1x #{array[0]} and your DEFENSE was DECREASED by #{res}!" if res < 0
+    elsif id == 11
+      hp = rand(-1..array[3]); mp = rand(-1..array[4])
+      atk = rand(-1..array[5]); deb = rand(-1..array[6])
+      add_bonus_stat(:hp, hp); add_bonus_stat(:mp, mp)
+      add_bonus_stat(:atk, atk); add_bonus_stat(:def, deb)
+      pa "You used 1x #{array[0]}..."
+      pa "Your MAX HP was INCREASED by #{hp}" if hp >= 0
+      pa "Your MAX HP was DECREASED by #{hp}" if hp < 0
+      pa "Your MAX MP was INCREASED by #{mp}" if mp >= 0
+      pa "Your MAX MP was DECREASED by #{mp}" if mp < 0
+      pa "Your ATTACK was INCREASED by #{atk}" if atk >= 0
+      pa "Your ATTACK was DECREASED by #{atk}" if atk < 0
+      pa "Your DEFENSE was INCREASED by #{deb}" if deb >= 0
+      pa "Your DEFENSE was DECREASED by #{deb}" if deb < 0
+    end
+  end
+
   def finish_setup(race, name, lvl=0)
     set_name(name)
     set_race(race)
@@ -137,8 +197,6 @@ class Player
     all_weaps.each_key {|key| @bag[:weapons][key] = 0}
     all_armor.each_key {|key| @bag[:armor][key] = 0}
     all_items.each_key {|key| @bag[:items][key] = 0}
-    pa "Bag formatted! #{@bag}"
-    inputttt = gets
   end
 
   #if new items are added after a game is saved, this will reformat the bag on game load
@@ -309,7 +367,7 @@ class Player
   end
 
 
-  #stats symbols :hp :mp :atk :def :spd
+  #stats symbols :hp :mp :atk :def :spd add_bonus_stat(stat, amount)
   def add_bonus_stat(stat, amount)
     return if stat == nil || amount == nil
     @added_stats[stat] += amount

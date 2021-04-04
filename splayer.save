@@ -3,29 +3,6 @@ bag:
   :weapons:
     0: 0
     1: 0
-    2: 1
-    3: 0
-    4: 1
-    5: 0
-    6: 1
-    7: 0
-    8: 0
-    9: 0
-    10: 0
-    11: 0
-  :armor:
-    0: 0
-    1: 0
-    2: 1
-    3: 1
-    4: 1
-    5: 0
-    6: 0
-    7: 1
-    8: 0
-  :items:
-    0: 0
-    1: 0
     2: 0
     3: 0
     4: 0
@@ -35,12 +12,36 @@ bag:
     8: 0
     9: 0
     10: 0
+    11: 0
+  :armor:
+    0: 0
+    1: 0
+    2: 0
+    3: 0
+    4: 0
+    5: 0
+    6: 0
+    7: 0
+    8: 0
+  :items:
+    0: 0
+    1: 4
+    2: 0
+    3: 0
+    4: 2
+    5: 0
+    6: 0
+    7: 8
+    8: 8
+    9: 12
+    10: 12
+    11: 24
 equip:
   weapon:
-  - 5
-  - 5
+  - 2
+  - 0
   armor:
-  - 4
+  - 1
 spells: []
 gold: 0
 exp: 0
@@ -49,7 +50,7 @@ levelUP: false
 total_damage: 0
 damage_taken: 0
 race: :dwarf
-playername: Geoff
+playername: 'Trogg Journey '
 hp: 14
 mhp: 14
 mp: 0
