@@ -172,7 +172,7 @@ module Game_DB
                       ░ ░        ░     ░  ░   ░
                                 ░                     "
 
-    @textdb[:other][12]= " Version: Alpha 1.21.04.03            Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: Alpha.1.21.04.04            Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section, id)
@@ -222,6 +222,37 @@ module Game_DB
         en3 = en1 + en2
         res = sel - en3
       end
+      return res.to_i
+    elsif heal == true #heal spell
+      lvc = plvl / 2; lvc = 0 if lvc < 0
+      rn = rand(0..lvc) if lvc > 0
+      rn = 0 if lvc <= 0
+      rn2 = rand(range[0]..range[1])
+      res = rn2 + rn
+      return res
+    end
+  end
+
+  def calc_enemy_spell_damage(range, plvl, edef, elvl, heal=false)
+    if heal == false #attack spell
+      b1 = plvl - elvl; b1 = 0 if b1 < 0
+      sel = rand(range[0]..range[1])
+      b2 = rand(1..10)
+      res = 0
+      if b1 > 0 #enemy higher level
+        en1 = edef * 0.40; en1.to_i
+        en2 = rand(0..b2)
+        en3 = en1 + en2
+        en4 = sel - en3
+        res = en4 * 0.8; res.to_i
+      else # enemy same or lower level
+        en1 = edef * 0.60; en1.to_i
+        en2 = rand(0..b2)
+        en3 = en1 + en2
+        en4 = sel - en3
+        res = en4 * 1.2; res.to_i
+      end
+      res = 1 if res < 1
       return res.to_i
     elsif heal == true #heal spell
       lvc = plvl / 2; lvc = 0 if lvc < 0
@@ -378,23 +409,23 @@ module Game_DB
     @spells[0] = ["...",                  false,     [0, 0],    0,   "..."]
     @spells[1] = ["Heal",                  true,   [19, 50],    4,   "Simple healing spell"]
     @spells[2] = ["Greater Heal",          true,  [68, 175],   11,   "Less simple healing spell"]
-    @spells[3] = ["Tremor",               false,  [15,  75],    7,   "Sends a tremor out and throws your target"]
-    @spells[4] = ["Haste",                false,     [0, 0],    5,   "Speed Jumps Slightly +5 to +10 for the whole battle"]
-    @spells[5] = ["Water Talons",         false,  [45, 120],    9,   "Pull water out of the air into talons and shoot at target"]
-    @spells[6] = ["Shock",                false,   [18, 35],    3,   "Electricity shoots from your mouth and strikes"]
-    @spells[7] = ["Blow You From A-Far",  false,   [19, 50],    9,   "Blizard swirls up around your target"]
-    @spells[8] = ["Fireball",             false,  [24, 125],   11,   "A Fireball pops into existance and strikes"]
-    @spells[9] = ["Earth-Swallow",        false, [169, 269],   14,   "Earth opens and crushes your target"]
-    @spells[10]= ["Cheetas Foot",         false,     [0, 0],   10,   "Speed Jumps Slightly +7 to +69 for whole battle"]
-    @spells[11]= ["Bolt",                 false, [108, 156],   13,   "Electricity shoots from all of your orifices and strikes"]
-    @spells[12]= ["Wall of Fire",         false,  [66, 333],   21,   "A Wall of Fire emerges and envelopes everything"]
+    @spells[3] = ["Tremor",               false,   [1,  30],    8,   "Sends a tremor out and throws the target"]
+    @spells[4] = ["Gust",                 false,   [5,  25],    6,   "A Sharp gust of wind impacts the target"]
+    @spells[5] = ["Water Talons",         false,   [5,  60],   10,   "Pull water out of the air into talons and shoot at target"]
+    @spells[6] = ["Shock",                false,   [25, 40],    8,   "Electricity shoots from your mouth and strikes"]
+    @spells[7] = ["Blizzard",             false,   [33, 80],   12,   "Blizzard swirls up around the target"]
+    @spells[8] = ["Fireball",             false,  [24, 125],   16,   "A Fireball pops into existance and strikes"]
+    @spells[9] = ["Quake",                false,   [1, 275],   18,   "Earth opens and crushes your target"]
+    @spells[10]= ["Hurricane",            false,  [50, 150],   19,   "A Hurricaine hits the target, then disappears"]
+    @spells[11]= ["Bolt",                 false, [108, 156],   24,   "Electricity shoots from all of your orifices and strikes"]
+    @spells[12]= ["Wall of Fire",         false,  [66, 333],   32,   "A Wall of Fire emerges and envelopes everything"]
   end
 
   def populate_enemies_db #races: ghost(0), dwarf(1), human(2), elf(3), animal(4), demon(5)
     #                #[Enemy name,             race, lvl,  mhp,  mmp,  atk,  def,  spd,   exp,   gold, [drops],drop%,  [spells], sp%]
-    @enemies[:g1] = ["Lost Spirit",             0,   0,    1,    3,    0,    0,    5,     4,      0,  [8, 7],    5,    [3, 0],  10]
-    @enemies[:g2] = ["Angry Spirit",            0,   5,   33,   24,    5,    0,   15,    10,      0,  [8, 7],   10,    [3, 4],  15]
-    @enemies[:g3] = ["Girl From The Ring",      0,   7,  166,   48,   22,    9,   19,    66,      6,  [8, 7],   10,    [1, 4],  15]
+    @enemies[:g1] = ["Lost Spirit",             0,   0,    1,    3,    0,    0,    5,     4,      0,  [8, 7],    5,    [3, 0],  20]
+    @enemies[:g2] = ["Angry Spirit",            0,   5,   33,   24,    5,    0,   15,    10,      0,  [8, 7],   10,    [3, 4],  25]
+    @enemies[:g3] = ["Girl From The Ring",      0,   7,  166,   48,   22,    9,   19,    66,      6,  [8, 7],   10,    [1, 4],  25]
 
     @enemies[0]  =  ["Emptyness",               0,   0,    1,    0,    0,    0,    0,     0,      0,  [0, 0],    1,    [0, 0],   0]
     @enemies[1]  =  ["Butterfly",               4,   0,    7,    0,    2,    1,    6,     2,      1,  [2, 1],   25,    [0, 0],   0]
@@ -404,21 +435,21 @@ module Game_DB
     @enemies[5]  =  ["Blacktail Deer",          4,   2,   18,    0,    8,    4,   12,     9,      5,  [2, 1],   10,    [0, 0],   0]
     @enemies[6]  =  ["Adorable Fox",            4,   3,   19,    0,   12,    5,   13,    12,     15,  [2, 1],   10,    [0, 0],   0]
     @enemies[7]  =  ["Angry Bird",              4,   3,   22,    0,   14,    6,   13,    18,     22,  [2, 1],   10,    [0, 0],   0]
-    @enemies[8]  =  ["Blazing Skull",           5,   4,   30,    9,   18,    6,   15,    26,     28, [10, 9],    5,    [3, 0],  25]
-    @enemies[9]  =  ["Syren",                   5,   4,   30,    8,   20,    9,   13,    38,     35,  [6, 5],   20,   [2, 10],  33]
-    @enemies[10] =  ["Ipotane",                 4,   4,   32,    9,   22,   12,   15,    40,     35,  [6, 7],   20,  [11, 13],  33]
+    @enemies[8]  =  ["Blazing Skull",           5,   4,   30,   10,   18,    6,   15,    26,     28, [10, 9],    5,    [1, 6],  30]
+    @enemies[9]  =  ["Syren",                   5,   4,   30,   16,   20,    9,   13,    38,     35,  [6, 5],   20,    [1, 4],  40]
+    @enemies[10] =  ["Ipotane",                 4,   4,   32,   14,   22,   12,   15,    40,     35,  [6, 7],   20,    [4, 3],  40]
     @enemies[11] =  ["F**king Tiger",           4,   5,   52,    0,   26,   10,   17,    44,     40,  [3, 9],    8,    [0, 0],   0]
     @enemies[12] =  ["Black Zebra",             4,   5,   54,    0,   25,   20,   19,    38,     90,  [3, 7],    8,    [0, 0],   0]
     @enemies[13] =  ["Giant C**t of a Rhino",   4,   6,   96,    0,   36,   40,   22,   110,     35, [10, 9],    5,    [0, 0],   0]
     @enemies[14] =  ["Shortneck Angry Giraffe", 4,   6,  118,    0,   37,   46,   26,   116,    104,  [8, 7],    5,    [0, 0],   0]
-    @enemies[15] =  ["Longma",                  4,   6,  120,   15,   35,   50,   28,   100,    112,  [8, 6],   33,   [2, 14],  33]
-    @enemies[16] =  ["Gay Horny Jinn",          5,   7,  135,   17,   42,   56,   35,   215,    175,  [9, 7],   15,   [10, 3],  30]
-    @enemies[17] =  ["Cute Velociraptor",       4,   7,  184,   12,   47,   55,   30,   224,    175, [9, 10],    7,    [1, 2],  15]
-    @enemies[18] =  ["Electric Floating Skull", 5,   8,  256,   64,   54,   50,   32,   300,    225,  [8, 9],   12,    [2, 4],  25]
+    @enemies[15] =  ["Longma",                  4,   6,  120,   25,   35,   50,   28,   100,    112,  [8, 6],   33,    [2, 7],  45]
+    @enemies[16] =  ["Gay Horny Jinn",          5,   7,  135,   28,   42,   56,   35,   215,    175,  [9, 7],   15,   [2, 11],  40]
+    @enemies[17] =  ["Cute Velociraptor",       4,   7,  184,   20,   47,   55,   30,   224,    175, [9, 10],    7,    [1, 0],  25]
+    @enemies[18] =  ["Electric Floating Skull", 5,   8,  256,   70,   54,   50,   32,   300,    225,  [8, 9],   12,   [2, 11],  36]
 
     @enemies[:b0] = ["Rosco the Drunk",         2,   4,   90,   25,   25,   11,   12,   100,    150, [3, 10],   10,    [1, 0],  25]
-    @enemies[:b4] = ["Babba-Yagga",             5,   4,  100,   28,   30,   15,   13,   120,    175,  [1, 6],   12,    [3, 1],  20]
-    @enemies[:b5] = ["Big Gay Yeti",            4,   5,  112,   30,   32,   10,   15,   128,    180,  [4, 5],   29,  [12, 10],  20]
+    @enemies[:b4] = ["Babba-Yagga",             5,   4,  100,   28,   30,   15,   13,   120,    175,  [1, 6],   12,    [1, 3],  20]
+    @enemies[:b5] = ["Big Gay Yeti",            4,   5,  112,   30,   32,   10,   15,   128,    180,  [4, 5],   29,    [1, 7],  35]
     @enemies[:b1] = ["Tiny",                    1,   7,  250,    0,   58,   25,   12,  1250,   2500,  [3, 9],   10,    [0, 0],   0]
     @enemies[:b2] = ["Lana",                    1,   9,  777,   86,   74,   58,   20,  3450,   7500, [10, 9],   25,    [2, 6],  33]
     @enemies[:b3] = ["Sexual Harrasment Panda", 4,  10, 1250,  108,   96,   64,   28,  7500,  10500, [8, 10],   33,    [2, 6],  20]

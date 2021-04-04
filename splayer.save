@@ -9,7 +9,7 @@ bag:
     5: 0
     6: 0
     7: 0
-    8: 0
+    8: 2
     9: 0
     10: 0
     11: 0
@@ -38,8 +38,8 @@ bag:
     11: 0
 equip:
   weapon:
-  - 8
-  - 8
+  - 0
+  - 0
   armor:
   - 3
 spells:
@@ -56,9 +56,9 @@ total_damage: 441
 damage_taken: 252
 race: :elf
 playername: Vash
-hp: 20
+hp: 31
 mhp: 32
-mp: 28
+mp: 60
 mmp: 60
 attack: 3
 defense: 4

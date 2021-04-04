@@ -32,6 +32,30 @@ class Enemy
     @turn = turn
   end
 
+  def get_valid_spells
+    var = @spells
+    can_heal = knows_heal_spells?
+    hppct = 100 * @hp / @mhp; hppct.to_i
+    var[0] = 0 if hppct >= 60 #disable heal spells if health over 60%
+    var.each {|spell| spell = 0 if Game_DB.spellbook(spell, 3) > @mp}
+    return var
+  end
+
+  def knows_heal_spells?
+    return true if @spells.any? {|spell| spell == 1 || spell == 2}
+    return false
+  end
+
+  def enemy_casting?
+    var = rand(1..100)
+    if var <= @spellchance
+      return true
+    else
+      return true if var > 95 unless @spellchance == 0
+      return false
+    end
+  end
+
   def dropinfo(read_chance=false)
     return @drops if !read_chance
     return @dropchance if read_chance
@@ -74,7 +98,8 @@ class Enemy
   end
 
   def useMP(amount)
-    @mp -= amount if @mp - amount < 0
+    @mp -= amount
+    @mp = 0 if @mp < 0
   end
 
 

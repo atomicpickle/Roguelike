@@ -322,18 +322,56 @@ class Game_Main
     efs = enemy_first_strike
     if @enemyturn == true || efs == true #force turn true on first strike attack ????
       # enemy attacks:
+      en_casting = @enemy.enemy_casting?
       if efs == true
         #enemy attacks first!
-        draw_flash(:red, 6)
-        pa "#{Game_DB.tx(:other, 0)}"
-        pa "#{Game_DB.tx(:other, 0)}"
-        pa "             #{@enemy.read_name} out maneuvers YOU and STRIKES FIRST!!!", :red
-        amount = Game_DB.calc_damage_alt2(@enemy.read_stat(:atk), @enemy.read_stat(:lvl), @player.final_stat(:def), @player.level, true)
-        @player.damage(:hp, amount)
-        pa "#{Game_DB.tx(:other, 0)}"
-        pa "#{Game_DB.tx(:other, 0)}"
-        pa "#{Game_DB.tx(:other, 0)}"
-        pa "             SMACK!!! #{@enemy.read_name} attacked YOU and did #{amount} damage!!!", :red
+        if en_casting #enemy casting a spell
+          en_spells = @enemy.get_valid_spells
+          en_healing = rand(1..2) if en_spells[0] > 0
+          en_healing = 2 if en_spells[0] == 0
+          if en_healing == 1 #enemy Heals
+            draw_flash(:blue, 6)
+            spcost = Game_DB.spellbook(en_spells[0], 3)
+            sprange = Game_DB.spellbook(en_spells[0], 2)
+            amount = Game_DB.calc_enemy_spell_damage(sprange, @enemy.read_stat(:lvl), @player.final_stat(:def), @player.level, true)
+            @enemy.healHP(amount)
+            @enemy.useMP(spcost)
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa "             #{@enemy.read_name} out maneuvers YOU and STRIKES FIRST!!!", :green
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa "             #{@enemy.read_name} cast the spell #{Game_DB.spellbook(en_spells[0], 0)} and healed #{amount} HP!!!!", :green
+            pa "             #{Game_DB.spellbook(en_spells[0], 4)}", :green
+          else #enemy doesnt heal, uses attack spell
+            draw_flash(:blue, 6)
+            spcost = Game_DB.spellbook(en_spells[1], 3)
+            sprange = Game_DB.spellbook(en_spells[1], 2)
+            amount = Game_DB.calc_enemy_spell_damage(sprange, @enemy.read_stat(:lvl), @player.final_stat(:def), @player.level, false)
+            @player.damage(:hp, amount)
+            @enemy.useMP(spcost)
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa "             #{@enemy.read_name} out maneuvers YOU and STRIKES FIRST!!!", :green
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa "             #{@enemy.read_name} cast the spell #{Game_DB.spellbook(en_spells[1], 0)} and did #{amount} damage!!!!", :red, :bright
+            pa "             #{Game_DB.spellbook(en_spells[1], 4)}", :red, :bright
+          end
+        else #enemy using physical attack
+          draw_flash(:red, 6)
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "             #{@enemy.read_name} out maneuvers YOU and STRIKES FIRST!!!", :red
+          amount = Game_DB.calc_damage_alt2(@enemy.read_stat(:atk), @enemy.read_stat(:lvl), @player.final_stat(:def), @player.level, true)
+          @player.damage(:hp, amount)
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "             SMACK!!! #{@enemy.read_name} attacked YOU and did #{amount} damage!!!", :red
+        end
         pa "#{Game_DB.tx(:other, 0)}"
         pa "#{Game_DB.tx(:other, 0)}"
         pa "#{Game_DB.tx(:other, 0)}"
@@ -342,14 +380,44 @@ class Game_Main
         @enemyturn = false
         @enemyhitfirst = true
       else
-        #enemy attacks!
-        draw_flash(:red, 2)
-        amount = Game_DB.calc_damage_alt2(@enemy.read_stat(:atk), @enemy.read_stat(:lvl), @player.final_stat(:def), @player.level, true)
-        @player.damage(:hp, amount)
-        pa "#{Game_DB.tx(:other, 0)}"
-        pa "#{Game_DB.tx(:other, 0)}"
-        pa "#{Game_DB.tx(:other, 0)}"
-        pa "             SMACK!!! #{@enemy.read_name} attacked YOU and did #{amount} damage!!!", :red
+        if en_casting #enemy casting a spell
+          en_spells = @enemy.get_valid_spells
+          en_healing = rand(1..2) if en_spells[0] > 0
+          en_healing = 2 if en_spells[0] == 0
+          if en_healing == 1 #enemy heals
+            draw_flash(:blue, 6)
+            spcost = Game_DB.spellbook(en_spells[0], 3)
+            sprange = Game_DB.spellbook(en_spells[0], 2)
+            amount = Game_DB.calc_enemy_spell_damage(sprange, @enemy.read_stat(:lvl), @player.final_stat(:def), @player.level, true)
+            @enemy.healHP(amount)
+            @enemy.useMP(spcost)
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa "             #{@enemy.read_name} cast the spell #{Game_DB.spellbook(en_spells[0], 0)} and healed #{amount} HP!!!!", :green
+            pa "             #{Game_DB.spellbook(en_spells[0], 4)}", :green
+          else #enemy attack spell
+            draw_flash(:blue, 6)
+            spcost = Game_DB.spellbook(en_spells[1], 3)
+            sprange = Game_DB.spellbook(en_spells[1], 2)
+            amount = Game_DB.calc_enemy_spell_damage(sprange, @enemy.read_stat(:lvl), @player.final_stat(:def), @player.level, false)
+            @player.damage(:hp, amount)
+            @enemy.useMP(spcost)
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa "             #{@enemy.read_name} cast the spell #{Game_DB.spellbook(en_spells[1], 0)} and did #{amount} damage!!!!", :red, :bright
+            pa "             #{Game_DB.spellbook(en_spells[1], 4)}", :red, :bright
+          end
+        else #enemy attacks
+          draw_flash(:red, 2)
+          amount = Game_DB.calc_damage_alt2(@enemy.read_stat(:atk), @enemy.read_stat(:lvl), @player.final_stat(:def), @player.level, true)
+          @player.damage(:hp, amount)
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "             SMACK!!! #{@enemy.read_name} attacked YOU and did #{amount} damage!!!", :red
+        end
         pa "#{Game_DB.tx(:other, 0)}"
         pa "#{Game_DB.tx(:other, 0)}"
         pa "#{Game_DB.tx(:other, 0)}"
@@ -373,10 +441,6 @@ class Game_Main
         pa "#{Game_DB.tx(:other, 0)}"
         pa "#{Game_DB.tx(:other, 0)}"
         pa "             SMACK!!! YOU attacked #{@enemy.read_name} and did #{amount} damage!!!", :red
-        pa "#{Game_DB.tx(:other, 0)}"
-        pa "#{Game_DB.tx(:other, 0)}"
-        pa "#{Game_DB.tx(:other, 0)}"
-        pa "                      #{Game_DB.tx(:other, 7)}"
       else
         # player casting spell!
         # calc_spell_damage(range, plvl, edef, elvl, heal=false)
@@ -404,6 +468,10 @@ class Game_Main
            pa "              You try to cast a spell without enough MP and waste your turn!", :magenta, :bright
         end
       end
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "                      #{Game_DB.tx(:other, 7)}"
       key = gets
       @enemyturn = true unless @enemyhitfirst
       @enemyhitfirst = false
