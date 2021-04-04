@@ -52,6 +52,8 @@ class Game_Main
     @update = false
     # Used to navigate the player menu [stats, bag, spells, save game, exit game]
     @submenu = [false, false, false, false, false]
+    # used to navigate item menu [weapons, armor, items]
+    @itemmenu = [false, false, false]
     startup_titlecard
   end
 
@@ -363,11 +365,6 @@ class Game_Main
     pa "#{Game_DB.tx(:other, 5)}"
   end
 
-#  Paint%['Yellow string with a %{blue_text} in it', :yellow,
-#  blue_text: ["blue text", :blue]
-#  ]
-# => "\e[33mYellow string with a \e[34mblue text\e[33m in it\e[0m"
-
   def clr
     system("cls")
   end
@@ -438,6 +435,7 @@ class Game_Main
     end
     if area == :menu
       draw_sub_menu
+      process_item_menu if @itemmenu.any? {|v| v == true}
       pa "          #{Game_DB.tx(:other, 1)}", :magenta
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
@@ -662,8 +660,37 @@ class Game_Main
       key = gets
       @submenu[0] = false
     elsif @submenu[1] #player inventory
-      #
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:cmd, 18)}"
+      pa "#{Game_DB.tx(:cmd, 19)}"
+      pa "#{Game_DB.tx(:cmd, 20)}"
+      pa "#{Game_DB.tx(:cmd, 26)}"
       @submenu[1] = false
+      loop do
+        key = gets.chomp.to_i
+        case key
+        when 1
+          #open weapons screen
+          @itemmenu[0] = true
+          break
+        when 2
+          #open armor screen
+          @itemmenu[1] = true
+          break
+        when 3
+          #open items screen
+          @itemmenu[2] = true
+          break
+        when 4
+          #back to main menu
+          @submenu[1] = false
+          break
+        end
+      end
     elsif @submenu[2] #player Spells
       #
       @submenu[2] = false
@@ -711,6 +738,121 @@ class Game_Main
           break
         end
       end
+    end
+    clr
+    draw_stats_main
+  end
+
+  def process_item_menu
+    clr
+    draw_stats_main
+    equiptextdata = {}
+    equiptextdata[:left] = @player.get_equipment_text(:left)
+    equiptextdata[:right] = @player.get_equipment_text(:right)
+    equiptextdata[:armor] = @player.get_equipment_text(:armor)
+    bag ={}
+    if @itemmenu[0] #weapons screen selected
+      bag = @player.read_item_bag(:weapons)
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "WEAPONS"
+      pa "Equipped:"
+      pa "    LEFT:  #{equiptextdata[:left][0]}, +#{equiptextdata[:left][1]} Attack, +#{equiptextdata[:left][2]} Speed"
+      pa "    RIGHT: #{equiptextdata[:right][0]}, +#{equiptextdata[:right][1]} Attack, +#{equiptextdata[:right][2]} Speed"
+      pa "Inventory: "
+      bag.each {|id, amt| pa "(#{id}) #{Game_DB.weapons_array(id, 0)}   x #{amt}" if amt > 0}
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:cmd, 21)}" #1 equip, 2 unequip, 4 back
+      pa "#{Game_DB.tx(:cmd, 22)}"
+      pa "#{Game_DB.tx(:cmd, 26)}"
+      loop do
+        key = gets.chomp.to_i
+        case key
+        when 1 #equip
+          clr
+          draw_stats_main
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "WEAPONS"
+          pa "Equipped:"
+          pa "    LEFT:  #{equiptextdata[:left][0]}, +#{equiptextdata[:left][1]} Attack, +#{equiptextdata[:left][2]} Speed"
+          pa "    RIGHT: #{equiptextdata[:right][0]}, +#{equiptextdata[:right][1]} Attack, +#{equiptextdata[:right][2]} Speed"
+          pa "Inventory: "
+          bag.each {|id, amt| pa "(#{id}) #{Game_DB.weapons_array(id, 0)}   x #{amt}" if amt > 0}
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "Equip which weapon? (choose number, (0) or invalid item to cancel)"
+          loop do
+            key = gets.chomp.to_i
+            break if bag.key?(key) == false
+            break if key == 0
+            if bag.key?(key) && bag[key] > 0
+              id = key
+              twohd = Game_DB.weapons_array(id, 3)
+              oldtwohd = Game_DB.weapons_array(@player.get_equipment_id(:lh), 3)
+              pa "(1) Left hand or (2) Right hand?     (0): Cancel"
+              key = gets.chomp.to_i
+              if key == 1
+                @player.unequip_weapon(3) if oldtwohd
+                @player.equip_weapon(id, 1) unless twohd
+                @player.equip_weapon(id, 3) if twohd
+                pa "Weapon #{@player.get_equipment_text(:left)[0]} has been equipped!"
+                key = gets
+              elsif key == 2
+                @player.unequip_weapon(3) if oldtwohd
+                @player.equip_weapon(id, 2) unless twohd
+                @player.equip_weapon(id, 3) if twohd
+                pa "Weapon #{@player.get_equipment_text(:right)[0]} has been equipped!"
+                key = gets
+              else
+                break
+              end
+              break
+            end
+          end
+
+          break
+        when 2 #unequip
+          clr
+          draw_stats_main
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "WEAPONS"
+          pa "Equipped:"
+          pa "    LEFT:  #{equiptextdata[:left][0]}, +#{equiptextdata[:left][1]} Attack, +#{equiptextdata[:left][2]} Speed"
+          pa "    RIGHT: #{equiptextdata[:right][0]}, +#{equiptextdata[:right][1]} Attack, +#{equiptextdata[:right][2]} Speed"
+          pa "Inventory: "
+          bag.each {|id, amt| pa "(#{id}) #{Game_DB.weapons_array(id, 0)}   x #{amt}" if amt > 0}
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "Unequip which weapon? (1) Left hand or (2) Right hand?     (0): Cancel"
+          twohd = Game_DB.weapons_array(@player.get_equipment_id(:lh), 3)
+          loop do
+            key = gets.chomp.to_i
+            break if key == 0
+            break if key > 2
+            if key == 1
+              @player.unequip_weapon(1)
+              @player.unequip_weapon(2) if twohd
+              pa "You unequipped your weapon from your Left hand and placed it in your bag"
+              key = gets
+              break
+            elsif key == 2
+              @player.unequip_weapon(2)
+              @player.unequip_weapon(1) if twohd
+              pa "You unequipped your weapon from your Right hand and placed it in your bag"
+              key = gets
+              break
+            end
+          end
+          break
+        when 4 #cancel/Back
+          @itemmenu[0] = false
+          break
+        end
+      end
+      @itemmenu[0] = false
+    elsif @itemmenu[1] #armor screen selected
+      #
+      @itemmenu[1] = false
+    elsif @itemmenu[2] #items screen selected
+      #
+      @itemmenu[2] = false
     end
     clr
     draw_stats_main

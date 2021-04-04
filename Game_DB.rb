@@ -121,6 +121,16 @@ module Game_DB
     @textdb[:cmd][16] = ["(1) Yes"]
     @textdb[:cmd][17] = ["(2) No"]
 
+    @textdb[:cmd][18] = ["(1) Weapons"]
+    @textdb[:cmd][19] = ["(2) Armor"]
+    @textdb[:cmd][20] = ["(3) Items"]
+    @textdb[:cmd][21] = ["(1) Equip"]
+    @textdb[:cmd][22] = ["(2) Unequip"]
+    @textdb[:cmd][23] = ["(1) Left Hand"]
+    @textdb[:cmd][24] = ["(2) Right Hand"]
+    @textdb[:cmd][25] = ["(1) Use Item"]
+    @textdb[:cmd][26] = ["(4) Back"]
+
     @textdb[:battle][6] = ["(A)ttack"]
     @textdb[:battle][7] = ["(S)pell"]
     @textdb[:battle][8] = ["(I)tem"]
@@ -140,8 +150,9 @@ module Game_DB
     @textdb[:other][9] = " Load your saved game?"
     @textdb[:other][10]= " Game loaded."
     @textdb[:other][11]= "███████████████████████████████████████████████████████████████████████████"
+    @textdb[:other][13]= ""
 
-    @textdb[:other][12]= " Version: Alpha 1.21.04.01            Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: Alpha 1.21.04.03            Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section, id)

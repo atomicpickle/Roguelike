@@ -28,3 +28,13 @@ h.each {|key, value| puts "#{key} is #{value}" }
 
 h = { "a" => 100, "b" => 200 }
 h.each_key {|key| puts key }
+
+
+%w[ant bear cat].all? { |word| word.length >= 3 } #=> true
+%w[ant bear cat].all? { |word| word.length >= 4 } #=> false
+%w[ant bear cat].all?(/t/)                        #=> false
+[1, 2i, 3.14].all?(Numeric)                       #=> true
+[nil, true, 99].all?                              #=> false
+[].all?                                           #=> true
+
+return if @submenu.all? { |v| v == false}

@@ -183,6 +183,13 @@ class Player
     end
   end
 
+  # returns equipment ID. :lh = left hand, :rh = right, :ar = armor
+  def get_equipment_id(item=:lh)
+    return @equip['weapon'][0] if item == :lh
+    return @equip['weapon'][1] if item == :rh
+    return @equip['armor'][0] if item == :ar
+  end
+
   def set_name(name)
     @playername = name if name.is_a? String
   end
@@ -350,7 +357,7 @@ class Player
   #hand = 1 for left, 2 for right, 3 for 2handed weapon
   def equip_weapon(weaponid, hand)
     return if hand <= 0 && hand >= 4 || hand == nil
-    return unless @bag[:weapons][weapon_id] > 0
+    return unless @bag[:weapons][weaponid] > 0
     if hand == 1 # left hand
       unequip_weapon(hand)
       remove_item(:weapon, weaponid)
