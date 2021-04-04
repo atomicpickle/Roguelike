@@ -107,6 +107,7 @@ class Game_Main
     end
   end
 
+  # :red, :blue, :level
   def draw_flash(color=:red, ticks=6)
     flashbar = Game_DB.tx(:other, 11)
     flasher = 0
@@ -118,6 +119,7 @@ class Game_Main
         pa "\n"
         pa "\n"
         pa "\n"
+        pa "\r#{flashbar}", :red, :bright if flasher.even?
         pa "\r#{flashbar}", :red if flasher.even?
         pa "\r#{flashbar}", :red if flasher.even?
         pa "\r#{flashbar}", :red if flasher.even?
@@ -126,12 +128,35 @@ class Game_Main
         pa "\r#{flashbar}", :red if flasher.odd?
         pa "\r#{flashbar}", :red if flasher.odd?
         pa "\r#{flashbar}", :red if flasher.odd?
+        pa "\r#{flashbar}", :red, :bright if flasher.odd?
         sleep 0.01
       end
       clr
       draw_stats_main
     elsif color == :blue
       #
+    elsif color == :level
+      ticks.times do
+        clr
+        draw_stats_main
+        flasher += 1
+        pa "\n"
+        pa "\n"
+        pa "\n"
+        pa "\r#{flashbar}", :green if flasher.even?
+        pa "\r#{flashbar}", :green if flasher.even?
+        pa "\r#{flashbar}", :green if flasher.even?
+        pa "\r#{flashbar}", :green if flasher.even?
+        pa "\n"
+        pa "\n"
+        pa "\r#{flashbar}", :blue if flasher.even?
+        pa "\r#{flashbar}", :blue if flasher.odd?
+        pa "\r#{flashbar}", :blue if flasher.odd?
+        pa "\r#{flashbar}", :blue if flasher.odd?
+        sleep 0.01
+      end
+      clr
+      draw_stats_main
     end
   end
 
@@ -306,9 +331,31 @@ class Game_Main
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
       pa "                           #{Game_DB.tx(:other, 7)}"
+      user_cur = Game_DB.level_stats_array(@player.race, @player.level)
       @player.add_exp(@enemy.read_stat(:exp))
       @player.add_gold(@enemy.read_stat(:gold))
+      user_new = Game_DB.level_stats_array(@player.race, @player.level)
       key = gets
+      if @player.levelUP
+        @player.levelUP = false
+        draw_flash(:level, 10)
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "                    YOU HAVE LEVELED UP!!!"
+        pa "                    Level:   #{@player.level-1} => #{@player.level}", :blue, :bright
+        pa "                    Max HP:  #{user_cur[0]} => #{user_new[0]}", :green
+        pa "                    Max MP:  #{user_cur[1]} => #{user_new[1]}", :magenta
+        pa "                    Attack:  #{user_cur[2]} => #{user_new[2]}", :red, :bright
+        pa "                    Defense: #{user_cur[3]} => #{user_new[3]}", :green, :bright
+        pa "                    Speed:   #{user_cur[4]} => #{user_new[4]}", :yellow, :bright
+        pa "#{Game_DB.tx(:other, 0)}"
+        if user_new[4] != nil #new spell learned
+          spname = Game_DB.spellbook(user_new[4], 0)
+          pa "                    You learned the spell #{spname}!", :yellow
+        end
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "                           #{Game_DB.tx(:other, 7)}"
+        key = gets
+      end
       @battle = false
       @enemy = 0
       @enemyturn = false
@@ -632,6 +679,11 @@ class Game_Main
     equiptextdata[:right] = @player.get_equipment_text(:right)
     equiptextdata[:armor] = @player.get_equipment_text(:armor)
     if @submenu[0] #player stats display
+      spells = @player.spells_learned
+      sp_names = []
+      spells.each {|i| sp_names.push Game_DB.spellbook(i, 0) }
+      names_conc = ""
+      sp_names.each {|i| names_conc << i + ", "}
       pa "#{Game_DB.tx(:other, 2)}", :blue
       pa "#{Game_DB.tx(:other, 0)}"
       pa "                  Name:          #{@player.playername}", :blue, :bright
@@ -646,7 +698,7 @@ class Game_Main
       pa "                  Defense Power: #{@player.final_stat(:def)}", :green, :bright
       pa "                  Speed:         #{@player.read_stat(:spd)}", :yellow, :bright
       pa "                  Total Speed:   #{@player.final_stat(:spd)}", :yellow, :bright
-      pa "                  Spells Known:  #{@player.spells_learned}", :yellow, :bright
+      pa "                  Spells Known:  #{names_conc}", :yellow, :bright
       pa "                  Equipment:", :magenta
       pa "                    Left Hand  : #{equiptextdata[:left][0]} +#{equiptextdata[:left][1]} Attack, +#{equiptextdata[:left][2]} Speed", :magenta, :bright
       pa "                    Right Hand : #{equiptextdata[:right][0]} +#{equiptextdata[:right][1]} Attack, +#{equiptextdata[:right][2]} Speed", :magenta, :bright

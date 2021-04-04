@@ -25,39 +25,41 @@ bag:
     8: 0
   :items:
     0: 0
-    1: 4
+    1: 0
     2: 0
     3: 0
-    4: 2
+    4: 0
     5: 0
     6: 0
-    7: 8
-    8: 8
-    9: 12
-    10: 12
-    11: 24
+    7: 0
+    8: 0
+    9: 0
+    10: 0
+    11: 0
 equip:
   weapon:
   - 2
   - 0
   armor:
   - 1
-spells: []
-gold: 0
-exp: 0
-level: 0
+spells:
+- 1
+- 2
+gold: 14
+exp: 16
+level: 1
 levelUP: false
-total_damage: 0
-damage_taken: 0
-race: :dwarf
-playername: 'Trogg Journey '
-hp: 14
-mhp: 14
-mp: 0
-mmp: 0
+total_damage: 61
+damage_taken: 29
+race: :elf
+playername: Vash
+hp: 15
+mhp: 15
+mp: 13
+mmp: 13
 attack: 2
-defense: 1
-speed: 1
+defense: 2
+speed: 2
 added_stats:
   :hp: 0
   :mp: 0

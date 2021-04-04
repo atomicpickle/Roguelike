@@ -1,9 +1,5 @@
 =begin
-
-@levelUP sets to true after a player has leveled. Needs display logic fetch
-
-
-Commands reference
+Commands reference (incomplete)
 Player.set_name("name")
 Player.set_race(:race)
 Player.add_gold(value)
