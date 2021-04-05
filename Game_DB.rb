@@ -171,7 +171,7 @@ module Game_DB
     @textdb[:other][2] = " This screen shows your detailed player stats."
     @textdb[:other][3] = " Press <ENTER> to return to the previous screen."
     @textdb[:other][4] = " ARE YOU SURE YOU WANT TO EXIT THE GAME? UNSAVED PROGRESS WILL BE LOST!"
-    @textdb[:other][5] = "=================================================================================="
+    @textdb[:other][5] = "========================================================================================"
     @textdb[:other][6] = " Are you sure you want to Save? your old save will be overwritten."
     @textdb[:other][7] = " Press <ENTER> to continue... "
     @textdb[:other][8] = " Game Saved."
@@ -269,19 +269,19 @@ module Game_DB
       res = 0
       if b1 > 0 #enemy higher level
         en1 = edef * 0.50; en1.to_i
-        b2 = rand(1..5) if elvl < 5
+        b2 = rand(1..5) if elvl <= 3
         en2 = rand(0..b2)
         en3 = en1 + en2
         en4 = sel - en3
-        en4 *= 0.70 if elvl < 5
+        en4 *= 0.70 if elvl <= 3
         res = en4 * 0.8; res.to_i
       else # enemy same or lower level
         en1 = edef * 0.60; en1.to_i
-        b2 = rand(1..5) if elvl < 5
+        b2 = rand(1..5) if elvl <= 3
         en2 = rand(0..b2)
         en3 = en1 + en2
         en4 = sel - en3
-        en4 *= 0.9 if elvl < 5
+        en4 *= 0.9 if elvl <= 3
         res = en4 * 1.2; res.to_i
       end
       res = 1 if res < 1

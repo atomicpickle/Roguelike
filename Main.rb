@@ -628,11 +628,13 @@ class Game_Main
     @stats[6] = expneed[1]
     @stats[7] = @player.gold
     @stats[8] = @player.playername
+    exppct = 100 * @player.exp / expneed[1]
+    exppct = exppct.to_i
     hppct = @stats[1].to_f / @stats[2].to_f * 100.to_i
     bgcolor = :black
     bgcolor = :red if hppct <= 30
     pa "#{Game_DB.tx(:other, 5)}"
-    pa "NAME: #{@stats[8]}   LEVEL: #{@stats[0]}    HP: #{@stats[1]}/#{@stats[2]}     MP: #{@stats[3]}/#{@stats[4]}   EXP: #{@stats[5]}/#{@stats[6]}   GOLD: #{@stats[7]}", :white, bgcolor
+    pa "NAME: #{@stats[8]}   LEVEL: #{@stats[0]}    HP: #{@stats[1]}/#{@stats[2]}     MP: #{@stats[3]}/#{@stats[4]}   EXP: #{@stats[5]}/#{@stats[6]}(#{exppct}%)   GOLD: #{@stats[7]}", :white, bgcolor
     pa "#{Game_DB.tx(:other, 5)}"
   end
 
