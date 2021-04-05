@@ -24,8 +24,7 @@ bag:
     7: 0
     8: 0
   :items:
-    0: 0
-    1: 1
+    1: 2
     2: 0
     3: 0
     4: 0
@@ -36,29 +35,30 @@ bag:
     9: 0
     10: 0
     11: 0
+    0: 0
 equip:
   weapon:
   - 1
-  - 0
+  - 2
   armor:
-  - 0
+  - 1
 spells: []
 gold: 5
-exp: 7
-level: 0
+exp: 68
+level: 2
 levelUP: false
-total_damage: 31
-damage_taken: 10
+total_damage: 259
+damage_taken: 64
 badges: []
 race: :dwarf
 playername: Geoff Targyan
-hp: 4
-mhp: 14
+hp: 16
+mhp: 25
 mp: 0
 mmp: 0
-attack: 2
-defense: 1
-speed: 1
+attack: 7
+defense: 4
+speed: 2
 added_stats:
   :hp: 0
   :mp: 0

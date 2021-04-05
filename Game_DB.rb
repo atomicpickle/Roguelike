@@ -171,7 +171,7 @@ module Game_DB
     @textdb[:other][2] = " This screen shows your detailed player stats."
     @textdb[:other][3] = " Press <ENTER> to return to the previous screen."
     @textdb[:other][4] = " ARE YOU SURE YOU WANT TO EXIT THE GAME? UNSAVED PROGRESS WILL BE LOST!"
-    @textdb[:other][5] = "=============================================================================="
+    @textdb[:other][5] = "=================================================================================="
     @textdb[:other][6] = " Are you sure you want to Save? your old save will be overwritten."
     @textdb[:other][7] = " Press <ENTER> to continue... "
     @textdb[:other][8] = " Game Saved."
@@ -462,11 +462,11 @@ module Game_DB
     @enemies[4]  =  ["Beautiful Hawk",          4,   2,   15,    0,    8,    3,   10,     7,      9,  [1, 2],   10,    [0, 0],   0]
     @enemies[5]  =  ["Blacktail Deer",          4,   2,   18,    0,    8,    4,   12,     9,      5,  [1, 2],   10,    [0, 0],   0]
     @enemies[6]  =  ["Adorable Fox",            4,   3,   19,    0,   12,    5,   13,    12,     15,  [1, 2],   10,    [0, 0],   0]
-    @enemies[7]  =  ["Angry Bird",              4,   3,   22,    0,   14,    6,   13,    18,     22,  [1, 2],   10,    [0, 0],   0]
+    @enemies[7]  =  ["Angry Bird",              4,   3,   22,    0,   14,    6,   14,    18,     22,  [1, 2],   10,    [0, 0],   0]
     @enemies[8]  =  ["Blazing Skull",           5,   4,   30,   10,   18,    6,   15,    26,     28, [10, 9],   10,    [1, 6],  30]
-    @enemies[9]  =  ["Syren",                   5,   4,   30,   16,   20,    9,   13,    38,     35,  [6, 5],   20,    [1, 4],  40]
-    @enemies[10] =  ["Ipotane",                 4,   4,   32,   14,   22,   12,   15,    40,     35,  [6, 7],   20,    [4, 3],  40]
-    @enemies[11] =  ["F**king Tiger",           4,   5,   52,    0,   26,   10,   17,    44,     40,  [3, 9],    8,    [0, 0],   0]
+    @enemies[9]  =  ["Syren",                   5,   4,   30,   16,   20,    9,   16,    38,     35,  [6, 5],   20,    [1, 4],  40]
+    @enemies[10] =  ["Ipotane",                 4,   4,   32,   14,   22,   12,   17,    40,     35,  [6, 7],   20,    [4, 3],  40]
+    @enemies[11] =  ["F**king Tiger",           4,   5,   52,    0,   26,   10,   18,    44,     40,  [3, 9],    8,    [0, 0],   0]
     @enemies[12] =  ["Black Zebra",             4,   5,   54,    0,   25,   20,   19,    38,     90,  [3, 7],    8,    [0, 0],   0]
     @enemies[13] =  ["Giant C**t of a Rhino",   4,   6,   96,    0,   36,   40,   22,   110,     35, [10, 9],    5,    [0, 0],   0]
     @enemies[14] =  ["Shortneck Angry Giraffe", 4,   6,  118,    0,   37,   46,   26,   116,    104,  [8, 7],    5,    [0, 0],   0]
@@ -487,16 +487,16 @@ module Game_DB
   def populate_experience_req_db
     #                     [amount, total]
     @experience_req[0]  = [     0,     0]
-    @experience_req[1]  = [    16,    16]
-    @experience_req[2]  = [    50,    66]
-    @experience_req[3]  = [   106,   172]
-    @experience_req[4]  = [   220,   392]
-    @experience_req[5]  = [   450,   842]
-    @experience_req[6]  = [   908,  1750]
-    @experience_req[7]  = [  1250,  3000]
-    @experience_req[8]  = [  1750,  4750]
-    @experience_req[9]  = [  2500,  7250]
-    @experience_req[10] = [  4000, 11250]
+    @experience_req[1]  = [    14,    14]
+    @experience_req[2]  = [    40,    54]
+    @experience_req[3]  = [   106,   160]
+    @experience_req[4]  = [   214,   374]
+    @experience_req[5]  = [   406,   780]
+    @experience_req[6]  = [   664,  1444]
+    @experience_req[7]  = [   996,  2440]
+    @experience_req[8]  = [  1044,  3484]
+    @experience_req[9]  = [  1656,  5140]
+    @experience_req[10] = [  3004,  8144]
     @experience_req[11] = [150000,166090]
   end
 
