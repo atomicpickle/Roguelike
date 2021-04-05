@@ -1,7 +1,7 @@
 # RoguelikeRubyArena
  hmm... well its a text game.
  run main to start the game.
- 
+
 
  Nearly ready to call this a beta release!
 
@@ -9,6 +9,7 @@
   - arena battles
 
 completed
+  - difficulty rating for battles
   - arena badges
   - tavern functions as an inn
   - common items shop

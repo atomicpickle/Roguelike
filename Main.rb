@@ -212,10 +212,30 @@ class Game_Main
     update
   end
 
-  def battle_draw
-    pa "#{Game_DB.tx(:other, 5)}", :green
-    pa "                          #{Game_DB.tx(:battle, 0)}", :green, :bright
-    pa "#{Game_DB.tx(:other, 5)}", :green
+  def battle_draw(arena=false)
+    if !arena
+      #wild battle
+      rating = Game_DB.battle_diff(@player.level, @enemy.read_stat(:lvl))
+      diff = wild_enemy_difficulty
+      if diff == 0
+        pa "#{Game_DB.tx(:other, 5)}", :green
+        pa " #{rating}", :green
+        pa "#{Game_DB.tx(:other, 5)}", :green
+      elsif diff == 1
+        pa "#{Game_DB.tx(:other, 5)}", :yellow
+        pa " #{rating}", :yellow
+        pa "#{Game_DB.tx(:other, 5)}", :yellow
+      elsif diff == 2
+        pa "#{Game_DB.tx(:other, 5)}", :red
+        pa " #{rating}", :red
+        pa "#{Game_DB.tx(:other, 5)}", :red
+      end
+    else
+      #arena battle
+      pa "#{Game_DB.tx(:other, 5)}", :red
+      pa "                  #{Game_DB.tx(:battle, 1)}", :red, :bright
+      pa "#{Game_DB.tx(:other, 5)}", :red
+    end
     pa "#{Game_DB.tx(:other, 0)}"
     pa "Enemy Stats: ", :red
     pa "NAME: #{@enemy.read_name}", :red, :bright
@@ -231,6 +251,13 @@ class Game_Main
     pa "#{Game_DB.tx(:other, 0)}"
     process_battle_input
     update
+  end
+
+  def wild_enemy_difficulty
+    res = @enemy.read_stat(:lvl) - @player.level
+    return 0 if res < 0
+    return 1 if res == 0
+    return 2 if res > 0
   end
 
   def process_battle_input

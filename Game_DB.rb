@@ -151,8 +151,11 @@ module Game_DB
     @textdb[:battle][7] = ["(S)pell"]
     @textdb[:battle][8] = ["(I)tem"]
     @textdb[:battle][9] = ["(R)un"]
-    @textdb[:battle][0] = "ACTIVE BATTLE: IN THE WILD"
+    @textdb[:battle][0] = "ACTIVE BATTLE: IN THE WILD                                          "
     @textdb[:battle][1] = "ACTIVE BATTLE: ARENA"
+    @textdb[:battle][2] = "DIFFICULTY: EASY"
+    @textdb[:battle][3] = "DIFFICULTY: MEDIUM"
+    @textdb[:battle][4] = "DIFFICULTY: HARD"
 
     @textdb[:badges][0] = '<{^}>'
     @textdb[:badges][1] = '<{1}>'
@@ -259,6 +262,22 @@ module Game_DB
 
   def clr
     system("cls")
+  end
+
+  def battle_diff(plvl, elvl)
+    res = elvl - plvl
+    base = tx(:battle, 0).dup
+    diff = [tx(:battle, 2).dup, tx(:battle, 3).dup, tx(:battle, 4).dup]
+    if res < 0
+      base << diff[0]
+      return base
+    elsif res == 0
+      base << diff[1]
+      return base
+    elsif res > 0
+      base << diff[2]
+      return base
+    end
   end
 
   #returns TRUE if enemy gets first strike, includes RANDOM roll
