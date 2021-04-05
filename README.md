@@ -1,7 +1,7 @@
 # RoguelikeRubyArena
  hmm... well its a text game.
  run main to start the game.
- change values in your save to modify your worn equipment.
+ 
 
  Nearly ready to call this a beta release!
 
