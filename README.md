@@ -2,12 +2,14 @@
  hmm... well its a text game.
  run main to start the game.
  change values in your save to modify your worn equipment.
+ 
+ Nearly ready to call this a beta release!
 
  in progress (not ordered)
-  - common items shop
   - arena battles
 
 completed
+  - common items shop
   - armor shop
   - weapons shop
   - spell usage (for enemies)
