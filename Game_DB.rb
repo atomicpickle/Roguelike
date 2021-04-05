@@ -132,6 +132,7 @@ module Game_DB
 
     @textdb[:cmd][14] = ["(N) New Game"]
     @textdb[:cmd][15] = ["(L) Load Game"]
+    @textdb[:cmd][103]= ["(C) Game Credits + Exit"]
     @textdb[:cmd][16] = ["(1) Yes"]
     @textdb[:cmd][17] = ["(2) No"]
 

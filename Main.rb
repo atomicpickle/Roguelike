@@ -1663,6 +1663,7 @@ class Game_Main
     pa "\n"
     pa "#{Game_DB.tx(:cmd, 14)}", :cyan
     pa "#{Game_DB.tx(:cmd, 15)}", :cyan
+    pa "#{Game_DB.tx(:cmd, 103)}", :cyan
     loop do
       key = gets.chomp.downcase
       case key
@@ -1690,7 +1691,10 @@ class Game_Main
             break
           end
         end
-
+      when "c"
+        #credits
+        pa "#{File.read("credits.txt")}", :green, :bright
+        break
       end
     end
   end
