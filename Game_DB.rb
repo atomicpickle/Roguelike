@@ -92,7 +92,7 @@ module Game_DB
     @textdb[:common][8]  = " You stand at the enterance to the Arena. An angry looking man \n guards the main enterance. He takes one look at you, laughs \n and tells you to come back when you got some meat on you."
     @textdb[:common][9]  = " To your SOUTH is the center of Dracilix City."
 
-    @textdb[:common][10] = " You make your way through some dense Brush, barely any sunlight \n pierces the thick canopy of the forest. You hear something. \n Continue to (L)ook around or select a target."
+    @textdb[:common][10] = " You make your way through some dense Brush, barely any sunlight \n pierces the thick canopy of the forest. You hear something. \n Continue to (L)ook (A)round or select a target."
     @textdb[:common][11] = " You walk into the Tavern. The Bartender Greets you."
     @textdb[:common][12] = " To your EAST is the center of Dracilix City."
 
@@ -455,9 +455,9 @@ module Game_DB
 
   def populate_enemies_db #races: ghost(0), dwarf(1), human(2), elf(3), animal(4), demon(5)
     #                #[Enemy name,             race, lvl,  mhp,  mmp,  atk,  def,  spd,   exp,   gold, [drops],drop%,  [spells], sp%]
-    @enemies[:g1] = ["Lost Spirit",             0,   0,    1,    3,    0,    0,    5,     4,      0,  [8, 7],    5,    [3, 0],  20]
-    @enemies[:g2] = ["Angry Spirit",            0,   5,   33,   24,    5,    0,   15,    10,      0,  [8, 7],   10,    [3, 4],  25]
-    @enemies[:g3] = ["Girl From The Ring",      0,   7,  166,   48,   22,    9,   19,    66,      6,  [8, 7],   10,    [1, 4],  25]
+    @enemies[:g1] = ["Lost Spirit",             0,   0,    1,    3,    0,    0,    5,     4,      0,  [8, 7],    5,    [1, 0],  33]
+    @enemies[:g2] = ["Angry Spirit",            0,   5,   33,   24,    5,    0,   15,    10,      0,  [8, 7],   10,    [1, 4],  40]
+    @enemies[:g3] = ["Girl From The Ring",      0,   7,  166,   48,   22,    9,   19,    66,      6,  [8, 7],   10,    [1, 8],  40]
 
     @enemies[0]  =  ["Emptyness",               0,   0,    1,    0,    0,    0,    0,     0,      0,  [0, 0],    1,    [0, 0],   0]
     @enemies[1]  =  ["Butterfly",               4,   0,    7,    0,    2,    1,    6,     2,      1,  [1, 2],   25,    [0, 0],   0]
@@ -467,24 +467,24 @@ module Game_DB
     @enemies[5]  =  ["Blacktail Deer",          4,   2,   18,    0,    8,    4,   12,     9,      5,  [1, 2],   10,    [0, 0],   0]
     @enemies[6]  =  ["Adorable Fox",            4,   3,   19,    0,   12,    5,   13,    12,     15,  [1, 2],   10,    [0, 0],   0]
     @enemies[7]  =  ["Angry Bird",              4,   3,   22,    0,   14,    6,   14,    18,     22,  [1, 2],   10,    [0, 0],   0]
-    @enemies[8]  =  ["Blazing Skull",           5,   4,   30,   10,   18,    6,   15,    26,     28, [10, 9],   10,    [1, 6],  30]
-    @enemies[9]  =  ["Syren",                   5,   4,   30,   16,   20,    9,   16,    38,     35,  [6, 5],   20,    [1, 4],  40]
-    @enemies[10] =  ["Ipotane",                 4,   4,   32,   14,   22,   12,   17,    40,     35,  [6, 7],   20,    [4, 3],  40]
+    @enemies[8]  =  ["Blazing Skull",           5,   4,   30,   10,   18,    6,   15,    26,     28, [10, 9],   10,    [1, 4],  45]
+    @enemies[9]  =  ["Syren",                   5,   4,   30,   16,   20,    9,   16,    38,     35,  [6, 5],   20,    [1, 5],  45]
+    @enemies[10] =  ["Ipotane",                 4,   4,   32,   14,   22,   12,   17,    40,     35,  [6, 7],   20,    [1, 6],  45]
     @enemies[11] =  ["F**king Tiger",           4,   5,   52,    0,   26,   10,   18,    44,     40,  [3, 9],    8,    [0, 0],   0]
     @enemies[12] =  ["Black Zebra",             4,   5,   54,    0,   25,   20,   19,    38,     90,  [3, 7],    8,    [0, 0],   0]
     @enemies[13] =  ["Giant C**t of a Rhino",   4,   6,   96,    0,   36,   40,   22,   110,     35, [10, 9],    5,    [0, 0],   0]
     @enemies[14] =  ["Shortneck Angry Giraffe", 4,   6,  118,    0,   37,   46,   26,   116,    104,  [8, 7],    5,    [0, 0],   0]
     @enemies[15] =  ["Longma",                  4,   6,  120,   25,   35,   50,   28,   100,    112,  [8, 6],   25,    [2, 7],  45]
     @enemies[16] =  ["Gay Horny Jinn",          5,   7,  135,   28,   42,   56,   35,   215,    175,  [9, 7],   15,   [2, 11],  40]
-    @enemies[17] =  ["Cute Velociraptor",       4,   7,  184,   20,   47,   55,   30,   224,    175, [9, 10],   10,    [1, 0],  25]
-    @enemies[18] =  ["Electric Floating Skull", 5,   8,  256,   70,   54,   50,   32,   300,    225,  [8, 9],   12,   [2, 11],  36]
+    @enemies[17] =  ["Cute Velociraptor",       4,   7,  184,   20,   47,   55,   30,   224,    175, [9, 10],   10,    [1, 0],  33]
+    @enemies[18] =  ["Electric Floating Skull", 5,   8,  256,   70,   54,   50,   32,   300,    225,  [8, 9],   12,   [2, 11],  40]
 
-    @enemies[:b0] = ["Rosco the Drunk",         2,   5,  112,   24,   24,   15,   15,   150,    100, [3, 10],   10,    [1, 0],  25]
-    @enemies[:b4] = ["Babba-Yagga",             5,   4,  100,   28,   30,   15,   13,   120,    175,  [1, 6],   12,    [1, 3],  20]
+    @enemies[:b0] = ["Rosco the Drunk",         2,   4,  112,   24,   24,   15,   15,   150,    100, [3, 10],   10,    [1, 0],  25]
+    @enemies[:b4] = ["Babba-Yagga",             5,   5,  100,   28,   30,   15,   13,   120,    175,  [1, 6],   12,    [1, 3],  30]
     @enemies[:b5] = ["Big Gay Yeti",            4,   5,  112,   30,   32,   10,   15,   128,    180,  [4, 5],   30,    [1, 7],  35]
     @enemies[:b1] = ["Tiny",                    1,   7,  250,    0,   58,   25,   12,  1250,   2500,  [3, 9],   10,    [0, 0],   0]
-    @enemies[:b2] = ["Lana",                    1,   9,  777,   86,   74,   58,   20,  3450,   7500, [10, 9],   25,    [2, 6],  33]
-    @enemies[:b3] = ["Sexual Harrasment Panda", 4,  10, 1250,  108,   96,   64,   28,  7500,  10500, [8, 10],   33,    [2, 6],  20]
+    @enemies[:b2] = ["Lana",                    1,   9,  777,   86,   74,   58,   20,  3450,   7500, [10, 9],   25,    [2, 6],  40]
+    @enemies[:b3] = ["Sexual Harrasment Panda", 4,  10, 1250,  108,   96,   64,   28,  7500,  10500, [8, 10],   33,    [2, 6],  40]
   end
 
   #key for experience_req = level (So experience_req[3] = exp for level 3)
