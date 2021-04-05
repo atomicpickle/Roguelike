@@ -747,7 +747,7 @@ class Game_Main
   end
 
   def process_shop_menu
-    if @shopmenu[0] #weapons shop
+    if @shopmenu[0] #============================   weapons shop   ===============================
       loop do
         clr
         draw_stats_main
@@ -762,12 +762,10 @@ class Game_Main
         when 1 #buy
           clr
           draw_stats_main
-          #  bag.each {|id, amt| pa "  (#{id}) #{Game_DB.weapons_array(id, 0)}   x #{amt}"}
           shopbag = Game_DB.weapons_array
-          #shopbag.delete_if {|k, v| k == 0}
           bagkeys = shopbag.keys
           bagkeys.delete_if {|i| i == 0}
-          shopbag.each {|id, value| pa  "(#{id}): #{value[0]},  ATTACK: #{value[1]}, SPEED: #{value[2]}, 2 HANDED: #{value[3]}, COST: #{value[4]}", :green unless id == 0 }
+          shopbag.each {|id, value| pa  "(#{id}): #{value[0]}, ATTACK: #{value[1]}, SPEED: #{value[2]}, 2-HANDED: #{value[3]}\n   > COST: #{value[4]}", :green unless id == 0 }
           pa "#{Game_DB.tx(:other, 0)}"
           pa "#{Game_DB.tx(:common, 22)}", :green, :bright
           loop do
@@ -819,9 +817,77 @@ class Game_Main
           break
         end
       end
-    elsif @shopmenu[1] #armor shop
-      #
-    elsif @shopmenu[2] #commons shop
+    elsif @shopmenu[1] #==========================   armor shop   ==================================
+      loop do
+        clr
+        draw_stats_main
+        pa "#{Game_DB.tx(:common, 19)}", :green
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "#{Game_DB.tx(:cmd, 4)}", :cyan
+        pa "#{Game_DB.tx(:cmd, 5)}", :cyan
+        pa "#{Game_DB.tx(:cmd, 103)}", :cyan
+        key = gets.chomp.to_i
+        case key
+        when 1 #buy
+          clr
+          draw_stats_main
+          shopbag = Game_DB.armor_array
+          bagkeys = shopbag.keys
+          bagkeys.delete_if {|i| i == 0}
+          shopbag.each {|id, value| pa  "(#{id}): #{value[0]},  DEFENSE: #{value[1]}, SPEED: #{value[2]}\n   > COST: #{value[3]}", :green unless id == 0 }
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "#{Game_DB.tx(:common, 22)}", :green, :bright
+          loop do
+            key = gets.chomp.to_i
+            if bagkeys.include?(key)
+              if @player.gold >= shopbag[key][3]
+                @player.remove_gold(shopbag[key][3])
+                @player.add_item(:armor, key)
+                pa "#{Game_DB.tx(:other, 0)}"
+                pa " You purchased #{shopbag[key][0]} for #{shopbag[key][3]} gold! Dont forget to equip it!", :green, :bright
+                key = gets
+                break
+              else
+                pa " You don't have enough gold!", :red
+                break
+              end
+            elsif key == 0
+              @shopmenu[1] = false
+              break
+            end
+          end
+        when 2 #sell
+          clr
+          draw_stats_main
+          pbag = @player.read_item_bag(:armor)
+          pbag.delete_if{|k, v| k == 0}
+          pbagkeys = pbag.keys
+          fullbag = Game_DB.armor_array
+          pbag.each {|k, v| pa "(#{k}): #{fullbag[k][0]}, SELL PRICE: #{fullbag[k][3]/2.to_i}", :green unless pbag[k] == 0}
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "#{Game_DB.tx(:common, 23)}", :green, :bright
+          loop do
+            key = gets.chomp.to_i
+            if pbagkeys.include?(key)
+              amt = fullbag[key][3] / 2; amt = amt.to_i
+              @player.add_gold(amt)
+              @player.remove_item(:armor, key)
+              pa "#{Game_DB.tx(:other, 0)}"
+              pa "You sold #{fullbag[key][0]} for a mere #{amt} Gold. You feel somewhat cheated...", :green, :bright
+              key = gets
+              break
+            elsif key == 0
+              @shopmenu[1] = false
+              break
+            end
+          end
+        when 3 #exit
+          @shopmenu[1] = false
+          break
+        end
+      end
+    elsif @shopmenu[2] #================================   commons shop   ================================
       #
     end
     clr

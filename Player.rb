@@ -315,9 +315,9 @@ class Player
         power = weap[1]
         left = var + power
         if !weap[3] && rh != 0 #two 1 handed weaps equipped?
-          weap = Game_DB.weapons_array(rh)
-          power = weap[1]
-          right = var + power
+          weap2 = Game_DB.weapons_array(rh)
+          power2 = weap2[1]
+          right = power2
           result = left + right  #return attack of both weaps
           return result
         end

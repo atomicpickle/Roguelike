@@ -1,7 +1,6 @@
 --- !ruby/object:Player
 bag:
   :weapons:
-    0: 0
     1: 0
     2: 0
     3: 0
@@ -12,7 +11,8 @@ bag:
     8: 0
     9: 0
     10: 0
-    11: 1
+    11: 0
+    0: 0
   :armor:
     0: 0
     1: 0
@@ -39,11 +39,11 @@ bag:
 equip:
   weapon:
   - 1
-  - 0
+  - 5
   armor:
-  - 0
+  - 4
 spells: []
-gold: 33
+gold: 5613
 exp: 32
 level: 1
 levelUP: false
