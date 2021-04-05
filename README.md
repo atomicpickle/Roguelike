@@ -4,10 +4,11 @@
  change values in your save to modify your worn equipment.
  
  in progress (not ordered)
-  - shop system
+  - shop system (armor and items shops)
   - arena battles
 
 completed
+  - weapons shop 
   - spell usage (for enemies)
   - item usage in battle
   - enemy item drops
