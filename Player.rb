@@ -354,7 +354,8 @@ class Player
       rh = @equip['weapon'][1]
       armor = @equip['armor'][0]
       wspd = 0; aspd = 0 #containers used for final values
-      if lh == rh #2 handed weapon
+      weap2chk = Game_DB.weapons_array(lh)
+      if weap2chk[3] #2 handed weapon
         weap = Game_DB.weapons_array(lh)
         wspd = weap[2]
       elsif lh != 0 || rh != 0 #left or right handed, or two one handed weaps

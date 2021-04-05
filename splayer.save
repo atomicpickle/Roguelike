@@ -12,7 +12,6 @@ bag:
     9: 0
     10: 0
     11: 0
-    0: 0
   :armor:
     1: 0
     2: 0
@@ -35,20 +34,19 @@ bag:
     9: 0
     10: 0
     11: 0
-    0: 0
 equip:
   weapon:
-  - 4
+  - 5
   - 5
   armor:
   - 3
 spells: []
-gold: 159
-exp: 484
+gold: 94
+exp: 536
 level: 4
 levelUP: false
-total_damage: 1030
-damage_taken: 124
+total_damage: 1082
+damage_taken: 162
 badges:
 - "<{^}>"
 race: :dwarf
