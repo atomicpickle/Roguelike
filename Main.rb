@@ -888,7 +888,75 @@ class Game_Main
         end
       end
     elsif @shopmenu[2] #================================   commons shop   ================================
-      #
+      loop do
+        clr
+        draw_stats_main
+        pa "#{Game_DB.tx(:common, 20)}", :green
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "#{Game_DB.tx(:cmd, 4)}", :cyan
+        pa "#{Game_DB.tx(:cmd, 5)}", :cyan
+        pa "#{Game_DB.tx(:cmd, 103)}", :cyan
+        key = gets.chomp.to_i
+        case key
+        when 1 #buy
+          clr
+          draw_stats_main
+          shopbag = Game_DB.items_array
+          bagkeys = shopbag.keys
+          bagkeys.delete_if {|i| i == 0}
+          shopbag.each {|id, value| pa  "(#{id}): #{value[0]}, #{value[8]}\n   > COST: #{value[7]}", :green unless id == 0 }
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "#{Game_DB.tx(:common, 22)}", :green, :bright
+          loop do
+            key = gets.chomp.to_i
+            if bagkeys.include?(key)
+              if @player.gold >= shopbag[key][7]
+                @player.remove_gold(shopbag[key][7])
+                @player.add_item(:item, key)
+                pa "#{Game_DB.tx(:other, 0)}"
+                pa " You purchased #{shopbag[key][0]} for #{shopbag[key][7]} gold!", :green, :bright
+                key = gets
+                break
+              else
+                pa " You don't have enough gold!", :red
+                break
+              end
+            elsif key == 0
+              @shopmenu[2] = false
+              break
+            end
+          end
+        when 2 #sell
+          clr
+          draw_stats_main
+          pbag = @player.read_item_bag(:items)
+          pbag.delete_if{|k, v| k == 0}
+          pbagkeys = pbag.keys
+          fullbag = Game_DB.items_array
+          pbag.each {|k, v| pa "(#{k}): #{fullbag[k][0]}, Amount Owned: x#{v}\n    > SELL PRICE: #{fullbag[k][7]/2.to_i} Gold", :green unless pbag[k] == 0}
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "#{Game_DB.tx(:common, 23)}", :green, :bright
+          loop do
+            key = gets.chomp.to_i
+            if pbagkeys.include?(key)
+              amt = fullbag[key][7] / 2; amt = amt.to_i
+              @player.add_gold(amt)
+              @player.remove_item(:item, key)
+              pa "#{Game_DB.tx(:other, 0)}"
+              pa "You sold #{fullbag[key][0]} for a mere #{amt} Gold. You feel somewhat cheated...", :green, :bright
+              key = gets
+              break
+            elsif key == 0
+              @shopmenu[2] = false
+              break
+            end
+          end
+        when 3 #exit
+          @shopmenu[2] = false
+          break
+        end
+      end
     end
     clr
     draw_stats_main
