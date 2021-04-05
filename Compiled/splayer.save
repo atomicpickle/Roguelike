@@ -1,0 +1,67 @@
+--- !ruby/object:Player
+bag:
+  :weapons:
+    0: 0
+    1: 0
+    2: 0
+    3: 0
+    4: 0
+    5: 0
+    6: 0
+    7: 0
+    8: 0
+    9: 0
+    10: 0
+    11: 0
+  :armor:
+    0: 0
+    1: 0
+    2: 0
+    3: 0
+    4: 0
+    5: 0
+    6: 0
+    7: 0
+    8: 0
+  :items:
+    0: 0
+    1: 0
+    2: 0
+    3: 0
+    4: 0
+    5: 0
+    6: 0
+    7: 0
+    8: 0
+    9: 0
+    10: 0
+    11: 0
+equip:
+  weapon:
+  - 1
+  - 0
+  armor:
+  - 0
+spells: []
+gold: 1
+exp: 2
+level: 0
+levelUP: false
+total_damage: 8
+damage_taken: 3
+badges: []
+race: :dwarf
+playername: dasdas
+hp: 11
+mhp: 14
+mp: 0
+mmp: 0
+attack: 2
+defense: 1
+speed: 1
+added_stats:
+  :hp: 0
+  :mp: 0
+  :atk: 0
+  :def: 0
+  :spd: 0

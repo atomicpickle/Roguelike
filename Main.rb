@@ -1,3 +1,5 @@
+require 'rubygems'
+require 'bundler/setup'
 require 'paint'
 require 'paint/pa'
 require 'json'

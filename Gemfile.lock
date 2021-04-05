@@ -1,0 +1,17 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    json (2.5.1)
+    paint (2.2.1)
+    yaml (0.1.1)
+
+PLATFORMS
+  x64-mingw32
+
+DEPENDENCIES
+  json (~> 2.5.1)
+  paint (~> 2.2.1)
+  yaml (~> 0.1.1)
+
+BUNDLED WITH
+   2.2.15

@@ -9,6 +9,7 @@
   - arena battles
 
 completed
+  - figured out compiling and added precompiled version 
   - difficulty rating for battles
   - arena badges
   - tavern functions as an inn
