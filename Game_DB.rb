@@ -54,6 +54,7 @@ module Game_DB
   @textdb[:common] = {}
   @textdb[:cmd] = {}
   @textdb[:battle] = {}
+  @textdb[:badges] = {}
   @textdb[:other] = {}
 
   def populate_database
@@ -92,7 +93,7 @@ module Game_DB
     @textdb[:common][9]  = " To your SOUTH is the center of Dracilix City."
 
     @textdb[:common][10] = " You make your way through some dense Brush, barely any sunlight \n pierces the thick canopy of the forest. You hear something. \n Continue to (L)ook around or select a target."
-    @textdb[:common][11] = " You walk into the Tavern. ALL OF YOUR WOUNDS ARE HEALED AFTER LEAVING!"
+    @textdb[:common][11] = " You walk into the Tavern. The Bartender Greets you."
     @textdb[:common][12] = " To your EAST is the center of Dracilix City."
 
     @textdb[:common][13] = " You enter the marketplace. It is bustling with activity. Around \n you are a series of open shops. You can buy Items, Weapons \n and Armor here. You can also sell extra items here."
@@ -144,12 +145,26 @@ module Game_DB
     @textdb[:cmd][25] = ["(1) Use Item"]
     @textdb[:cmd][26] = ["(4) Back"]
 
+    @textdb[:cmd][27] = ["(2) Rent Room"]
+
     @textdb[:battle][6] = ["(A)ttack"]
     @textdb[:battle][7] = ["(S)pell"]
     @textdb[:battle][8] = ["(I)tem"]
     @textdb[:battle][9] = ["(R)un"]
     @textdb[:battle][0] = "ACTIVE BATTLE: IN THE WILD"
     @textdb[:battle][1] = "ACTIVE BATTLE: ARENA"
+
+    @textdb[:badges][0] = '<{^}>'
+    @textdb[:badges][1] = '<{1}>'
+    @textdb[:badges][3] = '<{2}>'
+    @textdb[:badges][4] = '<{3}>'
+    @textdb[:badges][5] = '<{4}>'
+    @textdb[:badges][6] = '<{5}>'
+    @textdb[:badges][7] = '<{6}>'
+    @textdb[:badges][8] = '<{7}>'
+    @textdb[:badges][9] = '<{8}>'
+    @textdb[:badges][10]= '<{9}>'
+    @textdb[:badges][11]= '<{#}>'
 
     @textdb[:other][0] = "\n"
     @textdb[:other][1] = " This is your game menu. You can access stuff and things from here."
@@ -185,7 +200,7 @@ module Game_DB
                       ░ ░        ░     ░  ░   ░
                                 ░                     "
 
-    @textdb[:other][12]= " Version: Alpha.1.21.04.04            Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: Alpha.1.21.04.04.e            Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section, id)
@@ -460,7 +475,7 @@ module Game_DB
     @enemies[17] =  ["Cute Velociraptor",       4,   7,  184,   20,   47,   55,   30,   224,    175, [9, 10],   10,    [1, 0],  25]
     @enemies[18] =  ["Electric Floating Skull", 5,   8,  256,   70,   54,   50,   32,   300,    225,  [8, 9],   12,   [2, 11],  36]
 
-    @enemies[:b0] = ["Rosco the Drunk",         2,   4,   90,   25,   25,   11,   12,   100,    150, [3, 10],   10,    [1, 0],  25]
+    @enemies[:b0] = ["Rosco the Drunk",         2,   5,  112,   24,   24,   15,   15,   150,    100, [3, 10],   10,    [1, 0],  25]
     @enemies[:b4] = ["Babba-Yagga",             5,   4,  100,   28,   30,   15,   13,   120,    175,  [1, 6],   12,    [1, 3],  20]
     @enemies[:b5] = ["Big Gay Yeti",            4,   5,  112,   30,   32,   10,   15,   128,    180,  [4, 5],   30,    [1, 7],  35]
     @enemies[:b1] = ["Tiny",                    1,   7,  250,    0,   58,   25,   12,  1250,   2500,  [3, 9],   10,    [0, 0],   0]
@@ -473,15 +488,15 @@ module Game_DB
     #                     [amount, total]
     @experience_req[0]  = [     0,     0]
     @experience_req[1]  = [    16,    16]
-    @experience_req[2]  = [    56,    72]
-    @experience_req[3]  = [   124,   196]
-    @experience_req[4]  = [   250,   446]
-    @experience_req[5]  = [   550,   996]
-    @experience_req[6]  = [  1200,  2196]
-    @experience_req[7]  = [  1800,  3896]
-    @experience_req[8]  = [  2444,  6340]
-    @experience_req[9]  = [  3525,  9865]
-    @experience_req[10] = [  6225, 16090]
+    @experience_req[2]  = [    50,    66]
+    @experience_req[3]  = [   106,   172]
+    @experience_req[4]  = [   220,   392]
+    @experience_req[5]  = [   450,   842]
+    @experience_req[6]  = [   908,  1750]
+    @experience_req[7]  = [  1250,  3000]
+    @experience_req[8]  = [  1750,  4750]
+    @experience_req[9]  = [  2500,  7250]
+    @experience_req[10] = [  4000, 11250]
     @experience_req[11] = [150000,166090]
   end
 

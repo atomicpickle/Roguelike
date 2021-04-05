@@ -1,6 +1,7 @@
 --- !ruby/object:Player
 bag:
   :weapons:
+    0: 0
     1: 0
     2: 0
     3: 0
@@ -12,7 +13,6 @@ bag:
     9: 0
     10: 0
     11: 0
-    0: 0
   :armor:
     0: 0
     1: 0
@@ -25,8 +25,8 @@ bag:
     8: 0
   :items:
     0: 0
-    1: 0
-    2: 1
+    1: 1
+    2: 0
     3: 0
     4: 0
     5: 0
@@ -39,24 +39,25 @@ bag:
 equip:
   weapon:
   - 1
-  - 5
+  - 0
   armor:
-  - 4
+  - 0
 spells: []
-gold: 5613
-exp: 32
-level: 1
+gold: 5
+exp: 7
+level: 0
 levelUP: false
-total_damage: 104
-damage_taken: 66
+total_damage: 31
+damage_taken: 10
+badges: []
 race: :dwarf
-playername: Randy Lahey
-hp: 20
-mhp: 20
+playername: Geoff Targyan
+hp: 4
+mhp: 14
 mp: 0
 mmp: 0
-attack: 4
-defense: 2
+attack: 2
+defense: 1
 speed: 1
 added_stats:
   :hp: 0

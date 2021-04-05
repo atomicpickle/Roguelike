@@ -27,6 +27,7 @@ class Player
   attr_reader :gold
   attr_reader :exp
   attr_reader :damage_taken
+  attr_reader :badges
   attr_accessor :levelUP
   attr_accessor :total_damage
 
@@ -47,6 +48,7 @@ class Player
     @levelUP = false
     @total_damage = 0
     @damage_taken = 0
+    @badges = []
     @race = :ghost
     @playername = ""
     #add extra stat vars for permanent stat bonuses
@@ -63,6 +65,11 @@ class Player
     @added_stats[:def] = 0
     @added_stats[:spd] = 0
   end
+
+  def add_badge(strings)
+    @badges.puts strings unless @badges.include?(strings)
+  end
+
 
   def read_cur_hpmp(type=:hp)
     return @hp if type == :hp

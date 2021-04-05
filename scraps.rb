@@ -40,3 +40,31 @@ h.each_key {|key| puts key }
 return if @submenu.all? { |v| v == false}
 
 bag.each {|id, amt| pa "  (#{id}) #{Game_DB.weapons_array(id, 0)}   x #{amt}"}
+
+
+
+@experience_req[0]  = [     0,     0]
+@experience_req[1]  = [    16,    16]
+@experience_req[2]  = [    56,    72]
+@experience_req[3]  = [   124,   196]
+@experience_req[4]  = [   250,   446]
+@experience_req[5]  = [   550,   996]
+@experience_req[6]  = [  1200,  2196]
+@experience_req[7]  = [  1800,  3896]
+@experience_req[8]  = [  2444,  6340]
+@experience_req[9]  = [  3525,  9865]
+@experience_req[10] = [  6225, 16090]
+@experience_req[11] = [150000,166090]
+
+@experience_req[0]  = [     0,     0]
+@experience_req[1]  = [    16,    16]
+@experience_req[2]  = [    50,    66]
+@experience_req[3]  = [   106,   172]
+@experience_req[4]  = [   220,   392]
+@experience_req[5]  = [   450,   842]
+@experience_req[6]  = [   908,  1750]
+@experience_req[7]  = [  1250,  3000]
+@experience_req[8]  = [  1750,  4750]
+@experience_req[9]  = [  2500,  7250]
+@experience_req[10] = [  4000, 11250]
+@experience_req[11] = [150000,166090]

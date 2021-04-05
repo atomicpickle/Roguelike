@@ -570,6 +570,12 @@ class Game_Main
           spname = Game_DB.spellbook(user_new[5], 0)
           pa "                    You learned the spell #{spname}!", :yellow
         end
+        if @player.level == 4
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "                    You have reached level 4! You have earned your Arena entry badge!!!", :yellow
+          pa "                    You are now able to compete in the Arena.", :yellow
+          @player.add_badge(Game_DB.tx(:badges, 0))
+        end
         pa "#{Game_DB.tx(:other, 0)}"
         pa "                           #{Game_DB.tx(:other, 7)}"
         key = gets
@@ -657,14 +663,16 @@ class Game_Main
       update
     end
     if area == :tavern
+      price = @player.level * 3 + 3
       pa "#{Game_DB.tx(:common, 11)}", :green
+      pa " The Bartender offers you a room to sleep in for #{price} Gold.", :magenta, :bright
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:common, 12)}", :green, :bright
       pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:cmd, 27)} for #{price} Gold", :cyan
       pa "#{Game_DB.tx(:cmd, 2)}", :cyan
       process_input
-      @player.heal(:full)
       update
     end
     if area == :arena
@@ -1107,10 +1115,30 @@ class Game_Main
       loop do
         @update = true
         key = gets.chomp.downcase
+        keyi = key.to_i
         case key
         when "e"
           @location[1] = @location[0]
           @location[0] = :town
+          break
+        end
+        if keyi == 2
+          clr
+          draw_stats_main
+          price = @player.level * 3 + 3
+          if price > @player.gold #not enough gold
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa " You don't have enough gold to afford a room here.", :green
+            pa "#{Game_DB.tx(:other, 0)}"
+          else
+            @player.heal(:full)
+            @player.remove_gold(price)
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa " You went to sleep. You woke up and your wounds are magically healed.", :green
+            pa "#{Game_DB.tx(:other, 0)}"
+          end
+          pa "#{Game_DB.tx(:other, 7)}"
+          key = gets
           break
         end
       end
@@ -1159,6 +1187,10 @@ class Game_Main
       spells.each {|i| sp_names.push Game_DB.spellbook(i, 0) }
       names_conc = ""
       sp_names.each {|i| names_conc << i + ", "}
+      b_names = ""
+      if @player.badges.size > 0
+        @player.badges.each {|i| b_names << i + "  "}
+      end
       pa "#{Game_DB.tx(:other, 2)}", :blue
       pa "#{Game_DB.tx(:other, 0)}"
       pa "                  Name:          #{@player.playername}", :blue, :bright
@@ -1178,6 +1210,9 @@ class Game_Main
       pa "                    Left Hand  : #{equiptextdata[:left][0]} +#{equiptextdata[:left][1]} Attack, +#{equiptextdata[:left][2]} Speed", :magenta, :bright
       pa "                    Right Hand : #{equiptextdata[:right][0]} +#{equiptextdata[:right][1]} Attack, +#{equiptextdata[:right][2]} Speed", :magenta, :bright
       pa "                    Armor      : #{equiptextdata[:armor][0]} +#{equiptextdata[:armor][1]} Defense, +#{equiptextdata[:armor][2]} Speed", :magenta, :bright
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "                    Badges: ", :yellow
+      pa "                            #{b_names}", :yellow
       pa "#{Game_DB.tx(:other, 0)}"
       pa "                  Total Damage Done:  #{@player.total_damage}", :red
       pa "                  Total Damage Taken: #{@player.damage_taken}", :green
