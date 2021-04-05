@@ -54,6 +54,7 @@ class Game_Main
     @submenu = [false, false, false, false, false]
     # used to navigate item menu [weapons, armor, items]
     @itemmenu = [false, false, false]
+    @shopmenu = [false, false, false]
     startup_titlecard
   end
 
@@ -107,7 +108,7 @@ class Game_Main
     end
   end
 
-  # :red, :blue, :level
+  # :red, :blue, :level, :green
   def draw_flash(color=:red, ticks=6)
     flashbar = Game_DB.tx(:other, 11)
     flasher = 0
@@ -330,7 +331,7 @@ class Game_Main
           en_healing = rand(1..2) if en_spells[0] > 0
           en_healing = 2 if en_spells[0] == 0
           if en_healing == 1 #enemy Heals
-            draw_flash(:blue, 6)
+            draw_flash(:green, 6)
             spcost = Game_DB.spellbook(en_spells[0], 3)
             sprange = Game_DB.spellbook(en_spells[0], 2)
             amount = Game_DB.calc_enemy_spell_damage(sprange, @enemy.read_stat(:lvl), @player.final_stat(:def), @player.level, true)
@@ -385,7 +386,7 @@ class Game_Main
           en_healing = rand(1..2) if en_spells[0] > 0
           en_healing = 2 if en_spells[0] == 0
           if en_healing == 1 #enemy heals
-            draw_flash(:blue, 6)
+            draw_flash(:green, 6)
             spcost = Game_DB.spellbook(en_spells[0], 3)
             sprange = Game_DB.spellbook(en_spells[0], 2)
             amount = Game_DB.calc_enemy_spell_damage(sprange, @enemy.read_stat(:lvl), @player.final_stat(:def), @player.level, true)
@@ -444,7 +445,7 @@ class Game_Main
       else
         # player casting spell!
         # calc_spell_damage(range, plvl, edef, elvl, heal=false)
-        draw_flash(:blue, 6); healing = false
+        healing = false
         curmp = @player.read_cur_hpmp(:mp)
         spcost = Game_DB.spellbook(spellid, 3)
         sprange = Game_DB.spellbook(spellid, 2)
@@ -458,9 +459,11 @@ class Game_Main
           pa "#{Game_DB.tx(:other, 0)}"
           pa "#{Game_DB.tx(:other, 0)}"
           if healing
+            draw_flash(:green, 6)
             pa "             You cast the spell #{Game_DB.spellbook(spellid, 0)} and healed #{amount} HP!!!!", :green
             pa "             #{Game_DB.spellbook(spellid, 4)}", :green
           else
+            draw_flash(:blue, 6)
             pa "             You cast the spell #{Game_DB.spellbook(spellid, 0)} and did #{amount} damage!!!!", :red, :bright
             pa "             #{Game_DB.spellbook(spellid, 4)}", :red, :bright
           end
@@ -563,7 +566,7 @@ class Game_Main
         pa "                    Defense: #{user_cur[3]} => #{user_new[3]}", :green, :bright
         pa "                    Speed:   #{user_cur[4]} => #{user_new[4]}", :yellow, :bright
         pa "#{Game_DB.tx(:other, 0)}"
-        if user_new[4] != nil #new spell learned
+        if user_new[5] != nil #new spell learned
           spname = Game_DB.spellbook(user_new[5], 0)
           pa "                    You learned the spell #{spname}!", :yellow
         end
@@ -716,6 +719,22 @@ class Game_Main
       process_input
       update
     end
+    if area == :shop  #shopmenu[false, false, false]
+      process_shop_menu if @shopmenu.any? {|v| v == true}
+      pa "#{Game_DB.tx(:common, 13)}", :green
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:common, 14)}", :green, :bright
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:common, 15)}", :cyan
+      pa "#{Game_DB.tx(:common, 16)}", :cyan
+      pa "#{Game_DB.tx(:common, 17)}", :cyan
+      pa "#{Game_DB.tx(:cmd, 1)}", :cyan
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:cmd, 7)}", :cyan
+      process_input
+      update
+    end
   end
 
   def print_hunt_results
@@ -725,6 +744,88 @@ class Game_Main
       pa "(#{i}): '#{Game_DB.enemies_array(e, 0)}', Level: #{Game_DB.enemies_array(e, 2)}", :red
       i += 1
     end
+  end
+
+  def process_shop_menu
+    if @shopmenu[0] #weapons shop
+      loop do
+        clr
+        draw_stats_main
+        pa "#{Game_DB.tx(:common, 18)}", :green
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "#{Game_DB.tx(:cmd, 4)}", :cyan
+        pa "#{Game_DB.tx(:cmd, 5)}", :cyan
+        pa "#{Game_DB.tx(:cmd, 103)}", :cyan
+        key = gets.chomp.to_i
+        case key
+        when 1 #buy
+          clr
+          draw_stats_main
+          #  bag.each {|id, amt| pa "  (#{id}) #{Game_DB.weapons_array(id, 0)}   x #{amt}"}
+          shopbag = Game_DB.weapons_array
+          #shopbag.delete_if {|k, v| k == 0}
+          bagkeys = shopbag.keys
+          bagkeys.delete_if {|i| i == 0}
+          shopbag.each {|id, value| pa  "(#{id}): #{value[0]},  ATTACK: #{value[1]}, SPEED: #{value[2]}, 2 HANDED: #{value[3]}, COST: #{value[4]}", :green unless id == 0 }
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "#{Game_DB.tx(:common, 22)}", :green, :bright
+          loop do
+            key = gets.chomp.to_i
+            if bagkeys.include?(key)
+              if @player.gold >= shopbag[key][4]
+                @player.remove_gold(shopbag[key][4])
+                @player.add_item(:weapon, key)
+                pa "#{Game_DB.tx(:other, 0)}"
+                pa " You purchased #{shopbag[key][0]} for #{shopbag[key][4]} gold! Dont forget to equip it!", :green, :bright
+                key = gets
+                break
+              else
+                pa " You don't have enough gold!", :red
+                break
+              end
+            elsif key == 0
+              @shopmenu[0] = false
+              break
+            end
+          end
+        when 2 #sell
+          clr
+          draw_stats_main
+          pbag = @player.read_item_bag(:weapons)
+          pbag.delete_if{|k, v| k == 0}
+          pbagkeys = pbag.keys
+          fullbag = Game_DB.weapons_array
+          pbag.each {|k, v| pa "(#{k}): #{fullbag[k][0]}, SELL PRICE: #{fullbag[k][4]/2.to_i}", :green unless pbag[k] == 0}
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "#{Game_DB.tx(:common, 23)}", :green, :bright
+          loop do
+            key = gets.chomp.to_i
+            if pbagkeys.include?(key)
+              amt = fullbag[key][4] / 2; amt = amt.to_i
+              @player.add_gold(amt)
+              @player.remove_item(:weapon, key)
+              pa "#{Game_DB.tx(:other, 0)}"
+              pa "You sold #{fullbag[key][0]} for a mere #{amt} Gold. You feel somewhat cheated...", :green, :bright
+              key = gets
+              break
+            elsif key == 0
+              @shopmenu[0] = false
+              break
+            end
+          end
+        when 3 #exit
+          @shopmenu[0] = false
+          break
+        end
+      end
+    elsif @shopmenu[1] #armor shop
+      #
+    elsif @shopmenu[2] #commons shop
+      #
+    end
+    clr
+    draw_stats_main
   end
 
   #N, W, E, S, 1(menu)
@@ -745,7 +846,8 @@ class Game_Main
           @location[0] = :tavern
           break
         when "e"
-          pa "you move east"
+          @location[1] = @location[0]
+          @location[0] = :shop
           break
         when "s"
           @location[1] = @location[0]
@@ -755,6 +857,32 @@ class Game_Main
         if keyb == 1
           @location[1] = @location[0]
           @location[0] = :menu
+          break
+        end
+      end
+    elsif area == :shop
+      loop do
+        @update = true
+        key = gets.chomp.downcase
+        keyb = key.to_i #number input
+        case key
+        when "w" #back to town
+          @location[1] = @location[0]
+          @location[0] = :town
+          break
+        end
+        if keyb == 1
+          @location[1] = @location[0]
+          @location[0] = :menu
+          break
+        elsif keyb == 3 #open weapons shop
+          @shopmenu[0] = true
+          break
+        elsif keyb == 4 #open armor shop
+          @shopmenu[1] = true
+          break
+        elsif keyb == 5 #open commons shop
+          @shopmenu[2] = true
           break
         end
       end
@@ -852,8 +980,6 @@ class Game_Main
           break
         end
       end
-    elsif area == :shop
-      #
     elsif area == :menu # @submenu = [stats, bag, spells, save game, exit game]
       loop do
         @update = true
@@ -967,7 +1093,7 @@ class Game_Main
         if spellid == 1 || spellid == 2
           #heal
           if cost <= curmp
-            draw_flash(:blue, 6); healing = false
+            draw_flash(:green, 6); healing = false
             sprange = Game_DB.spellbook(spellid, 2)
             amount = Game_DB.calc_spell_damage(sprange, @player.level, 0, 0, true)
             @player.heal(:hp, amount)
@@ -984,7 +1110,6 @@ class Game_Main
       end
       @submenu[2] = false
     elsif @submenu[3] #player save game
-      #
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"

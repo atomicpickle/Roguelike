@@ -81,7 +81,7 @@ module Game_DB
     @textdb[:common][0]  = " You are standing in the middle of Draclix City. The city is \n bustling with activity all around you."
     @textdb[:common][1]  = " To your NORTH, you notice a large Arena. A large banner    \n reads 'ARENA: FIGHT TO THE DEATH! PROVE YOUR WORTH! GET RICH!'"
     @textdb[:common][2]  = " To your WEST, you notice a large tavern that appears to be \n quite busy. A few drunk patrons lean against the taverns walls."
-    @textdb[:common][3]  = " To your EAST, you notice an Armory and General store. It   \n seems that you can buy almost anything within these shops."
+    @textdb[:common][3]  = " To your EAST, you notice a large marketplace. It seems you   \n can buy almost anything within these shops."
     @textdb[:common][4]  = " To your SOUTH is the town exit, you see Surgalic Forest.  \n various sounds come from Surgalic Forest which gives you some    \n various forms of anxiety."
 
     @textdb[:common][5]  = " You are standing in Surgalic Forest. The deeper you go, the more \n strange the sounds get. Surely if you venture in, you will \n find something you can kill, or something that will eat you."
@@ -95,14 +95,27 @@ module Game_DB
     @textdb[:common][11] = " You walk into the Tavern. ALL OF YOUR WOUNDS ARE HEALED AFTER LEAVING!"
     @textdb[:common][12] = " To your EAST is the center of Dracilix City."
 
+    @textdb[:common][13] = " You enter the marketplace. It is bustling with activity. Around \n you are a series of open shops. You can buy Items, Weapons \n and Armor here. You can also sell extra items here."
+    @textdb[:common][14] = " To your WEST is the center of Dracilix City."
+    @textdb[:common][15] = ["(3) Enter the Weapons shop"]
+    @textdb[:common][16] = ["(4) Enter the Armor shop"]
+    @textdb[:common][17] = ["(5) Enter the Commons shop"]
+    @textdb[:common][18] = " You enter the Weapons shop. A large man wearing only pants and \n suspenders stares at you. He motions you to his counter."
+    @textdb[:common][19] = " As you walk into the Armor shop, you see various items on display.\n A large man wearing too many layers of clothing and smelling \n like manure greets you with a big smile."
+    @textdb[:common][20] = " You open the door to the Commons shop and walk in. A very old man \n with a large grey beard and no other hair to speak of greets \n you from behind his counter."
+    @textdb[:common][21] = " SHOP ITEMS:"
+    @textdb[:common][22] = " Select an item to buy, choose number, or (0) to cancel."
+    @textdb[:common][23] = " Select an item to sell, choose number, or (0) to cancel."
+
     @textdb[:cmd][0] = ["(N)orth"]
     @textdb[:cmd][1] = ["(W)est"]
     @textdb[:cmd][2] = ["(E)ast"]
     @textdb[:cmd][3] = ["(S)outh"]
 
 
-    @textdb[:cmd][4] = ["(B)uy"]
-    @textdb[:cmd][5] = ["(S)ell"]
+    @textdb[:cmd][4] = ["(1) Buy"]
+    @textdb[:cmd][5] = ["(2) Sell"]
+    @textdb[:cmd][103] = ["(3) Exit"]
 
     @textdb[:cmd][6] = ["(L)ook (A)round"]
 
@@ -428,28 +441,28 @@ module Game_DB
     @enemies[:g3] = ["Girl From The Ring",      0,   7,  166,   48,   22,    9,   19,    66,      6,  [8, 7],   10,    [1, 4],  25]
 
     @enemies[0]  =  ["Emptyness",               0,   0,    1,    0,    0,    0,    0,     0,      0,  [0, 0],    1,    [0, 0],   0]
-    @enemies[1]  =  ["Butterfly",               4,   0,    7,    0,    2,    1,    6,     2,      1,  [2, 1],   25,    [0, 0],   0]
-    @enemies[2]  =  ["Innocent Rabbit",         4,   1,    8,    0,    2,    1,    7,     3,      3,  [2, 1],   20,    [0, 0],   0]
-    @enemies[3]  =  ["Large Rat",               4,   1,    9,    0,    4,    1,    9,     4,      3,  [2, 1],   20,    [0, 0],   0]
-    @enemies[4]  =  ["Beautiful Hawk",          4,   2,   15,    0,    8,    3,   10,     7,      9,  [2, 1],   10,    [0, 0],   0]
-    @enemies[5]  =  ["Blacktail Deer",          4,   2,   18,    0,    8,    4,   12,     9,      5,  [2, 1],   10,    [0, 0],   0]
-    @enemies[6]  =  ["Adorable Fox",            4,   3,   19,    0,   12,    5,   13,    12,     15,  [2, 1],   10,    [0, 0],   0]
-    @enemies[7]  =  ["Angry Bird",              4,   3,   22,    0,   14,    6,   13,    18,     22,  [2, 1],   10,    [0, 0],   0]
-    @enemies[8]  =  ["Blazing Skull",           5,   4,   30,   10,   18,    6,   15,    26,     28, [10, 9],    5,    [1, 6],  30]
+    @enemies[1]  =  ["Butterfly",               4,   0,    7,    0,    2,    1,    6,     2,      1,  [1, 2],   25,    [0, 0],   0]
+    @enemies[2]  =  ["Innocent Rabbit",         4,   1,    8,    0,    2,    1,    7,     3,      3,  [1, 2],   20,    [0, 0],   0]
+    @enemies[3]  =  ["Large Rat",               4,   1,    9,    0,    4,    1,    9,     4,      3,  [1, 2],   20,    [0, 0],   0]
+    @enemies[4]  =  ["Beautiful Hawk",          4,   2,   15,    0,    8,    3,   10,     7,      9,  [1, 2],   10,    [0, 0],   0]
+    @enemies[5]  =  ["Blacktail Deer",          4,   2,   18,    0,    8,    4,   12,     9,      5,  [1, 2],   10,    [0, 0],   0]
+    @enemies[6]  =  ["Adorable Fox",            4,   3,   19,    0,   12,    5,   13,    12,     15,  [1, 2],   10,    [0, 0],   0]
+    @enemies[7]  =  ["Angry Bird",              4,   3,   22,    0,   14,    6,   13,    18,     22,  [1, 2],   10,    [0, 0],   0]
+    @enemies[8]  =  ["Blazing Skull",           5,   4,   30,   10,   18,    6,   15,    26,     28, [10, 9],   10,    [1, 6],  30]
     @enemies[9]  =  ["Syren",                   5,   4,   30,   16,   20,    9,   13,    38,     35,  [6, 5],   20,    [1, 4],  40]
     @enemies[10] =  ["Ipotane",                 4,   4,   32,   14,   22,   12,   15,    40,     35,  [6, 7],   20,    [4, 3],  40]
     @enemies[11] =  ["F**king Tiger",           4,   5,   52,    0,   26,   10,   17,    44,     40,  [3, 9],    8,    [0, 0],   0]
     @enemies[12] =  ["Black Zebra",             4,   5,   54,    0,   25,   20,   19,    38,     90,  [3, 7],    8,    [0, 0],   0]
     @enemies[13] =  ["Giant C**t of a Rhino",   4,   6,   96,    0,   36,   40,   22,   110,     35, [10, 9],    5,    [0, 0],   0]
     @enemies[14] =  ["Shortneck Angry Giraffe", 4,   6,  118,    0,   37,   46,   26,   116,    104,  [8, 7],    5,    [0, 0],   0]
-    @enemies[15] =  ["Longma",                  4,   6,  120,   25,   35,   50,   28,   100,    112,  [8, 6],   33,    [2, 7],  45]
+    @enemies[15] =  ["Longma",                  4,   6,  120,   25,   35,   50,   28,   100,    112,  [8, 6],   25,    [2, 7],  45]
     @enemies[16] =  ["Gay Horny Jinn",          5,   7,  135,   28,   42,   56,   35,   215,    175,  [9, 7],   15,   [2, 11],  40]
-    @enemies[17] =  ["Cute Velociraptor",       4,   7,  184,   20,   47,   55,   30,   224,    175, [9, 10],    7,    [1, 0],  25]
+    @enemies[17] =  ["Cute Velociraptor",       4,   7,  184,   20,   47,   55,   30,   224,    175, [9, 10],   10,    [1, 0],  25]
     @enemies[18] =  ["Electric Floating Skull", 5,   8,  256,   70,   54,   50,   32,   300,    225,  [8, 9],   12,   [2, 11],  36]
 
     @enemies[:b0] = ["Rosco the Drunk",         2,   4,   90,   25,   25,   11,   12,   100,    150, [3, 10],   10,    [1, 0],  25]
     @enemies[:b4] = ["Babba-Yagga",             5,   4,  100,   28,   30,   15,   13,   120,    175,  [1, 6],   12,    [1, 3],  20]
-    @enemies[:b5] = ["Big Gay Yeti",            4,   5,  112,   30,   32,   10,   15,   128,    180,  [4, 5],   29,    [1, 7],  35]
+    @enemies[:b5] = ["Big Gay Yeti",            4,   5,  112,   30,   32,   10,   15,   128,    180,  [4, 5],   30,    [1, 7],  35]
     @enemies[:b1] = ["Tiny",                    1,   7,  250,    0,   58,   25,   12,  1250,   2500,  [3, 9],   10,    [0, 0],   0]
     @enemies[:b2] = ["Lana",                    1,   9,  777,   86,   74,   58,   20,  3450,   7500, [10, 9],   25,    [2, 6],  33]
     @enemies[:b3] = ["Sexual Harrasment Panda", 4,  10, 1250,  108,   96,   64,   28,  7500,  10500, [8, 10],   33,    [2, 6],  20]

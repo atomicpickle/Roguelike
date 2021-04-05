@@ -178,9 +178,6 @@ class Player
     set_stat(:atk, lvlarray[2])
     set_stat(:def, lvlarray[3])
     set_stat(:spd, lvlarray[4])
-    learn_spell(lvlarray[5]) if lvlarray[5] != nil
-    @hp = read_stat(:hp)
-    @mp = read_stat(:mp)
     @total_damage = 0 if @total_damage == nil
     @damage_taken = 0 if @damage_taken == nil
     re_format_bag

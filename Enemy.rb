@@ -36,7 +36,7 @@ class Enemy
     var = @spells
     can_heal = knows_heal_spells?
     hppct = 100 * @hp / @mhp; hppct.to_i
-    var[0] = 0 if hppct >= 60 #disable heal spells if health over 60%
+    var[0] = 0 if hppct >= 75 #disable heal spells if health over 75%
     var.each {|spell| spell = 0 if Game_DB.spellbook(spell, 3) > @mp}
     return var
   end

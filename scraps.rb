@@ -38,3 +38,5 @@ h.each_key {|key| puts key }
 [].all?                                           #=> true
 
 return if @submenu.all? { |v| v == false}
+
+bag.each {|id, amt| pa "  (#{id}) #{Game_DB.weapons_array(id, 0)}   x #{amt}"}
