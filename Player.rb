@@ -67,7 +67,7 @@ class Player
   end
 
   def add_badge(strings)
-    @badges.puts strings unless @badges.include?(strings)
+    @badges.push strings unless @badges.include?(strings)
   end
 
 
@@ -299,12 +299,19 @@ class Player
 
   #reports stat total (atk + added_atk)
   #stats symbols :hp :mp :atk :def :spd
-  def read_stat(stat)
-    var = @mhp + @added_stats[stat] if stat == :hp
-    var = @mmp + @added_stats[stat] if stat == :mp
-    var = @attack + @added_stats[stat] if stat == :atk
-    var = @defense + @added_stats[stat] if stat == :def
-    var = @speed + @added_stats[stat] if stat == :spd
+  #mode :add :base :bonus
+  def read_stat(stat, mode=:add)
+    var = @mhp + @added_stats[stat] if stat == :hp && mode == :add
+    var = @mmp + @added_stats[stat] if stat == :mp && mode == :add
+    var = @attack + @added_stats[stat] if stat == :atk && mode == :add
+    var = @defense + @added_stats[stat] if stat == :def && mode == :add
+    var = @speed + @added_stats[stat] if stat == :spd && mode == :add
+    var = @added_stats[stat] if mode == :bonus
+    var = @mhp if stat == :hp && mode == :base
+    var = @mmp if stat == :mp && mode == :base
+    var = @attack if stat == :atk && mode == :base
+    var = @defense if stat == :def && mode == :base
+    var = @speed if stat == :spd && mode == :base
     return var
   end
 

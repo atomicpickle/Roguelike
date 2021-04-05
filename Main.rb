@@ -749,7 +749,9 @@ class Game_Main
     i = 2
     @enemies[:wandering].each do |e|
       break if i > 6
-      pa "(#{i}): '#{Game_DB.enemies_array(e, 0)}', Level: #{Game_DB.enemies_array(e, 2)}", :red
+      pa "(#{i}): '#{Game_DB.enemies_array(e, 0)}', Level: #{Game_DB.enemies_array(e, 2)}", :blue, :bright if @player.level > Game_DB.enemies_array(e, 2)
+      pa "(#{i}): '#{Game_DB.enemies_array(e, 0)}', Level: #{Game_DB.enemies_array(e, 2)}", :red, :bright if @player.level == Game_DB.enemies_array(e, 2)
+      pa "(#{i}): '#{Game_DB.enemies_array(e, 0)}', Level: #{Game_DB.enemies_array(e, 2)}", :red if @player.level < Game_DB.enemies_array(e, 2)
       i += 1
     end
   end
@@ -1126,6 +1128,7 @@ class Game_Main
           clr
           draw_stats_main
           price = @player.level * 3 + 3
+          price = 20 if price > 20
           if price > @player.gold #not enough gold
             pa "#{Game_DB.tx(:other, 0)}"
             pa " You don't have enough gold to afford a room here.", :green
@@ -1191,32 +1194,30 @@ class Game_Main
       if @player.badges.size > 0
         @player.badges.each {|i| b_names << i + "  "}
       end
-      pa "#{Game_DB.tx(:other, 2)}", :blue
-      pa "#{Game_DB.tx(:other, 0)}"
-      pa "                  Name:          #{@player.playername}", :blue, :bright
-      pa "                  Race:          #{@player.race}", :blue, :bright
-      pa "                  Level:         #{@player.level}", :blue, :bright
-      pa "                  Exp:           #{@player.exp}/#{@stats[6]}", :blue, :bright
-      pa "                  HP:            #{@stats[1]}/#{@stats[2]}", :blue, :bright
-      pa "                  MP:            #{@stats[3]}/#{@stats[4]}", :blue, :bright
-      pa "                  Strength:      #{@player.read_stat(:atk)}", :red, :bright
-      pa "                  Attack Power:  #{@player.final_stat(:atk)}", :red, :bright
-      pa "                  Defense:       #{@player.read_stat(:def)}", :green, :bright
-      pa "                  Defense Power: #{@player.final_stat(:def)}", :green, :bright
-      pa "                  Speed:         #{@player.read_stat(:spd)}", :yellow, :bright
-      pa "                  Total Speed:   #{@player.final_stat(:spd)}", :yellow, :bright
-      pa "                  Spells Known:  #{names_conc}", :yellow, :bright
+      pa "                  Name:           #{@player.playername}", :blue, :bright
+      pa "                  Race:           #{@player.race}", :blue, :bright
+      pa "                  Level:          #{@player.level}", :blue, :bright
+      pa "                  Exp:            #{@player.exp}/#{@stats[6]}", :blue, :bright
+      pa "                  HP:             #{@stats[1]}/#{@stats[2]}", :blue, :bright
+      pa "                  MP:             #{@stats[3]}/#{@stats[4]}", :blue, :bright
+      pa "                  Base Strength:  #{@player.read_stat(:atk, :base)}", :red, :bright
+      pa "                  Bonus Strength: #{@player.read_stat(:atk, :bonus)}", :red, :bright
+      pa "                  Attack Power:   #{@player.final_stat(:atk)}", :red, :bright
+      pa "                  Base Defense:   #{@player.read_stat(:def, :base)}", :green, :bright
+      pa "                  Bonus Defense:  #{@player.read_stat(:def, :bonus)}", :green, :bright
+      pa "                  Defense Power:  #{@player.final_stat(:def)}", :green, :bright
+      pa "                  Base Speed:     #{@player.read_stat(:spd, :base)}", :yellow, :bright
+      pa "                  Bonus Speed:    #{@player.read_stat(:spd, :bonus)}", :yellow, :bright
+      pa "                  Total Speed:    #{@player.final_stat(:spd)}", :yellow, :bright
+      pa "                  Spells Known:   #{names_conc}", :yellow, :bright
       pa "                  Equipment:", :magenta
-      pa "                    Left Hand  : #{equiptextdata[:left][0]} +#{equiptextdata[:left][1]} Attack, +#{equiptextdata[:left][2]} Speed", :magenta, :bright
-      pa "                    Right Hand : #{equiptextdata[:right][0]} +#{equiptextdata[:right][1]} Attack, +#{equiptextdata[:right][2]} Speed", :magenta, :bright
-      pa "                    Armor      : #{equiptextdata[:armor][0]} +#{equiptextdata[:armor][1]} Defense, +#{equiptextdata[:armor][2]} Speed", :magenta, :bright
-      pa "#{Game_DB.tx(:other, 0)}"
-      pa "                    Badges: ", :yellow
-      pa "                            #{b_names}", :yellow
-      pa "#{Game_DB.tx(:other, 0)}"
+      pa "                    Left Hand:   #{equiptextdata[:left][0]} +#{equiptextdata[:left][1]} Attack, +#{equiptextdata[:left][2]} Speed", :magenta, :bright
+      pa "                    Right Hand:  #{equiptextdata[:right][0]} +#{equiptextdata[:right][1]} Attack, +#{equiptextdata[:right][2]} Speed", :magenta, :bright
+      pa "                    Armor:       #{equiptextdata[:armor][0]} +#{equiptextdata[:armor][1]} Defense, +#{equiptextdata[:armor][2]} Speed", :magenta, :bright
+      pa "                  Badges: ", :yellow
+      pa "                         #{b_names}", :yellow
       pa "                  Total Damage Done:  #{@player.total_damage}", :red
       pa "                  Total Damage Taken: #{@player.damage_taken}", :green
-      pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 3)}"
       key = gets
@@ -1254,28 +1255,34 @@ class Game_Main
         end
       end
     elsif @submenu[2] #player Spells
-      spellid = spell_selection
-      sparray = Game_DB.spellbook[spellid]
-      curmp = @player.read_cur_hpmp(:mp)
-      cost = sparray[3]
-      if spellid != 0
-        if spellid == 1 || spellid == 2
-          #heal
-          if cost <= curmp
-            draw_flash(:green, 6); healing = false
-            sprange = Game_DB.spellbook(spellid, 2)
-            amount = Game_DB.calc_spell_damage(sprange, @player.level, 0, 0, true)
-            @player.heal(:hp, amount)
-            @player.damage(:mp, Game_DB.spellbook(spellid, 3))
-            pa " You cast the spell #{Game_DB.spellbook(spellid, 0)} and healed #{amount} HP!!!!", :green
-          else
-            pa " You try to cast the spell but don't have enough mp!", :magenta, :bright
-          end
-        else
-          #damage
-          pa " Would sure be a waste to cast that spell with no target...", :green
-        end
+      if @player.spells_learned.size < 1
+        pa " Kind of hard to cast a spell when you don't know any...", :green
         key = gets
+      else
+        #spells known
+        spellid = spell_selection
+        sparray = Game_DB.spellbook[spellid]
+        curmp = @player.read_cur_hpmp(:mp)
+        cost = sparray[3]
+        if spellid != 0
+          if spellid == 1 || spellid == 2
+            #heal
+            if cost <= curmp
+              draw_flash(:green, 6); healing = false
+              sprange = Game_DB.spellbook(spellid, 2)
+              amount = Game_DB.calc_spell_damage(sprange, @player.level, 0, 0, true)
+              @player.heal(:hp, amount)
+              @player.damage(:mp, Game_DB.spellbook(spellid, 3))
+              pa " You cast the spell #{Game_DB.spellbook(spellid, 0)} and healed #{amount} HP!!!!", :green
+            else
+              pa " You try to cast the spell but don't have enough mp!", :magenta, :bright
+            end
+          else
+            #damage
+            pa " Would sure be a waste to cast that spell with no target...", :green
+          end
+          key = gets
+        end
       end
       @submenu[2] = false
     elsif @submenu[3] #player save game

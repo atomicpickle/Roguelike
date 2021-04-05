@@ -268,16 +268,20 @@ module Game_DB
       b2 = rand(1..10)
       res = 0
       if b1 > 0 #enemy higher level
-        en1 = edef * 0.40; en1.to_i
+        en1 = edef * 0.50; en1.to_i
+        b2 = rand(1..5) if elvl < 5
         en2 = rand(0..b2)
         en3 = en1 + en2
         en4 = sel - en3
+        en4 *= 0.70 if elvl < 5
         res = en4 * 0.8; res.to_i
       else # enemy same or lower level
         en1 = edef * 0.60; en1.to_i
+        b2 = rand(1..5) if elvl < 5
         en2 = rand(0..b2)
         en3 = en1 + en2
         en4 = sel - en3
+        en4 *= 0.9 if elvl < 5
         res = en4 * 1.2; res.to_i
       end
       res = 1 if res < 1
@@ -419,8 +423,8 @@ module Game_DB
   def populate_items_db
     #           [Item Name,              +HP,  +MP,  +PHP, +PMP, +PATK, +PDEF,     cost,    Item Description]
     @items[0]  = ["Missingo",               0,    0,     0,    0,     0,     0,        0,    "..."]
-    @items[1]  = ["Mugwart Root",          25,    0,     0,    0,     0,     0,       12,    "Heals +25 HP"]
-    @items[2]  = ["Vervain Flower",         0,   25,     0,    0,     0,     0,       30,    "Heals +25 MP"]
+    @items[1]  = ["Mugwart Root",          25,    0,     0,    0,     0,     0,       20,    "Heals +25 HP"]
+    @items[2]  = ["Vervain Flower",         0,   25,     0,    0,     0,     0,       45,    "Heals +25 MP"]
     @items[3]  = ["Rose-Hipp Potion",     120,    0,     0,    0,     0,     0,       75,    "Heals +120 HP"]
     @items[4]  = ["Wolfsbane Potion",       0,   80,     0,    0,     0,     0,      120,    "Heals +100 MP"]
     @items[5]  = ["White Orchid Potion",  400,    0,     0,    0,     0,     0,      300,    "Heals +400 HP"]
