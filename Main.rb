@@ -531,12 +531,13 @@ class Game_Main
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:other, 15)}", :green
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "                    You have defeated #{@enemy.read_name}!!!", :cyan
-      pa "                    You have gained #{@enemy.read_stat(:exp)} Experience Points!", :green
-      pa "                    You have gained #{@enemy.read_stat(:gold)} Gold!", :yellow
+      pa "                          You have defeated #{@enemy.read_name}!!!", :cyan
+      pa "                          You have gained #{@enemy.read_stat(:exp)} Experience Points!", :green
+      pa "                          You have gained #{@enemy.read_stat(:gold)} Gold!", :yellow
       pa "#{Game_DB.tx(:other, 0)}"
       dropinfo = @enemy.dropinfo
       dropchance = @enemy.dropinfo(true)
@@ -1608,28 +1609,11 @@ class Game_Main
 
   def startup_titlecard
     flasher = 0
-    text1 = "
-           ▄████████ ███    █▄  ▀█████████▄  ▄██   ▄
-          ███    ███ ███    ███   ███    ███ ███   ██▄
-          ███    ███ ███    ███   ███    ███ ███▄▄▄███
-         ▄███▄▄▄▄██▀ ███    ███  ▄███▄▄▄██▀  ▀▀▀▀▀▀███
-        ▀▀███▀▀▀▀▀   ███    ███ ▀▀███▀▀▀██▄  ▄██   ███
-        ▀███████████ ███    ███   ███    ██▄ ███   ███
-          ███    ███ ███    ███   ███    ███ ███   ███
-          ███    ███ ████████▀  ▄█████████▀   ▀█████▀
-          ███    ███                                                   "
-
-
-
-text2 =  "           ▄████████    ▄████████    ▄████████ ███▄▄▄▄      ▄████████
-          ███    ███   ███    ███   ███    ███ ███▀▀▀██▄   ███    ███
-          ███    ███   ███    ███   ███    █▀  ███   ███   ███    ███
-          ███    ███  ▄███▄▄▄▄██▀  ▄███▄▄▄     ███   ███   ███    ███
-        ▀███████████ ▀▀███▀▀▀▀▀   ▀▀███▀▀▀     ███   ███ ▀███████████
-          ███    ███ ▀███████████   ███    █▄  ███   ███   ███    ███
-          ███    ███   ███    ███   ███    ███ ███   ███   ███    ███
-          ███    █▀    ███    ███   ██████████  ▀█   █▀    ███    █▀
-                       ███    ███                                     "
+    rnd = rand(1..11)
+    text1 = Game_DB.tx(:other, 16) if rnd.even?
+    text2 = Game_DB.tx(:other, 17) if rnd.even?
+    text1 = Game_DB.tx(:other, 18) if rnd.odd?
+    text2 = Game_DB.tx(:other, 19) if rnd.odd?
     10.times do
       clr
       flasher += 1
