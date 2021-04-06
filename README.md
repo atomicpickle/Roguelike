@@ -1,6 +1,10 @@
 # RoguelikeRubyArena
  hmm... well its a text game.
- run main to start the game.
+
+ If you have Ruby installed, run the name by starting launch.rb
+
+ If you don't have Ruby, Run the game with the RubyArena.exe file in the Compiled
+ folder.
 
 
  Nearly ready to call this a beta release!
@@ -9,7 +13,7 @@
   - arena battles
 
 completed
-  - figured out compiling and added precompiled version 
+  - figured out compiling and added precompiled version
   - difficulty rating for battles
   - arena badges
   - tavern functions as an inn

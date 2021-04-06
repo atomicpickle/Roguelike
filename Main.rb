@@ -1,26 +1,3 @@
-require 'rubygems'
-require 'bundler/setup'
-require 'paint'
-require 'paint/pa'
-require 'json'
-require 'yaml'
-puts "Require paint \n Require paint/pa \n Require json \n Require yaml"
-require_relative 'Game_DB'
-require_relative 'Player'
-require_relative 'Enemy'
-puts "Checking for relative scripts Game_DB, Player, Enemy"
-
-include Game_DB
-puts "Populating Game database..."
-Game_DB.populate_database
-
-# color text conventions
-# :green = standard text
-# :cyan = standard choice
-# :green, :bright = selected item, action performed
-# :red, physical attack, or input error
-puts "loading..."
-
 
 class Game_Main
 
@@ -1691,10 +1668,12 @@ class Game_Main
             break
           end
         end
-      when "c"
+      when "e"
         #credits
-        pa "#{File.read("credits.txt")}", :green, :bright
-        break
+        #pa "#{File.read("credits.txt")}", :green, :bright
+        pa "#{Game_DB.tx(:other, 20)}", :green, :bright
+        key = gets
+        exit
       end
     end
   end
@@ -1702,5 +1681,3 @@ class Game_Main
 
 
 end
-
-Game = Game_Main.new

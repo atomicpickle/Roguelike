@@ -132,7 +132,7 @@ module Game_DB
 
     @textdb[:cmd][14] = ["(N) New Game"]
     @textdb[:cmd][15] = ["(L) Load Game"]
-    @textdb[:cmd][103]= ["(C) Game Credits + Exit"]
+    @textdb[:cmd][103]= ["(E) Exit + View Credits"]
     @textdb[:cmd][16] = ["(1) Yes"]
     @textdb[:cmd][17] = ["(2) No"]
 
@@ -253,6 +253,11 @@ module Game_DB
       ░   ▒     ░░   ░    ░      ░   ░ ░   ░   ▒
           ░  ░   ░        ░  ░         ░       ░  ░
                                                    "
+    @textdb[:other][20]= "                    Credits
+          Game Programmed and developed by Matt Sully (@GumpNerd)
+          Special Thanks: Teague Padriac
+          Special Thanks: _powder_ (reddit.com)
+          Icon Made by 'Good Ware' from www.flaticon.com"
     @textdb[:other][12]= " Version: Alpha.1.21.04.05.a            Author: Matt Sully(@GumpNerd)"
   end
 

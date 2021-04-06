@@ -1,1 +1,1 @@
-ocra main.rb --debug --icon eeicon.ico --dll ruby_builtin_dlls\libssp-0.dll --output RubyArena.exe
+ocra launch.rb --icon eeicon.ico --dll ruby_builtin_dlls\libssp-0.dll --debug --output RubyArena.exe
