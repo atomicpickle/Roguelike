@@ -355,7 +355,7 @@ class Game_Main
             draw_flash(:blue, 6)
             spcost = Game_DB.spellbook(en_spells[1], 3)
             sprange = Game_DB.spellbook(en_spells[1], 2)
-            amount = Game_DB.calc_enemy_spell_damage(sprange, @enemy.read_stat(:lvl), @player.final_stat(:def), @player.level, false)
+            amount = Game_DB.calc_enemy_spell_damage(sprange, @enemy.read_stat(:lvl), @player.final_stat(:def), @player.level, false, @player.race)
             @player.damage(:hp, amount)
             @enemy.useMP(spcost)
             pa "#{Game_DB.tx(:other, 0)}"
@@ -407,7 +407,7 @@ class Game_Main
             draw_flash(:blue, 6)
             spcost = Game_DB.spellbook(en_spells[1], 3)
             sprange = Game_DB.spellbook(en_spells[1], 2)
-            amount = Game_DB.calc_enemy_spell_damage(sprange, @enemy.read_stat(:lvl), @player.final_stat(:def), @player.level, false)
+            amount = Game_DB.calc_enemy_spell_damage(sprange, @enemy.read_stat(:lvl), @player.final_stat(:def), @player.level, false, @player.race)
             @player.damage(:hp, amount)
             @enemy.useMP(spcost)
             pa "#{Game_DB.tx(:other, 0)}"
@@ -1640,7 +1640,7 @@ class Game_Main
     pa "\n"
     pa "#{Game_DB.tx(:cmd, 14)}", :cyan
     pa "#{Game_DB.tx(:cmd, 15)}", :cyan
-    pa "#{Game_DB.tx(:cmd, 103)}", :cyan
+    pa "#{Game_DB.tx(:cmd, 104)}", :cyan
     loop do
       key = gets.chomp.downcase
       case key

@@ -73,7 +73,7 @@ module Game_DB
     @textdb[:intro][0] = " Welcome to Ruby Arena, a small roguelike text adventure. \n Begin by choosing your race and name..."
     @textdb[:intro][1] = ["1: Dwarf - no magic, hits hard. slower."]
     @textdb[:intro][2] = ["2: Human -  well rounded, can hit and use magic"]
-    @textdb[:intro][3] = ["3: Elf -  primary magic user. faster."]
+    @textdb[:intro][3] = ["3: Elf -  primary magic user. faster. Take less magic damage."]
     @textdb[:intro][4] = " Type your name (Maximum 20 characters, may have spaces)"
     @textdb[:intro][5] = " Error, invalid name length... Try that again."
     @textdb[:intro][6] = " Its time to start your journey through Ruby Arena... Wake up!"
@@ -132,7 +132,7 @@ module Game_DB
 
     @textdb[:cmd][14] = ["(N) New Game"]
     @textdb[:cmd][15] = ["(L) Load Game"]
-    @textdb[:cmd][103]= ["(E) Exit + View Credits"]
+    @textdb[:cmd][104]= ["(E) Exit + View Credits"]
     @textdb[:cmd][16] = ["(1) Yes"]
     @textdb[:cmd][17] = ["(2) No"]
 
@@ -258,7 +258,7 @@ module Game_DB
           Special Thanks: Teague Padriac
           Special Thanks: _powder_ (reddit.com)
           Icon Made by 'Good Ware' from www.flaticon.com"
-    @textdb[:other][12]= " Version: Alpha.1.21.04.05.a            Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: Alpha.1.21.04.05.b            Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section, id)
@@ -335,7 +335,7 @@ module Game_DB
     end
   end
 
-  def calc_enemy_spell_damage(range, plvl, edef, elvl, heal=false)
+  def calc_enemy_spell_damage(range, plvl, edef, elvl, heal=false, prace=:human)
     if heal == false #attack spell
       b1 = plvl - elvl; b1 = 0 if b1 < 0
       sel = rand(range[0]..range[1])
@@ -359,6 +359,7 @@ module Game_DB
         res = en4 * 1.2; res.to_i
       end
       res = 1 if res < 1
+      res = res * 0.70 if res > 1 && prace == :elf
       return res.to_i
     elsif heal == true #heal spell
       lvc = plvl / 2; lvc = 0 if lvc < 0
@@ -605,9 +606,9 @@ module Game_DB
     @level_up_chart[:human][9]  = [ 112,  62,  22,  18,   5,   nil]
     @level_up_chart[:human][10] = [ 120,  80,  25,  21,   5,    11]
     #  ELVES                      [ mhp, mmp, atk, def, spd, spell]
-    @level_up_chart[:elf][0]    = [  10,   4,   1,   1,   1,     1]
-    @level_up_chart[:elf][1]    = [  15,  13,   2,   2,   2,     2]
-    @level_up_chart[:elf][2]    = [  19,  32,   2,   2,   2,     6]
+    @level_up_chart[:elf][0]    = [  11,   4,   1,   1,   1,     1]
+    @level_up_chart[:elf][1]    = [  16,  13,   2,   2,   2,     2]
+    @level_up_chart[:elf][2]    = [  20,  32,   2,   2,   2,     6]
     @level_up_chart[:elf][3]    = [  25,  44,   2,   3,   3,     4]
     @level_up_chart[:elf][4]    = [  32,  60,   3,   4,   3,     3]
     @level_up_chart[:elf][5]    = [  40,  69,   4,   4,   4,     5]
