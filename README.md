@@ -11,6 +11,7 @@
 
  in progress (not ordered)
   - arena battles
+  - lots of balancing (a bit of everything)
 
 completed
   - figured out compiling and added precompiled version
