@@ -453,7 +453,12 @@ class Player
       remove_item(:weapon, weaponid)
       @equip['weapon'][1] = weaponid
     elsif hand == 3 #2 handed
-      unequip_weapon(hand)
+      if Game_DB.weapons_array(@equip['weapon'][0], 3)
+        unequip_weapon(hand)
+      else
+        unequip_weapon(1) if @equip['weapon'][0] > 0
+        unequip_weapon(2) if @equip['weapon'][1] > 0
+      end
       remove_item(:weapon, weaponid)
       @equip['weapon'][0] = weaponid
       @equip['weapon'][1] = weaponid

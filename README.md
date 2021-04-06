@@ -32,3 +32,22 @@ completed
   - save/load system
   - player stats
   - background logic for various things i.e. equipping and unequipping items
+
+
+Races:
+  Humans:
+   - well rounded
+   - weak magic user (magic spells are 10% less effective)
+  Dwarves:
+   - no mp, cant use spells
+   - higher attack and defense
+   - lower speed
+   - higher hp
+   - weak to magic (take 10% more magic damage)
+   - strong attacker (physical attacks are 10% more effective)
+  Elves:
+   - higher mp, lower hp
+   - lower attack, lower defense
+   - higher speed
+   - resistant to magic (take 20% less magic damage)
+   - weak attacker (physical attacks are 10% less effective)

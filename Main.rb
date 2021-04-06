@@ -448,7 +448,7 @@ class Game_Main
         playerlvl = @player.level
         enemydef = @enemy.read_stat(:def)
         enemylvl = @enemy.read_stat(:lvl)
-        amount = Game_DB.calc_damage_alt2(playeratk, playerlvl, enemydef, enemylvl)
+        amount = Game_DB.calc_damage_alt2(playeratk, playerlvl, enemydef, enemylvl, false, @player.race)
         @enemy.damage(amount)
         @player.total_damage += amount
         pa "#{Game_DB.tx(:other, 0)}"
@@ -464,7 +464,7 @@ class Game_Main
         sprange = Game_DB.spellbook(spellid, 2)
         healing = true if spellid == 1 || spellid == 2
         if spcost <= curmp
-          amount = Game_DB.calc_spell_damage(sprange, @player.level, @enemy.read_stat(:def), @enemy.read_stat(:lvl), healing)
+          amount = Game_DB.calc_spell_damage(sprange, @player.level, @enemy.read_stat(:def), @enemy.read_stat(:lvl), healing, @player.race)
           @enemy.damage(amount) if !healing
           @player.heal(:hp, amount) if healing
           @player.damage(:mp, Game_DB.spellbook(spellid, 3))
@@ -633,16 +633,18 @@ class Game_Main
   def draw_stats_main
     lvl1 = @player.level + 1
     expneed = Game_DB.experience_array(lvl1)
+    explast = Game_DB.experience_array(@player.level)
+    curexpnxt = @player.exp - explast[1]
     @stats[0] = @player.level
     @stats[1] = @player.read_cur_hpmp(:hp)
     @stats[2] = @player.final_stat(:hp)
     @stats[3] = @player.read_cur_hpmp(:mp)
     @stats[4] = @player.final_stat(:mp)
-    @stats[5] = @player.exp
-    @stats[6] = expneed[1]
+    @stats[5] = curexpnxt
+    @stats[6] = expneed[0]
     @stats[7] = @player.gold
     @stats[8] = @player.playername
-    exppct = 100 * @player.exp / expneed[1]
+    exppct = 100 * curexpnxt / expneed[0]
     exppct = exppct.to_i
     hppct = @stats[1].to_f / @stats[2].to_f * 100.to_i
     bgcolor = :black
@@ -1563,10 +1565,11 @@ class Game_Main
   end
 
   def startup_race_select
+    clr
+    pa "#{Game_DB.tx(:other, 0)}"
+    pa "#{Game_DB.tx(:other, 0)}"
     pa "#{Game_DB.tx(:intro, 0)}", :green
-    pa "#{Game_DB.tx(:other, 0)}"
-    pa "#{Game_DB.tx(:other, 0)}"
-    pa "#{Game_DB.tx(:other, 0)}"
+    pa "#{Game_DB.tx(:intro, 8)}", :green
     pa "#{Game_DB.tx(:other, 0)}"
     pa "#{Game_DB.tx(:intro, 1)}", :cyan
     pa "#{Game_DB.tx(:intro, 2)}", :cyan

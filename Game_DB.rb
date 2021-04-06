@@ -78,6 +78,23 @@ module Game_DB
     @textdb[:intro][5] = " Error, invalid name length... Try that again."
     @textdb[:intro][6] = " Its time to start your journey through Ruby Arena... Wake up!"
     @textdb[:intro][7]  = " You wake up on the side of town square. Your head hurts. \n Your whole body hurts. You have no recent memory of how you \n got here. You stand up, foggy and in pain, and look around."
+    @textdb[:intro][8] = "
+      Humans:
+       - well rounded
+       - weak magic user (magic spells are 10% less effective)
+      Dwarves:
+       - no mp, cant use spells
+       - higher attack and defense
+       - lower speed
+       - higher hp
+       - weak to magic (take 10% more magic damage)
+       - strong attacker (physical attacks are 10% more effective)
+      Elves:
+       - higher mp, lower hp
+       - lower attack, lower defense
+       - higher speed
+       - resistant to magic (take 20% less magic damage)
+       - weak attacker (physical attacks are 10% less effective)"
 
     @textdb[:common][0]  = " You are standing in the middle of Draclix City. The city is \n bustling with activity all around you."
     @textdb[:common][1]  = " To your NORTH, you notice a large Arena. A large banner    \n reads 'ARENA: FIGHT TO THE DEATH! PROVE YOUR WORTH! GET RICH!'"
@@ -255,10 +272,10 @@ module Game_DB
                                                    "
     @textdb[:other][20]= "                    Credits
           Game Programmed and developed by Matt Sully (@GumpNerd)
-          Special Thanks: Teague Padriac
+          Special Thanks: Teague Hammell
           Special Thanks: _powder_ (reddit.com)
           Icon Made by 'Good Ware' from www.flaticon.com"
-    @textdb[:other][12]= " Version: Alpha.1.21.04.05.b            Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: Alpha.1.21.04.06.a            Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section, id)
@@ -307,7 +324,7 @@ module Game_DB
     return val
   end
 
-  def calc_spell_damage(range, plvl, edef, elvl, heal=false)
+  def calc_spell_damage(range, plvl, edef, elvl, heal=false, prace=:human)
     if heal == false #attack spell
       b1 = plvl - elvl; b1 = 0 if b1 < 0
       sel = rand(range[0]..range[1])
@@ -317,13 +334,25 @@ module Game_DB
         en1 = edef * 0.30; en1.to_i
         en2 = rand(0..b2)
         en3 = en1 + en2
-        res = sel - en3
+        en4 = en3 * 0.60
+        if sel > en3
+          res = sel - en3
+        else
+          res = sel - en4
+        end
       else # player same or lower level
         en1 = edef * 0.50; en1.to_i
         en2 = rand(0..b2)
         en3 = en1 + en2
-        res = sel - en3
+        en4 = en3 * 0.60
+        if sel > en3
+          res = sel - en3
+        else
+          res = sel - en4
+        end
       end
+      res = res * 0.90 if res > 1 && prace == :human
+      res = 1 if res <= 0
       return res.to_i
     elsif heal == true #heal spell
       lvc = plvl / 2; lvc = 0 if lvc < 0
@@ -331,7 +360,8 @@ module Game_DB
       rn = 0 if lvc <= 0
       rn2 = rand(range[0]..range[1])
       res = rn2 + rn
-      return res
+      res = res * 0.90 if res > 1 && prace == :human
+      return res.to_i
     end
   end
 
@@ -359,7 +389,8 @@ module Game_DB
         res = en4 * 1.2; res.to_i
       end
       res = 1 if res < 1
-      res = res * 0.70 if res > 1 && prace == :elf
+      res = res * 0.80 if res > 1 && prace == :elf
+      res = res * 1.10 if res > 1 && prace == :dwarf
       return res.to_i
     elsif heal == true #heal spell
       lvc = plvl / 2; lvc = 0 if lvc < 0
@@ -372,7 +403,7 @@ module Game_DB
   end
 
   #current damage calc formula being used
-  def calc_damage_alt2(atk, lvl, defend, lvl2, mob=false)
+  def calc_damage_alt2(atk, lvl, defend, lvl2, mob=false, prace=:human)
     base = atk - defend
     base = 1 if base < 1
     if mob == false
@@ -391,6 +422,9 @@ module Game_DB
         base += rand(0..15) if lvl > lvl2
         base += rand(0..5) if lvl == lvl2
       end
+      base = base *1.1 if base > 1 && prace == :dwarf
+      base = base *0.9 if base > 1 && prace == :elf
+      return base.to_i
     elsif mob
       if lvl >= lvl2
         base += rand(0..5) if lvl > lvl2
@@ -510,10 +544,10 @@ module Game_DB
     @items[9]  = ["Dragon's Testicle",      0,    0,     0,    0,     6,     0,     3500,    "Permanently increases ATTACK up to -1 to +6"]
     @items[10] = ["Fairy Dust",             0,    0,     0,    0,     0,     6,     3500,    "Permanently increases DEFENSE up to -1 to +6"]
     @items[11] = ["Godsperm",               0,    0,    10,   10,    10,    10,     9001,    "Permanently increases HP, MP, ATK, DEF up to -1 to +10"]
-    @items[12] = ["Speed Reader",           0,    0,     0,    0,     0,     0,    12500,    "After Use: Permanently enables the ability to see your enemies speed"]
-    @items[13] = ["Attack Reader",          0,    0,     0,    0,     0,     0,    12500,    "After Use: Permanently enables the ability to see your enemies speed"]
-    @items[14] = ["Defense Reader",         0,    0,     0,    0,     0,     0,    12500,    "After Use: Permanently enables the ability to see your enemies speed"]
-    @items[15] = ["Rewards Reader",         0,    0,     0,    0,     0,     0,    12500,    "After Use: Permanently enables the ability to see your enemies speed"]
+    @items[12] = ["Speed Reader",           0,    0,     0,    0,     0,     0,    12500,    "After Use: Permanently enables the ability to see your enemies Speed"]
+    @items[13] = ["Attack Reader",          0,    0,     0,    0,     0,     0,    12500,    "After Use: Permanently enables the ability to see your enemies Attack"]
+    @items[14] = ["Defense Reader",         0,    0,     0,    0,     0,     0,    12500,    "After Use: Permanently enables the ability to see your enemies Defense"]
+    @items[15] = ["Rewards Reader",         0,    0,     0,    0,     0,     0,    12500,    "After Use: Permanently enables the ability to see your enemies Rewards"]
   end
 
   def populate_spells_db
