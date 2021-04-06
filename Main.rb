@@ -4,6 +4,7 @@ class Game_Main
   def initialize
     clr
     Paint.mode = 256
+    @init = true
     # only used for setup. maybe not needed
     @character_base = {}
     @character_base[:race] = []
@@ -20,7 +21,7 @@ class Game_Main
     @enemies[:amount] = 0
     # if true, player is actively hunting
     @hunting = false
-    # if t rue, player is in a battle
+    # if true, player is in a battle
     @battle = false
     # used as enemy class object for battles
     @enemy = 0
@@ -65,6 +66,7 @@ class Game_Main
     key = gets
     @location[0] = @location[1]
     @update = true
+    @init = false
     update
   end
 
@@ -77,13 +79,16 @@ class Game_Main
   end
 
   def update
-    if @update
+    if @update && !@init
       @update = false
       clr
       draw_stats_main
       @hunting = false if @location[0] != :forest
       location_draw(@location[0]) unless @battle
       battle_draw if @battle
+    elsif @update && @init
+      @update = false
+      startup_titlecard
     end
   end
 
@@ -1618,6 +1623,7 @@ class Game_Main
   end
 
   def create_character
+    @init = false
     @player = Player.new
     r = @character_base[:race][1]
     n = @character_base[:name]
@@ -1670,14 +1676,9 @@ class Game_Main
         pa "#{Game_DB.tx(:cmd, 17)}", :cyan
         loop do
           key = gets.chomp.to_i
-          case key
-          when 1
-            #load saved game
-            process_game_load_file
-          when 2
-            #dont load
-            break
-          end
+          process_game_load_file if key == 1
+          @update = true if key == 2
+          update if key == 2
         end
       when "e"
         #credits
