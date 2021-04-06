@@ -34,10 +34,10 @@ completed
   - background logic for various things i.e. equipping and unequipping items
 
 
-Races:
   Humans:
    - well rounded
    - weak magic user (magic spells are 10% less effective)
+
   Dwarves:
    - no mp, cant use spells
    - higher attack and defense
@@ -45,6 +45,7 @@ Races:
    - higher hp
    - weak to magic (take 10% more magic damage)
    - strong attacker (physical attacks are 10% more effective)
+
   Elves:
    - higher mp, lower hp
    - lower attack, lower defense
