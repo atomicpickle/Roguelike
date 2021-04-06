@@ -28,6 +28,7 @@ class Player
   attr_reader :exp
   attr_reader :damage_taken
   attr_reader :badges
+  attr_reader :perm_readers
   attr_accessor :levelUP
   attr_accessor :total_damage
 
@@ -48,6 +49,8 @@ class Player
     @levelUP = false
     @total_damage = 0
     @damage_taken = 0
+                 #  [speed,  atk,   def, rewards]
+    @perm_readers = [false, false, false, false]
     @badges = []
     @race = :ghost
     @playername = ""
@@ -69,7 +72,6 @@ class Player
   def add_badge(strings)
     @badges.push strings unless @badges.include?(strings)
   end
-
 
   def read_cur_hpmp(type=:hp)
     return @hp if type == :hp
@@ -125,22 +127,22 @@ class Player
       heal(:mp, array[2])
       pa "You used 1x #{array[0]} and recovered #{array[1]} HP and #{array[2]} MP!"
     elsif id == 7
-      res = rand(-2..array[3])
+      res = rand(-1..array[3])
       add_bonus_stat(:hp, res)
       pa "You used 1x #{array[0]} and your MAX HP was INCREASED by #{res}!" if res >= 0
       pa "You used 1x #{array[0]} and your MAX HP was DECREASED by #{res}!" if res < 0
     elsif id == 8
-      res = rand(-2..array[4])
+      res = rand(-1..array[4])
       add_bonus_stat(:mp, res)
       pa "You used 1x #{array[0]} and your MAX MP was INCREASED by #{res}!" if res >= 0
       pa "You used 1x #{array[0]} and your MAX MP was DECREASED by #{res}!" if res < 0
     elsif id == 9
-      res = rand(-2..array[5])
+      res = rand(-1..array[5])
       add_bonus_stat(:atk, res)
       pa "You used 1x #{array[0]} and your ATTACK was INCREASED by #{res}!" if res >= 0
       pa "You used 1x #{array[0]} and your ATTACK was DECREASED by #{res}!" if res < 0
     elsif id == 10
-      res = rand(-2..array[6])
+      res = rand(-1..array[6])
       add_bonus_stat(:def, res)
       pa "You used 1x #{array[0]} and your DEFENSE was INCREASED by #{res}!" if res >= 0
       pa "You used 1x #{array[0]} and your DEFENSE was DECREASED by #{res}!" if res < 0
@@ -158,7 +160,23 @@ class Player
       pa "Your ATTACK was DECREASED by #{atk}" if atk < 0
       pa "Your DEFENSE was INCREASED by #{deb}" if deb >= 0
       pa "Your DEFENSE was DECREASED by #{deb}" if deb < 0
+    elsif id == 12
+      add_perm_reader(0)
+      pa " You used a #{array[0]}, you can now permanently see an enemies Speed in battle!"
+    elsif id == 13
+      add_perm_reader(1)
+      pa " You used a #{array[0]}, you can now permanently see an enemies Attack in battle!"
+    elsif id == 14
+      add_perm_reader(2)
+      pa " You used a #{array[0]}, you can now permanently see an enemies Defense in battle!"
+    elsif id == 15
+      add_perm_reader(3)
+      pa " You used a #{array[0]}, you can now permanently see an enemies Rewards in battle!"
     end
+  end
+  #  [speed,  atk,   def, rewards]
+  def add_perm_reader(stat=0)
+    @perm_readers[stat] = true
   end
 
   def finish_setup(race, name, lvl=0)

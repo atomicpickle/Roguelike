@@ -1,6 +1,7 @@
 --- !ruby/object:Player
 bag:
   :weapons:
+    0: 0
     1: 0
     2: 0
     3: 0
@@ -12,8 +13,8 @@ bag:
     9: 0
     10: 0
     11: 0
-    0: 0
   :armor:
+    0: 0
     1: 0
     2: 0
     3: 0
@@ -22,8 +23,9 @@ bag:
     6: 0
     7: 0
     8: 0
-    0: 0
+    9: 0
   :items:
+    0: 0
     1: 0
     2: 0
     3: 0
@@ -35,34 +37,41 @@ bag:
     9: 0
     10: 0
     11: 0
-    0: 0
+    12: 0
+    13: 0
+    14: 0
+    15: 0
 equip:
   weapon:
-  - 5
+  - 1
   - 5
   armor:
-  - 3
+  - 4
 spells: []
-gold: 334
-exp: 818
-level: 5
+gold: 99360
+exp: 0
+level: 0
 levelUP: false
-total_damage: 1504
-damage_taken: 203
-badges:
-- "<{^}>"
-race: :dwarf
-playername: Forrest Gump
-hp: 56
-mhp: 56
-mp: 0
-mmp: 0
-attack: 16
-defense: 8
-speed: 3
+total_damage: 0
+damage_taken: 0
+perm_readers:
+- true
+- true
+- true
+- true
+badges: []
+race: :human
+playername: Forrest
+hp: 13
+mhp: 13
+mp: 1
+mmp: 1
+attack: 1
+defense: 1
+speed: 1
 added_stats:
   :hp: 0
   :mp: 0
-  :atk: -2
+  :atk: 0
   :def: 0
   :spd: 0

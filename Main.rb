@@ -215,6 +215,7 @@ class Game_Main
       pa "                  #{Game_DB.tx(:battle, 1)}", :red, :bright
       pa "#{Game_DB.tx(:other, 5)}", :red
     end
+    enemy_drops = @enemy.read_stat(:drops)
     pa "#{Game_DB.tx(:other, 0)}"
     pa "Enemy Stats: ", :red
     pa "NAME: #{@enemy.read_name}", :red, :bright
@@ -223,9 +224,14 @@ class Game_Main
     pa "HP: #{@enemy.read_stat(:hp)}/#{@enemy.read_stat(:mhp)}", :red, :bright
     pa "MP: #{@enemy.read_stat(:mp)}/#{@enemy.read_stat(:mmp)}", :red, :bright
     pa "#{Game_DB.tx(:other, 0)}"
+    pa " Attack: #{@enemy.read_stat(:atk)}", :yellow, :bright if @player.perm_readers[1]
+    pa "Defense: #{@enemy.read_stat(:def)}", :yellow, :bright if @player.perm_readers[2]
+    pa "  Speed: #{@enemy.read_stat(:spd)}", :yellow, :bright if @player.perm_readers[0]
     pa "#{Game_DB.tx(:other, 0)}"
-    pa "#{Game_DB.tx(:other, 0)}"
-    pa "#{Game_DB.tx(:other, 0)}"
+    pa "REWARDS: ", :yellow, :bright if @player.perm_readers[3]
+    pa "    Exp: #{@enemy.read_stat(:exp)}", :yellow, :bright if @player.perm_readers[3]
+    pa "   Gold: #{@enemy.read_stat(:gold)}", :yellow, :bright if @player.perm_readers[3]
+    pa "  Items: #{Game_DB.items_array(enemy_drops[0], 0)}, #{Game_DB.items_array(enemy_drops[1], 0)}", :yellow, :bright if @player.perm_readers[3]
     pa "#{Game_DB.tx(:other, 0)}"
     pa "#{Game_DB.tx(:other, 0)}"
     process_battle_input
@@ -276,7 +282,7 @@ class Game_Main
   def use_item_battle
     clr
     draw_stats_main
-    bag = @player.read_item_bag(:items)
+    bag = @player.read_item_bag(:items).dup
     pa "#{Game_DB.tx(:other, 0)}"
     pa "ITEMS"
     pa "Inventory:"
@@ -290,6 +296,7 @@ class Game_Main
       key = gets.chomp.to_i
       break if bag.key?(key) == false
       break if key == 0
+      break if bag.key?(key) && key > 6
       if bag.key?(key) && bag[key] > 0
         draw_flash(:green, 6)
         @player.use_item(key)
@@ -1229,7 +1236,8 @@ class Game_Main
       pa "                  Total Damage Taken: #{@player.damage_taken}", :green
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 3)}"
-      key = gets
+      key = gets.chomp.downcase
+      @player.add_gold(75000) if key == "makemerich"
       @submenu[0] = false
     elsif @submenu[1] #player inventory
       pa "#{Game_DB.tx(:other, 0)}"
