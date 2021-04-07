@@ -51,7 +51,9 @@ class Player
     @damage_taken = 0
                  #  [speed,  atk,   def, rewards]
     @perm_readers = [false, false, false, false]
+    @badge_progress = {}
     @badges = []
+    @curr_badge_arena = ""
     @race = :ghost
     @playername = ""
     #add extra stat vars for permanent stat bonuses
@@ -69,8 +71,55 @@ class Player
     @added_stats[:spd] = 0
   end
 
-  def add_badge(strings)
+  def add_badge(strings, bool=true)
     @badges.push strings unless @badges.include?(strings)
+    add_badge_progress(strings) if bool
+  end
+
+  def add_next_badge
+    string = @curr_badge_arena
+    string = string[0]
+    newbadge = ""
+    newb = false
+    if @badge_progress[string] >= 5
+      newbadge = Game_DB.find_next_badge(string)
+      @badge_progress[newbadge] = 1
+      add_badge(newbadge, false)
+      newb = true
+    end
+    return [string, false] if !newb
+    return [newbadge, true] if newb
+  end
+
+  def add_badge_progress(id)
+    id = id.to_s
+    bool = badge_complete?(id)
+    @badge_progress[id] += 1 if !bool
+  end
+
+  def badge_complete?(id)
+    return true if @badge_progress[id] >= 5
+    return false if @badge_progress[id] < 5
+  end
+
+  def get_current_badge
+    proghash = read_badges(true)
+    proghash.reject! {|k,v| v >= 5}
+    proghash.reject! {|k,v| v == 0}
+    return proghash
+  end
+
+  def read_badges(progress=false)
+    return @badges if !progress
+    return @badge_progress if progress
+  end
+
+  def set_current_badge_arena(string)
+    @curr_badge_arena = string
+  end
+
+  def read_current_badge_arena
+    return @curr_badge_arena
   end
 
   def read_cur_hpmp(type=:hp)
@@ -194,6 +243,7 @@ class Player
     @total_damage = 0 if @total_damage == nil
     @damage_taken = 0 if @damage_taken == nil
     format_bag
+    rebuild_badge_progress_array
   end
 
   def finish_reload
@@ -206,6 +256,7 @@ class Player
     @total_damage = 0 if @total_damage == nil
     @damage_taken = 0 if @damage_taken == nil
     re_format_bag
+    rebuild_badge_progress_array
   end
 
   # @bag[:weapons], @bag[:armor]
@@ -309,6 +360,10 @@ class Player
       learn_spell(nextlvlary[5]) if nextlvlary[5] != nil
       @levelUP = true
     end
+  end
+
+  def lvl_up_override_4870(a=false)
+    @levelUP = true if a == true
   end
 
   def level_up(bool)
@@ -533,7 +588,13 @@ class Player
     return @bag[:items] if type == :items
   end
 
-
+  def rebuild_badge_progress_array
+    badges = Game_DB.tx(:badges)
+    badge_strings = badges.values
+    badge_strings.each do |i|
+      @badge_progress[i] = 0 unless @badge_progress.has_key?(i)
+    end
+  end
 
 
 

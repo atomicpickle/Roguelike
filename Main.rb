@@ -23,6 +23,7 @@ class Game_Main
     @hunting = false
     # if true, player is in a battle
     @battle = false
+    @arenabattle = false
     # used as enemy class object for battles
     @enemy = 0
     @enemyturn = false
@@ -187,7 +188,8 @@ class Game_Main
     end
   end
 
-  def start_battle(enemy_id)
+  def start_battle(enemy_id, arena=false)
+    @arenabattle = true if arena
     @battle = true
     @location[1] = @location[0]
     @location[0] = :battle
@@ -196,7 +198,7 @@ class Game_Main
     update
   end
 
-  def battle_draw(arena=false)
+  def battle_draw(arena=@arenabattle)
     if !arena
       #wild battle
       rating = Game_DB.battle_diff(@player.level, @enemy.read_stat(:lvl))
@@ -505,16 +507,18 @@ class Game_Main
     draw_stats_main
     pspd = @player.final_stat(:spd)
     espd = @enemy.read_stat(:spd)
-    odds = 115 if espd > pspd
+    odds = 125 if espd > pspd
     odds = 65 if espd <= pspd
     res = rand(0..odds)
     escape = true if res <= 50
     escape = false if res > 50
+    escape = true if @arenabattle
     if escape == true
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "            You attempt to run! #{@enemy.read_name} blocks your path!", :blue, :bright
+      pa "            You attempt to run! #{@enemy.read_name} blocks your path!", :blue, :bright if !@arenabattle
+      pa "            You attempt to run! Nowehere to go in the Arena! The crowd boos at you!", :blue, :bright if @arenabattle
       key = gets
       @enemyturn = true
       process_battle_attack
@@ -572,6 +576,20 @@ class Game_Main
       user_new = Game_DB.level_stats_array(@player.race, @player.level+1)
       @player.add_exp(@enemy.read_stat(:exp))
       @player.add_gold(@enemy.read_stat(:gold))
+      if @arenabattle
+        badgestring = @player.read_current_badge_arena
+        badgestring = badgestring[0]
+        @player.add_badge_progress(badgestring)
+        newbadge = @player.add_next_badge #array
+        if newbadge[1]
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "               You have earned a new Arena badge! You are now able\n               to compete in a higher level in the Arena!", :yellow
+        else
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa " You have won an arena battle! You got another current badge! Collect 5 to advance!", :yellow, :bright
+        end
+        @arenabattle = false
+      end
       key = gets
       if @player.levelUP
         @player.levelUP = false
@@ -596,7 +614,6 @@ class Game_Main
           @player.add_badge(Game_DB.tx(:badges, 0))
         end
         pa "#{Game_DB.tx(:other, 0)}"
-        pa "                           #{Game_DB.tx(:other, 7)}"
         key = gets
       end
       @battle = false
@@ -632,6 +649,19 @@ class Game_Main
     @enemies[:amount] = @enemies[:wandering].length
   end
 
+  def calculate_arena_enemy
+    arry = @player.read_badges
+    proghash = @player.get_current_badge
+    keya = proghash.keys
+    @player.set_current_badge_arena(keya)
+    badge = @player.read_current_badge_arena.dup
+    badger = badge[0]
+    enemies_keys = Game_DB.populate_arena_enemies(badger)
+    dice = rand(1..100)
+    return enemies_keys[0] if dice <= 50
+    return enemies_keys[1] if dice > 50
+  end
+
   # level hp/mhp mp/mhp     experience/exp. needed     gold
   # #stats symbols :hp :mp :atk :def :spd
   #[lvl, hp, mhp, mp, mmp, exp, expneed, gold, name]
@@ -662,7 +692,7 @@ class Game_Main
   def clr
     system("cls")
   end
-  #locations: :town, :arena, :tavern, :shop, :forest, :menu
+  #locations: :town, :arena, :arena2, :arena3, :tavern, :shop, :forest, :menu
   def location_draw(area=:town)
     if area == :town
       pa "#{Game_DB.tx(:common, 0)}", :green
@@ -699,10 +729,53 @@ class Game_Main
       update
     end
     if area == :arena
-      pa "#{Game_DB.tx(:common, 8)}", :green
+      if @player.badges.size > 0
+        pa "#{Game_DB.tx(:common, 101)}", :green
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "#{Game_DB.tx(:common, 105)}", :green, :bright
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "#{Game_DB.tx(:common, 9)}", :green, :bright
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "#{Game_DB.tx(:cmd, 0)}", :cyan
+      else
+        pa "#{Game_DB.tx(:common, 8)}", :green
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "#{Game_DB.tx(:common, 9)}", :green, :bright
+      end
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:cmd, 3)}", :cyan
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:cmd, 7)}", :cyan
+      process_input
+      update
+    end
+    if area == :arena2
+      pa "#{Game_DB.tx(:common, 102)}", :green
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "#{Game_DB.tx(:common, 9)}", :green, :bright
+      pa "#{Game_DB.tx(:common, 108)}", :green, :bright
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:common, 106)}", :green, :bright
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:cmd, 28)}", :cyan
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:cmd, 3)}", :cyan
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:cmd, 7)}", :cyan
+      process_input
+      update
+    end
+    if area == :arena3
+      pa "#{Game_DB.tx(:common, 107)}", :green
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:common, 104)}", :green, :bright
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:common, 103)}", :green, :bright
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:cmd, 28)}", :cyan
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:cmd, 3)}", :cyan
       pa "#{Game_DB.tx(:other, 0)}"
@@ -777,6 +850,265 @@ class Game_Main
       pa "(#{i}): '#{Game_DB.enemies_array(e, 0)}', Level: #{Game_DB.enemies_array(e, 2)}", :red if @player.level < Game_DB.enemies_array(e, 2)
       i += 1
     end
+  end
+
+  #N, W, E, S, 1(menu)
+  #locations: :town, :arena, :arena2, :arena3 :tavern, :shop, :forest, :menu
+  def process_input(area=@location[0])
+    if area == :town
+      loop do
+        @update = true
+        key = gets.chomp.downcase
+        keyb = key.to_i #for number check
+        case key
+        when "n"
+          @location[1] = @location[0]
+          @location[0] = :arena
+          break
+        when "w"
+          @location[1] = @location[0]
+          @location[0] = :tavern
+          break
+        when "e"
+          @location[1] = @location[0]
+          @location[0] = :shop
+          break
+        when "s"
+          @location[1] = @location[0]
+          @location[0] = :forest
+          break
+        end
+        if keyb == 1
+          @location[1] = @location[0]
+          @location[0] = :menu
+          break
+        end
+      end
+    elsif area == :shop
+      loop do
+        @update = true
+        key = gets.chomp.downcase
+        keyb = key.to_i #number input
+        case key
+        when "w" #back to town
+          @location[1] = @location[0]
+          @location[0] = :town
+          break
+        end
+        if keyb == 1
+          @location[1] = @location[0]
+          @location[0] = :menu
+          break
+        elsif keyb == 3 #open weapons shop
+          @shopmenu[0] = true
+          break
+        elsif keyb == 4 #open armor shop
+          @shopmenu[1] = true
+          break
+        elsif keyb == 5 #open commons shop
+          @shopmenu[2] = true
+          break
+        end
+      end
+    elsif area == :arena
+      loop do
+        @update = true
+        key = gets.chomp.downcase
+        keyb = key.to_i #for number check
+        case key
+        when "s"
+          @location[1] = @location[0]
+          @location[0] = :town
+          break
+        when "n"
+          @location[1] = @location[0]
+          @location[0] = :arena2
+          break
+        end
+        if keyb == 1
+          @location[1] = @location[0]
+          @location[0] = :menu
+          break
+        end
+      end
+    elsif area == :arena2
+      loop do
+        @update = true
+        key = gets.chomp.downcase
+        keyb = key.to_i
+        #south, step forward and menu
+        case key
+        when "f"
+          @location[1] = @location[0]
+          @location[0] = :arena3
+          break
+        when "s"
+          @location[1] = @location[0]
+          @location[0] = :arena
+          break
+        end
+        if keyb == 2
+          @location[1] = @location[0]
+          @location[0] = :arena3
+          break
+        elsif keyb == 1
+          @location[1] = @location[0]
+          @location[0] = :menu
+          break
+        end
+      end
+    elsif area == :arena3
+      loop do
+        @update = true
+        key = gets.chomp.downcase
+        keyb = key.to_i
+        #south, step forward and menu
+        case key
+        when "f" #start arena battle
+          @location[1] = @location[0]
+          @location[0] = :arena
+          calculate_arena_enemy
+          break
+        when "s"
+          @location[1] = @location[0]
+          @location[0] = :arena2
+          break
+        end
+        if keyb == 2 #start arena battle
+          id = calculate_arena_enemy
+          start_battle(id, true)
+          break
+        elsif keyb == 1
+          @location[1] = @location[0]
+          @location[0] = :menu
+          break
+        end
+      end
+    elsif area == :forest
+      loop do
+        if !@hunting
+          @update = true
+          key = gets.chomp.downcase
+          keyb = key.to_i #for number check
+          case key
+          when "n"
+            @location[1] = @location[0]
+            @location[0] = :town
+            break
+          when "l"
+            calculate_enemies
+            break
+          when "a"
+            calculate_enemies
+            break
+          end
+          if keyb == 1
+            @location[1] = @location[0]
+            @location[0] = :menu
+            break
+          end
+        end
+        if @hunting # 2, 3, 4, 5, 6, (0..5) = selection limit
+          @update = true
+          key = gets.chomp.downcase
+          keyb = key.to_i #for number check
+          keys = @enemies[:wandering]
+          length = @enemies[:wandering].length
+          case key
+          when "n"
+            @location[1] = @location[0]
+            @location[0] = :town
+            break
+          when "l"
+            calculate_enemies
+            break
+          when "a"
+            calculate_enemies
+            break
+          end
+          if keyb == 1
+            @location[1] = @location[0]
+            @location[0] = :menu
+            break
+          end
+          case keyb
+          when 2 #enemy 1
+            start_battle(@enemies[:wandering][0]) unless @enemies[:wandering][0] == nil
+            break
+          when 3 #enemy 2
+            start_battle(@enemies[:wandering][1]) unless @enemies[:wandering][1] == nil
+            break
+          when 4 #enemy 3
+            start_battle(@enemies[:wandering][2]) unless @enemies[:wandering][2] == nil
+            break
+          when 5 #enemy 4
+            start_battle(@enemies[:wandering][3]) unless @enemies[:wandering][3] == nil
+            break
+          when 6 #enemy 5
+            start_battle(@enemies[:wandering][4]) unless @enemies[:wandering][4] == nil
+            break
+          end
+        end
+      end
+    elsif area == :tavern
+      loop do
+        @update = true
+        key = gets.chomp.downcase
+        keyi = key.to_i
+        case key
+        when "e"
+          @location[1] = @location[0]
+          @location[0] = :town
+          break
+        end
+        if keyi == 2
+          clr
+          draw_stats_main
+          price = @player.level * 3 + 3
+          price = 20 if price > 20
+          if price > @player.gold #not enough gold
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa " You don't have enough gold to afford a room here.", :green
+            pa "#{Game_DB.tx(:other, 0)}"
+          else
+            @player.heal(:full)
+            @player.remove_gold(price)
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa " You went to sleep. You woke up and your wounds are magically healed.", :green
+            pa "#{Game_DB.tx(:other, 0)}"
+          end
+          pa "#{Game_DB.tx(:other, 7)}"
+          key = gets
+          break
+        end
+      end
+    elsif area == :menu # @submenu = [stats, bag, spells, save game, exit game]
+      loop do
+        @update = true
+        key = gets.chomp.to_i
+        case key
+        when 0
+          @submenu[4] = true
+          break
+        when 1
+          @submenu[0] = true
+          break
+        when 2
+          @submenu[1] = true
+          break
+        when 3
+          @submenu[2] = true
+          break
+        when 4 #exit menu go back to last location
+          @location[0] = @location[1]
+          break
+        when 5
+          @submenu[3] = true
+          break
+        end
+      end
+    end
+
   end
 
   def process_shop_menu
@@ -938,6 +1270,7 @@ class Game_Main
           shopbag = Game_DB.items_array
           bagkeys = shopbag.keys
           bagkeys.delete_if {|i| i == 0}
+          bagkeys.delete_if {|i| i >= 12}
           shopbag.each {|id, value| pa  "(#{id}): #{value[0]}, #{value[8]}\n   > COST: #{value[7]}", :green unless id == 0 }
           pa "#{Game_DB.tx(:other, 0)}"
           pa "#{Game_DB.tx(:common, 22)}", :green, :bright
@@ -995,208 +1328,6 @@ class Game_Main
     draw_stats_main
   end
 
-  #N, W, E, S, 1(menu)
-  #locations: :town, :arena, :tavern, :shop, :forest, :menu
-  def process_input(area=@location[0])
-    if area == :town
-      loop do
-        @update = true
-        key = gets.chomp.downcase
-        keyb = key.to_i #for number check
-        case key
-        when "n"
-          @location[1] = @location[0]
-          @location[0] = :arena
-          break
-        when "w"
-          @location[1] = @location[0]
-          @location[0] = :tavern
-          break
-        when "e"
-          @location[1] = @location[0]
-          @location[0] = :shop
-          break
-        when "s"
-          @location[1] = @location[0]
-          @location[0] = :forest
-          break
-        end
-        if keyb == 1
-          @location[1] = @location[0]
-          @location[0] = :menu
-          break
-        end
-      end
-    elsif area == :shop
-      loop do
-        @update = true
-        key = gets.chomp.downcase
-        keyb = key.to_i #number input
-        case key
-        when "w" #back to town
-          @location[1] = @location[0]
-          @location[0] = :town
-          break
-        end
-        if keyb == 1
-          @location[1] = @location[0]
-          @location[0] = :menu
-          break
-        elsif keyb == 3 #open weapons shop
-          @shopmenu[0] = true
-          break
-        elsif keyb == 4 #open armor shop
-          @shopmenu[1] = true
-          break
-        elsif keyb == 5 #open commons shop
-          @shopmenu[2] = true
-          break
-        end
-      end
-    elsif area == :arena
-      loop do
-        @update = true
-        key = gets.chomp.downcase
-        keyb = key.to_i #for number check
-        case key
-        when "s"
-          @location[1] = @location[0]
-          @location[0] = :town
-          break
-        end
-        if keyb == 1
-          @location[1] = @location[0]
-          @location[0] = :menu
-          break
-        end
-      end
-    elsif area == :forest
-      loop do
-        if !@hunting
-          @update = true
-          key = gets.chomp.downcase
-          keyb = key.to_i #for number check
-          case key
-          when "n"
-            @location[1] = @location[0]
-            @location[0] = :town
-            break
-          when "l"
-            calculate_enemies
-            break
-          when "a"
-            calculate_enemies
-            break
-          end
-          if keyb == 1
-            @location[1] = @location[0]
-            @location[0] = :menu
-            break
-          end
-        end
-        if @hunting # 2, 3, 4, 5, 6, (0..5) = selection limit
-          @update = true
-          key = gets.chomp.downcase
-          keyb = key.to_i #for number check
-          keys = @enemies[:wandering]
-          length = @enemies[:wandering].length
-          case key
-          when "n"
-            @location[1] = @location[0]
-            @location[0] = :town
-            break
-          when "l"
-            calculate_enemies
-            break
-          when "a"
-            calculate_enemies
-            break
-          end
-          if keyb == 1
-            @location[1] = @location[0]
-            @location[0] = :menu
-            break
-          end
-          case keyb
-          when 2 #enemy 1
-            start_battle(@enemies[:wandering][0]) unless @enemies[:wandering][0] == nil
-            break
-          when 3 #enemy 2
-            start_battle(@enemies[:wandering][1]) unless @enemies[:wandering][1] == nil
-            break
-          when 4 #enemy 3
-            start_battle(@enemies[:wandering][2]) unless @enemies[:wandering][2] == nil
-            break
-          when 5 #enemy 4
-            start_battle(@enemies[:wandering][3]) unless @enemies[:wandering][3] == nil
-            break
-          when 6 #enemy 5
-            start_battle(@enemies[:wandering][4]) unless @enemies[:wandering][4] == nil
-            break
-          end
-        end
-      end
-    elsif area == :tavern
-      loop do
-        @update = true
-        key = gets.chomp.downcase
-        keyi = key.to_i
-        case key
-        when "e"
-          @location[1] = @location[0]
-          @location[0] = :town
-          break
-        end
-        if keyi == 2
-          clr
-          draw_stats_main
-          price = @player.level * 3 + 3
-          price = 20 if price > 20
-          if price > @player.gold #not enough gold
-            pa "#{Game_DB.tx(:other, 0)}"
-            pa " You don't have enough gold to afford a room here.", :green
-            pa "#{Game_DB.tx(:other, 0)}"
-          else
-            @player.heal(:full)
-            @player.remove_gold(price)
-            pa "#{Game_DB.tx(:other, 0)}"
-            pa " You went to sleep. You woke up and your wounds are magically healed.", :green
-            pa "#{Game_DB.tx(:other, 0)}"
-          end
-          pa "#{Game_DB.tx(:other, 7)}"
-          key = gets
-          break
-        end
-      end
-    elsif area == :menu # @submenu = [stats, bag, spells, save game, exit game]
-      loop do
-        @update = true
-        key = gets.chomp.to_i
-        case key
-        when 0
-          @submenu[4] = true
-          break
-        when 1
-          @submenu[0] = true
-          break
-        when 2
-          @submenu[1] = true
-          break
-        when 3
-          @submenu[2] = true
-          break
-        when 4 #exit menu go back to last location
-          @location[0] = @location[1]
-          break
-        when 5
-          @submenu[3] = true
-          break
-        end
-      end
-    end
-
-  end
-
         #      [    0,   1,     2,          3,         4,]
   # @submenu = [stats, bag, spells, save game, exit game]
   def draw_sub_menu
@@ -1213,14 +1344,18 @@ class Game_Main
       spells.each {|i| sp_names.push Game_DB.spellbook(i, 0) }
       names_conc = ""
       sp_names.each {|i| names_conc << i + ", "}
+      bgs = @player.read_badges(true)
       b_names = ""
+      expneed = Game_DB.experience_array(@player.level+1)
       if @player.badges.size > 0
-        @player.badges.each {|i| b_names << i + "  "}
+        @player.badges.each {|i|
+          lvl = bgs[i]; lvl = lvl.to_s
+          b_names << i + lvl + "  "}
       end
       pa "                  Name:           #{@player.playername}", :blue, :bright
       pa "                  Race:           #{@player.race}", :blue, :bright
       pa "                  Level:          #{@player.level}", :blue, :bright
-      pa "                  Exp:            #{@player.exp}/#{@stats[6]}", :blue, :bright
+      pa "                  Exp:            #{@player.exp}/#{expneed[1]}", :blue, :bright
       pa "                  HP:             #{@stats[1]}/#{@stats[2]}", :blue, :bright
       pa "                  MP:             #{@stats[3]}/#{@stats[4]}", :blue, :bright
       pa "                  Base Strength:  #{@player.read_stat(:atk, :base)}", :red, :bright
@@ -1245,6 +1380,10 @@ class Game_Main
       pa "#{Game_DB.tx(:other, 3)}"
       key = gets.chomp.downcase
       @player.add_gold(75000) if key == "makemerich"
+      if key == "forcelvlexp"
+        key = gets.chomp.to_i
+        @player.add_exp(key)
+      end
       @submenu[0] = false
     elsif @submenu[1] #player inventory
       pa "#{Game_DB.tx(:other, 0)}"

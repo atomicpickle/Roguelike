@@ -1,18 +1,27 @@
 # RoguelikeRubyArena
- hmm... well its a text game.
+Text Adventure Roguelike Game Version BETA 1.0.1
+
+The Beta version is now available, which means all core systems are completed.
+More content, formatting and stuff is now being added to the game. It is Now
+in a playable state with all the core stuff.
 
  If you have Ruby installed, run the name by starting launch.rb
 
  If you don't have Ruby, Run the game with the RubyArena.exe file in the Compiled
  folder.
 
-
- Nearly ready to call this a beta release!
-
  in progress (not ordered)
-  - arena battles
+ - addition of more arena bosses
+ - formatting various screens to look prettier
+ - more colorization
+ - adding more areas
+ - adding npcs to describe things in world (how to hunt and level, tips etc)
+ - adding of basic quests (such as kill x mob for reward)
+ - adding of method to get currently hidden stat view items
 
 completed
+  - arena badges and earning system
+  - arena battles
   - figured out compiling and added precompiled version
   - difficulty rating for battles
   - arena badges

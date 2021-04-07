@@ -106,7 +106,15 @@ module Game_DB
     @textdb[:common][6]  = " To your NORTH, you see the city gates and the entrance to  \n Dracilix City. A Sentinal stares at you from the gates."
     @textdb[:common][7]  = " All other directions seemed covered in overgrowth. Will you \n look around the Forest, or go NORTH back to the city?"
 
-    @textdb[:common][8]  = " You stand at the enterance to the Arena. An angry looking man \n guards the main enterance. He takes one look at you, laughs \n and tells you to come back when you got some meat on you."
+    @textdb[:common][8]  = " You stand at the entrance to the Arena. An angry looking man \n guards the main enterance. He takes one look at you, and motions\n you forward. He stops you and says 'show Badge! No Badge, no\n enter!' Not having any badges, you walk away..."
+    @textdb[:common][101]= " You stand at the entrance to the Arena. An angry looking man \n guards the main enterance. He takes one look at you, and motions\n you forward. He stops you and says 'show Badge! No Badge, no\n enter!' You show him your Badges. He smiles, and motions you\n inside."
+    @textdb[:common][102]= " You are in the Arena Front Hall. A Lady behind a counter and \n glass motions you forward. 'Hey buddy, you can only fight on the level'\n 'that you are qualified for. Let me see your badges.'\n After showing her your badges, she points you to a short hall\n that leads to a fighting pit. A crowd can be heard mingling."
+    @textdb[:common][107]= " You stand at the edge of the fighting pit. A crowd of patrons\n cheer from the stands, atop a stone wall surrounding the pit."
+    @textdb[:common][103]= " To your SOUTH is the Arena entrance and Front Hall."
+    @textdb[:common][104]= " Step Forward into the fighting pit to begin combat."
+    @textdb[:common][108]= " Step Forward into the hall to approach the fighting pit."
+    @textdb[:common][106]= " To your SOUTH is the Arena Entrance."
+    @textdb[:common][105]= " To your NORTH is the Arena Hall."
     @textdb[:common][9]  = " To your SOUTH is the center of Dracilix City."
 
     @textdb[:common][10] = " You make your way through some dense Brush, barely any sunlight \n pierces the thick canopy of the forest. You hear something. \n Continue to (L)ook (A)round or select a target."
@@ -130,6 +138,7 @@ module Game_DB
     @textdb[:cmd][2] = ["(E)ast"]
     @textdb[:cmd][3] = ["(S)outh"]
 
+    @textdb[:cmd][28] = ["(2) Step (F)orward"]
 
     @textdb[:cmd][4] = ["(1) Buy"]
     @textdb[:cmd][5] = ["(2) Sell"]
@@ -170,7 +179,7 @@ module Game_DB
     @textdb[:battle][8] = ["(I)tem"]
     @textdb[:battle][9] = ["(R)un"]
     @textdb[:battle][0] = "ACTIVE BATTLE: IN THE WILD                                          "
-    @textdb[:battle][1] = "ACTIVE BATTLE: ARENA"
+    @textdb[:battle][1] = "                     ACTIVE BATTLE: ARENA"
     @textdb[:battle][2] = "DIFFICULTY: EASY"
     @textdb[:battle][3] = "DIFFICULTY: MEDIUM"
     @textdb[:battle][4] = "DIFFICULTY: HARD"
@@ -275,11 +284,12 @@ module Game_DB
           Special Thanks: Teague Hammell
           Special Thanks: _powder_ (reddit.com)
           Icon Made by 'Good Ware' from www.flaticon.com"
-    @textdb[:other][12]= " Version: Alpha.1.21.04.06.a            Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: BETA 1.01            Author: Matt Sully(@GumpNerd)"
   end
 
-  def tx(section, id)
-    return nil if section == nil || id == nil
+  def tx(section=nil, id=nil)
+    return nil if section == nil
+    return @textdb[section] if id == nil
     return @textdb[section][id]
   end
 
@@ -500,6 +510,26 @@ module Game_DB
     return base
   end
 
+  def populate_arena_enemies(badge_string=nil)
+    return if badge_string == nil
+    enemyids = []
+    truekey = -1
+    @textdb[:badges].each {|k,v| truekey = k if v == badge_string}
+    enemyids.push(:b0, :b1) if truekey == 0
+    enemyids.push(:b2, :b3) if truekey == 1
+    enemyids.push(:b4, :b5) if truekey == 2
+    enemyids.push(:b4, :b5) if truekey >= 2
+    return enemyids
+  end
+
+  def find_next_badge(string)
+    truekey = 5
+    @textdb[:badges].each {|k,v| truekey = k if v == string}
+    truekey += 1
+    return @textdb[:badges][truekey-1] if truekey > 11
+    return @textdb[:badges][truekey]
+  end
+
   def populate_weapons_db
     #             [Weapon name,              atk, spd, 2hand,  cost]
     @weapons[0] = ["Fists        ",            0,   0, false,      0]
@@ -552,7 +582,7 @@ module Game_DB
 
   def populate_spells_db
     #            [Spell name,             Heal?,   [Minmax], Cost,   Description]
-    @spells[0] = ["...",                  false,     [0, 0],    0,   "..."]
+    @spells[0] = ["Burp!",                false,     [0, 0],    0,   "Drunkely misprounounce the heal spell and cause minor damage."]
     @spells[1] = ["Heal",                  true,    [7, 24],    4,   "Simple healing spell"]
     @spells[2] = ["Greater Heal",          true,  [45, 125],    9,   "Less simple healing spell"]
     @spells[3] = ["Tremor",               false,   [5,  40],    6,   "Sends a tremor out and throws the target"]
@@ -593,12 +623,12 @@ module Game_DB
     @enemies[17] =  ["Cute Velociraptor",       4,   7,  192,   22,   49,   58,   40,   224,    204, [9, 10],   10,    [2, 0],  25]
     @enemies[18] =  ["Electric Floating Skull", 5,   8,  256,   70,   54,   50,   32,   300,    225,  [8, 9],   12,   [2, 11],  40]
 
-    @enemies[:b0] = ["Rosco the Drunk",         2,   4,  112,   24,   24,   15,   15,   150,    100, [3, 10],   10,    [1, 0],  25]
-    @enemies[:b4] = ["Babba-Yagga",             5,   5,  100,   28,   30,   15,   13,   120,    175,  [1, 6],   12,    [1, 3],  30]
-    @enemies[:b5] = ["Big Gay Yeti",            4,   5,  112,   30,   32,   10,   15,   128,    180,  [4, 5],   30,    [1, 7],  35]
-    @enemies[:b1] = ["Tiny",                    1,   7,  250,    0,   58,   25,   12,  1250,   2500,  [3, 9],   10,    [0, 0],   0]
-    @enemies[:b2] = ["Lana",                    1,   9,  777,   86,   74,   58,   20,  3450,   7500, [10, 9],   25,    [2, 6],  40]
-    @enemies[:b3] = ["Sexual Harrasment Panda", 4,  10, 1250,  108,   96,   64,   28,  7500,  10500, [8, 10],   33,    [2, 6],  40]
+    @enemies[:b0] = ["Rosco the Drunk",         2,   4,  120,   24,   30,   15,   15,   150,    100, [3, 10],   10,    [1, 0],  35]
+    @enemies[:b1] = ["Babba-Yagga",             5,   5,  128,   28,   24,   15,   18,   120,    175,  [1, 6],   12,    [1, 3],  35]
+    @enemies[:b2] = ["Big Gay Yeti",            4,   6,  244,   30,   45,   35,   24,   275,    400,  [4, 5],   30,    [1, 7],  35]
+    @enemies[:b3] = ["Tiny",                    1,   6,  325,    0,   60,   25,   20,   350,    750,  [3, 9],   10,    [0, 0],   0]
+    @enemies[:b4] = ["Lana",                    1,   7,  777,   86,   72,   46,   30,   800,   1200, [10, 9],   25,    [2, 6],  40]
+    @enemies[:b5] = ["Sexual Harrasment Panda", 4,   8, 1040,  108,   88,   50,   34,  1355,   2000, [8, 10],   33,    [2, 6],  40]
   end
 
   #key for experience_req = level (So experience_req[3] = exp for level 3)
