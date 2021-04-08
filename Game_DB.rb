@@ -186,15 +186,15 @@ module Game_DB
 
     @textdb[:badges][0] = '<{^}>'
     @textdb[:badges][1] = '<{1}>'
-    @textdb[:badges][3] = '<{2}>'
-    @textdb[:badges][4] = '<{3}>'
-    @textdb[:badges][5] = '<{4}>'
-    @textdb[:badges][6] = '<{5}>'
-    @textdb[:badges][7] = '<{6}>'
-    @textdb[:badges][8] = '<{7}>'
-    @textdb[:badges][9] = '<{8}>'
-    @textdb[:badges][10]= '<{9}>'
-    @textdb[:badges][11]= '<{#}>'
+    @textdb[:badges][2] = '<{2}>'
+    @textdb[:badges][3] = '<{3}>'
+    @textdb[:badges][4] = '<{4}>'
+    @textdb[:badges][5] = '<{5}>'
+    @textdb[:badges][6] = '<{6}>'
+    @textdb[:badges][7] = '<{7}>'
+    @textdb[:badges][8] = '<{8}>'
+    @textdb[:badges][9]= '<{9}>'
+    @textdb[:badges][10]= '<{#}>'
 
     @textdb[:other][0] = "\n"
     @textdb[:other][1] = " This is your game menu. You can access stuff and things from here."
@@ -283,8 +283,9 @@ module Game_DB
           Game Programmed and developed by Matt Sully (@GumpNerd)
           Special Thanks: Teague Hammell
           Special Thanks: _powder_ (reddit.com)
+          Special Thanks: Andrek8 (reddit.com)
           Icon Made by 'Good Ware' from www.flaticon.com"
-    @textdb[:other][12]= " Version: BETA 1.01            Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: BETA 1.0.2            Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section=nil, id=nil)
@@ -523,10 +524,10 @@ module Game_DB
   end
 
   def find_next_badge(string)
-    truekey = 5
+    truekey = 0
     @textdb[:badges].each {|k,v| truekey = k if v == string}
     truekey += 1
-    return @textdb[:badges][truekey-1] if truekey > 11
+    return @textdb[:badges][truekey-1] if truekey > 10
     return @textdb[:badges][truekey]
   end
 

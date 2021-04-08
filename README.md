@@ -10,6 +10,14 @@ in a playable state with all the core stuff.
  If you don't have Ruby, Run the game with the RubyArena.exe file in the Compiled
  folder.
 
+ BETA Versions updates and fixes:
+
+    BETA 1.0.2:
+    - fixed error obtaining new badges beyond 2nd badge
+
+    BETA 1.0.1:
+    - initial stable release with all core functions
+
  in progress (not ordered)
  - addition of more arena bosses
  - formatting various screens to look prettier

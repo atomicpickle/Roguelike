@@ -103,7 +103,7 @@ class Player
   end
 
   def get_current_badge
-    proghash = read_badges(true)
+    proghash = @badge_progress.dup
     proghash.reject! {|k,v| v >= 5}
     proghash.reject! {|k,v| v == 0}
     return proghash
