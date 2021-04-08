@@ -158,69 +158,69 @@ class Player
     array = Game_DB.items_array(id)
     if id == 1
       heal(:hp, array[1])
-      pa "You used 1x #{array[0]} and recovered #{array[1]} HP!"
+      pa "You used 1x #{array[0]} and recovered #{array[1]} HP!", :blue, :bright
     elsif id == 2
       heal(:mp, array[2])
-      pa "You used 1x #{array[0]} and recovered #{array[2]} MP!"
+      pa "You used 1x #{array[0]} and recovered #{array[2]} MP!", :blue, :bright
     elsif id == 3
       heal(:hp, array[1])
-      pa "You used 1x #{array[0]} and recovered #{array[1]} HP!"
+      pa "You used 1x #{array[0]} and recovered #{array[1]} HP!", :blue, :bright
     elsif id == 4
       heal(:mp, array[2])
-      pa "You used 1x #{array[0]} and recovered #{array[2]} MP!"
+      pa "You used 1x #{array[0]} and recovered #{array[2]} MP!", :blue, :bright
     elsif id == 5
       heal(:hp, array[1])
-      pa "You used 1x #{array[0]} and recovered #{array[1]} HP!"
+      pa "You used 1x #{array[0]} and recovered #{array[1]} HP!", :blue, :bright
     elsif id == 6
       heal(:hp, array[1])
       heal(:mp, array[2])
-      pa "You used 1x #{array[0]} and recovered #{array[1]} HP and #{array[2]} MP!"
+      pa "You used 1x #{array[0]} and recovered #{array[1]} HP and #{array[2]} MP!", :blue, :bright
     elsif id == 7
       res = rand(-1..array[3])
       add_bonus_stat(:hp, res)
-      pa "You used 1x #{array[0]} and your MAX HP was INCREASED by #{res}!" if res >= 0
-      pa "You used 1x #{array[0]} and your MAX HP was DECREASED by #{res}!" if res < 0
+      pa "You used 1x #{array[0]} and your MAX HP was INCREASED by #{res}!", :blue, :bright if res >= 0
+      pa "You used 1x #{array[0]} and your MAX HP was DECREASED by #{res}!", :blue, :bright if res < 0
     elsif id == 8
       res = rand(-1..array[4])
       add_bonus_stat(:mp, res)
-      pa "You used 1x #{array[0]} and your MAX MP was INCREASED by #{res}!" if res >= 0
-      pa "You used 1x #{array[0]} and your MAX MP was DECREASED by #{res}!" if res < 0
+      pa "You used 1x #{array[0]} and your MAX MP was INCREASED by #{res}!", :blue, :bright if res >= 0
+      pa "You used 1x #{array[0]} and your MAX MP was DECREASED by #{res}!", :blue, :bright if res < 0
     elsif id == 9
       res = rand(-1..array[5])
       add_bonus_stat(:atk, res)
-      pa "You used 1x #{array[0]} and your ATTACK was INCREASED by #{res}!" if res >= 0
-      pa "You used 1x #{array[0]} and your ATTACK was DECREASED by #{res}!" if res < 0
+      pa "You used 1x #{array[0]} and your ATTACK was INCREASED by #{res}!", :blue, :bright if res >= 0
+      pa "You used 1x #{array[0]} and your ATTACK was DECREASED by #{res}!", :blue, :bright if res < 0
     elsif id == 10
       res = rand(-1..array[6])
       add_bonus_stat(:def, res)
-      pa "You used 1x #{array[0]} and your DEFENSE was INCREASED by #{res}!" if res >= 0
-      pa "You used 1x #{array[0]} and your DEFENSE was DECREASED by #{res}!" if res < 0
+      pa "You used 1x #{array[0]} and your DEFENSE was INCREASED by #{res}!", :blue, :bright if res >= 0
+      pa "You used 1x #{array[0]} and your DEFENSE was DECREASED by #{res}!", :blue, :bright if res < 0
     elsif id == 11
       hp = rand(-1..array[3]); mp = rand(-1..array[4])
       atk = rand(-1..array[5]); deb = rand(-1..array[6])
       add_bonus_stat(:hp, hp); add_bonus_stat(:mp, mp)
       add_bonus_stat(:atk, atk); add_bonus_stat(:def, deb)
-      pa "You used 1x #{array[0]}..."
-      pa "Your MAX HP was INCREASED by #{hp}" if hp >= 0
-      pa "Your MAX HP was DECREASED by #{hp}" if hp < 0
-      pa "Your MAX MP was INCREASED by #{mp}" if mp >= 0
-      pa "Your MAX MP was DECREASED by #{mp}" if mp < 0
-      pa "Your ATTACK was INCREASED by #{atk}" if atk >= 0
-      pa "Your ATTACK was DECREASED by #{atk}" if atk < 0
-      pa "Your DEFENSE was INCREASED by #{deb}" if deb >= 0
-      pa "Your DEFENSE was DECREASED by #{deb}" if deb < 0
+      pa "You used 1x #{array[0]}...", :blue, :bright
+      pa "Your MAX HP was INCREASED by #{hp}", :blue, :bright if hp >= 0
+      pa "Your MAX HP was DECREASED by #{hp}", :blue, :bright if hp < 0
+      pa "Your MAX MP was INCREASED by #{mp}", :blue, :bright if mp >= 0
+      pa "Your MAX MP was DECREASED by #{mp}", :blue, :bright if mp < 0
+      pa "Your ATTACK was INCREASED by #{atk}", :blue, :bright if atk >= 0
+      pa "Your ATTACK was DECREASED by #{atk}", :blue, :bright if atk < 0
+      pa "Your DEFENSE was INCREASED by #{deb}", :blue, :bright if deb >= 0
+      pa "Your DEFENSE was DECREASED by #{deb}", :blue, :bright if deb < 0
     elsif id == 12
       add_perm_reader(0)
-      pa " You used a #{array[0]}, you can now permanently see an enemies Speed in battle!"
+      pa " You used a #{array[0]}, you can now permanently see an enemies Speed in battle!", :blue, :bright
     elsif id == 13
       add_perm_reader(1)
-      pa " You used a #{array[0]}, you can now permanently see an enemies Attack in battle!"
+      pa " You used a #{array[0]}, you can now permanently see an enemies Attack in battle!", :blue, :bright
     elsif id == 14
       add_perm_reader(2)
-      pa " You used a #{array[0]}, you can now permanently see an enemies Defense in battle!"
+      pa " You used a #{array[0]}, you can now permanently see an enemies Defense in battle!", :blue, :bright
     elsif id == 15
       add_perm_reader(3)
-      pa " You used a #{array[0]}, you can now permanently see an enemies Rewards in battle!"
+      pa " You used a #{array[0]}, you can now permanently see an enemies Rewards in battle!", :blue, :bright
     end
   end
   #  [speed,  atk,   def, rewards]
@@ -346,10 +346,10 @@ class Player
   # exp array   [amount, total] 0..1
   #stats symbols :hp :mp :atk :def :spd
   def level_up_chk
-    return if @level >= 10
+    return if @level >= 20
     lvlnext = @level + 1
     nextlvlary = Game_DB.level_stats_array(@race, lvlnext)
-    expnext = Game_DB.experience_array(lvlnext)
+    expnext = Game_DB.experience_array(lvlnext, @race)
     if @exp >= expnext[1]
       level_up(true)
       set_stat(:hp, nextlvlary[0])
@@ -410,7 +410,13 @@ class Player
         end
         result = left
         return result #only left hand equipped or 2 handed, return attack power
+      elsif rh != 0
+        weap = Game_DB.weapons_array(rh)
+        power = weap[1]
+        right = var + power
+        return right if !weap[3] #1 handed weapon only on right hand, left hand empty
       end
+
     end
     #return total defense stats + armor
     if stat == :def

@@ -1,4 +1,4 @@
-# Ruby Arena version BETA 1.0.3
+# Ruby Arena version BETA 1.0.4 (rel april 8th 2021)
 
 To support this games development, you can buy it here for your choice
 of price: https://gumpnerd.itch.io/ruby-arena
@@ -18,6 +18,16 @@ in a playable state with all the core stuff.
  Screenshots: https://imgur.com/gallery/Z8P1mB6
 
  BETA Versions updates and fixes:
+
+    BETA 1.0.4
+    - fixed bug where having only a 1 handed weapon in your right hand caused an error.
+    - level-tree is now expanded, all races can get up to level 20
+    - all races now have different exp requirements to level up
+    - drawfs are easiest to level, humans mid range, elves hardest
+    - new spells added, Mega Heal, Tsunami, Deathknell
+    - colorized Weapon, Armor and Item sub menus (status screen)
+    - colorized Item sub menu (battle screen)
+    - colorized spell selection menu
 
     BETA 1.0.3
     - added more enemies and arena bosses

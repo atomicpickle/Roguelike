@@ -44,7 +44,9 @@ module Game_DB
   @items = {}
   @spells = {}
   @enemies = {}
-  @experience_req = {}
+  @experience_reqd = {}
+  @experience_reqh = {}
+  @experience_reqe = {}
   @level_up_chart = {}
   @level_up_chart[:dwarf] = {}
   @level_up_chart[:human] = {}
@@ -193,7 +195,7 @@ module Game_DB
     @textdb[:badges][6] = '<{6}>'
     @textdb[:badges][7] = '<{7}>'
     @textdb[:badges][8] = '<{8}>'
-    @textdb[:badges][9]= '<{9}>'
+    @textdb[:badges][9] = '<{9}>'
     @textdb[:badges][10]= '<{#}>'
 
     @textdb[:other][0] = "\n"
@@ -285,7 +287,7 @@ module Game_DB
           Special Thanks: _powder_ (reddit.com)
           Special Thanks: Andrek8 (reddit.com)
           Icon Made by 'Good Ware' from www.flaticon.com"
-    @textdb[:other][12]= " Version: BETA 1.0.3            Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: BETA 1.0.4            Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section=nil, id=nil)
@@ -574,9 +576,9 @@ module Game_DB
     @items[6]  = ["Night-Shade Elixer",   500,  250,     0,    0,     0,     0,     1000,    "Heals +500 HP and +250 MP"]
     @items[7]  = ["Angels Tear",            0,    0,     5,    0,     0,     0,     2500,    "Permanently increases HP up to -1 to +5"]
     @items[8]  = ["Necromancer's Eye",      0,    0,     0,    5,     0,     0,     3000,    "Permanently increases MP up to -1 to +5"]
-    @items[9]  = ["Dragon's Testicle",      0,    0,     0,    0,     6,     0,     3500,    "Permanently increases ATTACK up to -1 to +6"]
+    @items[9]  = ["Dragon's Talon",         0,    0,     0,    0,     6,     0,     3500,    "Permanently increases ATTACK up to -1 to +6"]
     @items[10] = ["Fairy Dust",             0,    0,     0,    0,     0,     6,     3500,    "Permanently increases DEFENSE up to -1 to +6"]
-    @items[11] = ["Godsperm",               0,    0,    10,   10,    10,    10,     9001,    "Permanently increases HP, MP, ATK, DEF up to -1 to +10"]
+    @items[11] = ["Godspeck",               0,    0,    10,   10,    10,    10,     9001,    "Permanently increases HP, MP, ATK, DEF up to -1 to +10"]
     @items[12] = ["Speed Reader",           0,    0,     0,    0,     0,     0,    12500,    "After Use: Permanently enables the ability to see your enemies Speed"]
     @items[13] = ["Attack Reader",          0,    0,     0,    0,     0,     0,    12500,    "After Use: Permanently enables the ability to see your enemies Attack"]
     @items[14] = ["Defense Reader",         0,    0,     0,    0,     0,     0,    12500,    "After Use: Permanently enables the ability to see your enemies Defense"]
@@ -585,7 +587,7 @@ module Game_DB
 
   def populate_spells_db
     #            [Spell name,             Heal?,   [Minmax], Cost,   Description]
-    @spells[0] = ["Burp!",                false,     [0, 0],    0,   "Drunkely misprounounce the heal spell and cause minor damage."]
+    @spells[0] = ["Burp!",                false,     [0, 0],    0,   "Drunkely misprounounce the heal spell and cause minor damage"]
     @spells[1] = ["Heal",                  true,    [7, 24],    4,   "Simple healing spell"]
     @spells[2] = ["Greater Heal",          true,  [45, 125],    9,   "Less simple healing spell"]
     @spells[3] = ["Tremor",               false,   [5,  40],    6,   "Sends a tremor out and throws the target"]
@@ -598,6 +600,9 @@ module Game_DB
     @spells[10]= ["Hurricane",            false,  [45, 250],   16,   "A Hurricaine hits the target, then disappears"]
     @spells[11]= ["Bolt",                 false, [114, 166],   24,   "Electricity shoots from all of your orifices and strikes"]
     @spells[12]= ["Wall of Fire",         false,  [88, 333],   32,   "A Wall of Fire emerges and envelopes everything"]
+    @spells[13]= ["Mega Heal",             true, [200, 320],   33,   "Complicated healing spell"]
+    @spells[14]= ["Tsunami",              false, [175, 275],   42,   "A massive Tsunami appears out of thin air and drowns the target"]
+    @spells[15]= ["Deathknell",           false,   [1, 750],   66,   "The target is either ripped apart, or somewhat damaged by Death himself"]
   end
 
   def populate_enemies_db #races: ghost(0), dwarf(1), human(2), elf(3), animal(4), demon(5)
@@ -643,37 +648,93 @@ module Game_DB
 
     #              #[Enemy name,             race, lvl,  mhp,  mmp,  atk,  def,  spd,   exp,   gold, [drops],drop%,  [spells], sp%]
 
-    @enemies[:b0] = ["Rosco the Drunk",         2,   4,  120,   24,   30,   15,   15,   150,    100, [3, 10],   10,    [1, 0],  35]
-    @enemies[:b1] = ["Babba-Yagga",             5,   5,  128,   28,   24,   15,   18,   120,    175,  [1, 6],   12,    [1, 3],  35]
+    @enemies[:b0] = ["Rosco the Drunk",         2,   4,  120,   24,   32,   15,   15,   150,    100, [3, 10],   10,    [1, 0],  35]
+    @enemies[:b1] = ["Babba-Yagga",             5,   5,  128,   28,   26,   18,   18,   120,    175,  [1, 6],   12,    [1, 3],  35]
 
     @enemies[:b2] = ["Big Happy Yeti",          4,   6,  244,   30,   48,   55,   32,   355,    500,  [4, 5],   30,    [1, 7],  35]
     @enemies[:b3] = ["Tiny",                    2,   6,  325,    0,   61,   58,   36,   386,    650,  [3, 9],   10,    [0, 0],   0]
 
-    @enemies[:b4] = ["Lana",                    2,   7,  575,   86,   56,   53,   40,   550,   1000, [10, 9],   25,    [2, 6],  40]
-    @enemies[:b5] = ["Sexual Harrasment Panda", 4,   7,  625,  108,   64,   60,   40,   625,   1250, [8, 10],   33,    [2, 6],  40]
+    @enemies[:b4] = ["Lana",                    2,   7,  575,   86,   56,   64,   40,   550,   1000, [10, 9],   25,    [2, 6],  40]
+    @enemies[:b5] = ["Sexual Harrasment Panda", 4,   7,  625,  108,   64,   70,   40,   625,   1250, [8, 10],   33,    [2, 6],  40]
 
-    @enemies[:b6] = ["Hatchet Patrick",         2,   8,  775,    0,   77,   64,   55,   750,   1500, [10, 9],   25,    [0, 0],   0]
-    @enemies[:b7] = ["Royal Mage Jimmy",        2,   8,  850,  175,   64,   60,   50,   775,   1550, [8, 11],   33,    [2, 8],  45]
+    @enemies[:b6] = ["Hatchet Patrick",         2,   8,  775,    0,   77,   74,   55,   750,   1500, [10, 9],   25,    [0, 0],   0]
+    @enemies[:b7] = ["Royal Mage Jimmy",        2,   8,  850,  175,   64,   80,   50,   775,   1550, [8, 11],   33,    [2, 8],  45]
 
-    @enemies[:b8] = ["Ninja Bob",               2,   9, 1040,    0,   78,   70,   60,  1250,   1850,  [7, 9],   25,    [0, 0],   0]
-    @enemies[:b9] = ["Angry Lana",              2,   9, 1110,  250,   85,   80,   64,  1550,   2050, [8, 11],   33,    [2,11],  30]
+    @enemies[:b8] = ["Ninja Bob",               2,   9, 1040,    0,   78,   82,   60,  1250,   1850,  [7, 9],   25,    [0, 0],   0]
+    @enemies[:b9] = ["Angry Lana",              2,   9, 1110,  250,   85,   90,   64,  1550,   2050, [8, 11],   33,    [2,11],  30]
   end
 
   #key for experience_req = level (So experience_req[3] = exp for level 3)
   def populate_experience_req_db
     #                     [amount, total]
-    @experience_req[0]  = [     0,     0]
-    @experience_req[1]  = [    14,    14]
-    @experience_req[2]  = [    40,    54]
-    @experience_req[3]  = [   106,   160]
-    @experience_req[4]  = [   214,   374]
-    @experience_req[5]  = [   406,   780]
-    @experience_req[6]  = [   664,  1444]
-    @experience_req[7]  = [   996,  2440]
-    @experience_req[8]  = [  1044,  3484]
-    @experience_req[9]  = [  1656,  5140]
-    @experience_req[10] = [  3004,  8144]
-    @experience_req[11] = [150000,166090]
+    @experience_reqd[0]  = [     0,     0]
+    @experience_reqd[1]  = [    14,    14]
+    @experience_reqd[2]  = [    40,    54]
+    @experience_reqd[3]  = [   106,   160]
+    @experience_reqd[4]  = [   214,   374]
+    @experience_reqd[5]  = [   406,   780]
+    @experience_reqd[6]  = [   664,  1444]
+    @experience_reqd[7]  = [   996,  2440]
+    @experience_reqd[8]  = [  1044,  3484]
+    @experience_reqd[9]  = [  1656,  5140]
+    @experience_reqd[10] = [  3004,  8144]
+    @experience_reqd[11] = [  4000, 12144]
+    @experience_reqd[12] = [  5550, 17694]
+    @experience_reqd[13] = [  6250, 23944]
+    @experience_reqd[14] = [  7500, 31444]
+    @experience_reqd[15] = [  9001, 40445]
+    @experience_reqd[16] = [ 11250, 51695]
+    @experience_reqd[17] = [ 13500, 65195]
+    @experience_reqd[18] = [ 15000, 80195] #
+    @experience_reqd[19] = [ 17505, 97700]
+    @experience_reqd[20] = [ 24000,121700]
+    @experience_reqd[21] =[999999,1121699]
+
+    @experience_reqh[0]  = [     0,     0]
+    @experience_reqh[1]  = [    15,    15]
+    @experience_reqh[2]  = [    45,    60]
+    @experience_reqh[3]  = [   112,   172]
+    @experience_reqh[4]  = [   232,   404]
+    @experience_reqh[5]  = [   420,   824]
+    @experience_reqh[6]  = [   685,  1509]
+    @experience_reqh[7]  = [  1075,  2584]
+    @experience_reqh[8]  = [  1250,  3834]
+    @experience_reqh[9]  = [  1800,  5634]
+    @experience_reqh[10] = [  3250,  8884]
+    @experience_reqh[11] = [  4300, 13184]
+    @experience_reqh[12] = [  5900, 19084]
+    @experience_reqh[13] = [  6666, 25750]
+    @experience_reqh[14] = [  8000, 33750]
+    @experience_reqh[15] = [  9750, 43500]
+    @experience_reqh[16] = [ 12750, 56250]
+    @experience_reqh[17] = [ 14800, 71050]
+    @experience_reqh[18] = [ 17500, 88550]
+    @experience_reqh[19] = [ 19000,107550]
+    @experience_reqh[20] = [ 28500,136050]
+    @experience_reqh[21] =[999999,1121699]
+
+    @experience_reqe[0]  = [     0,     0]
+    @experience_reqe[1]  = [    16,    16]
+    @experience_reqe[2]  = [    48,    64]
+    @experience_reqe[3]  = [   118,   182]
+    @experience_reqe[4]  = [   254,   436]
+    @experience_reqe[5]  = [   455,   891]
+    @experience_reqe[6]  = [   725,  1616]
+    @experience_reqe[7]  = [  1150,  2766]
+    @experience_reqe[8]  = [  1324,  4090]
+    @experience_reqe[9]  = [  1990,  6080]
+    @experience_reqe[10] = [  3450,  9530]
+    @experience_reqe[11] = [  4500, 14030]
+    @experience_reqe[12] = [  6250, 20280]
+    @experience_reqe[13] = [  6950, 27230]
+    @experience_reqe[14] = [  8420, 35650]
+    @experience_reqe[15] = [ 10500, 46150]
+    @experience_reqe[16] = [ 13333, 59483]
+    @experience_reqe[17] = [ 15507, 74990]
+    @experience_reqe[18] = [ 18510, 93500]
+    @experience_reqe[19] = [ 20500,114000]
+    @experience_reqe[20] = [ 31500,145500]
+    @experience_reqe[21] =[999999,1145499]
   end
 
   #key for level_up_chart = :race, level (So level_up_chart[:dwarf][3] is stats for dwarf level 3)
@@ -690,6 +751,16 @@ module Game_DB
     @level_up_chart[:dwarf][8]  = [ 106,   0,  25,  19,   3,   nil]
     @level_up_chart[:dwarf][9]  = [ 124,   0,  30,  22,   3,   nil]
     @level_up_chart[:dwarf][10] = [ 154,   0,  38,  28,   4,   nil]
+    @level_up_chart[:dwarf][11] = [ 180,   0,  45,  32,   4,   nil]
+    @level_up_chart[:dwarf][12] = [ 206,   0,  50,  36,   5,   nil]
+    @level_up_chart[:dwarf][13] = [ 240,   0,  54,  42,   5,   nil]
+    @level_up_chart[:dwarf][14] = [ 274,   0,  57,  47,   5,   nil]
+    @level_up_chart[:dwarf][15] = [ 290,   0,  62,  51,   6,   nil]
+    @level_up_chart[:dwarf][16] = [ 316,   0,  64,  54,   6,   nil]
+    @level_up_chart[:dwarf][17] = [ 333,   0,  68,  58,   7,   nil]
+    @level_up_chart[:dwarf][18] = [ 360,   0,  71,  63,   7,   nil]
+    @level_up_chart[:dwarf][19] = [ 394,   0,  75,  66,   7,   nil]
+    @level_up_chart[:dwarf][20] = [ 420,   0,  79,  70,   8,   nil]
     #  HUMANS                     [ mhp, mmp, atk, def, spd, spell]
     @level_up_chart[:human][0]  = [  13,   1,   1,   1,   1,   nil]
     @level_up_chart[:human][1]  = [  17,   4,   2,   2,   1,     1]
@@ -701,7 +772,17 @@ module Game_DB
     @level_up_chart[:human][7]  = [  75,  45,  15,  11,   4,   nil]
     @level_up_chart[:human][8]  = [  90,  54,  18,  15,   5,     9]
     @level_up_chart[:human][9]  = [ 112,  66,  22,  18,   5,   nil]
-    @level_up_chart[:human][10] = [ 120,  84,  25,  21,   5,    10]
+    @level_up_chart[:human][10] = [ 120,  84,  25,  21,   6,    10]
+    @level_up_chart[:human][11] = [ 136,  90,  28,  24,   6,   nil]
+    @level_up_chart[:human][12] = [ 152,  98,  31,  26,   7,   nil]
+    @level_up_chart[:human][13] = [ 168, 106,  34,  29,   7,    11]
+    @level_up_chart[:human][14] = [ 180, 114,  37,  33,   8,   nil]
+    @level_up_chart[:human][15] = [ 194, 120,  40,  36,   8,    12]
+    @level_up_chart[:human][16] = [ 216, 132,  43,  39,   9,   nil]
+    @level_up_chart[:human][17] = [ 230, 140,  45,  41,   9,    13]
+    @level_up_chart[:human][18] = [ 256, 152,  48,  44,  10,   nil]
+    @level_up_chart[:human][19] = [ 280, 162,  50,  46,  10,   nil]
+    @level_up_chart[:human][20] = [ 304, 180,  54,  48,  11,    14]
     #  ELVES                      [ mhp, mmp, atk, def, spd, spell]
     @level_up_chart[:elf][0]    = [  11,   5,   1,   1,   1,     1]
     @level_up_chart[:elf][1]    = [  16,  12,   2,   2,   3,     2]
@@ -709,16 +790,34 @@ module Game_DB
     @level_up_chart[:elf][3]    = [  25,  34,   2,   3,   4,     3]
     @level_up_chart[:elf][4]    = [  33,  50,   3,   4,   5,     4]
     @level_up_chart[:elf][5]    = [  40,  64,   4,   4,   5,     5]
-    @level_up_chart[:elf][6]    = [  50,  78,   6,   6,   6,     8]
-    @level_up_chart[:elf][7]    = [  63,  92,   9,   8,   6,     9]
-    @level_up_chart[:elf][8]    = [  78, 124,  11,  11,   7,    10]
-    @level_up_chart[:elf][9]    = [  92, 152,  14,  13,   7,    11]
-    @level_up_chart[:elf][10]   = [ 104, 184,  18,  16,   8,    12]
+    @level_up_chart[:elf][6]    = [  50,  78,   6,   6,   6,     7]
+    @level_up_chart[:elf][7]    = [  63,  92,   9,   8,   6,     8]
+    @level_up_chart[:elf][8]    = [  78, 124,  11,  11,   7,     9]
+    @level_up_chart[:elf][9]    = [  92, 152,  14,  13,   7,    10]
+    @level_up_chart[:elf][10]   = [ 104, 184,  18,  16,   8,    11]
+    @level_up_chart[:elf][11]   = [ 112, 200,  20,  18,   9,   nil]
+    @level_up_chart[:elf][12]   = [ 122, 216,  24,  21,   9,    12]
+    @level_up_chart[:elf][13]   = [ 130, 224,  26,  24,  10,    13]
+    @level_up_chart[:elf][14]   = [ 145, 240,  27,  26,  11,   nil]
+    @level_up_chart[:elf][15]   = [ 155, 264,  30,  30,  12,    14]
+    @level_up_chart[:elf][16]   = [ 164, 280,  32,  33,  12,   nil]
+    @level_up_chart[:elf][17]   = [ 172, 304,  35,  35,  13,    15]
+    @level_up_chart[:elf][18]   = [ 184, 320,  37,  37,  14,   nil]
+    @level_up_chart[:elf][19]   = [ 200, 330,  39,  39,  15,   nil]
+    @level_up_chart[:elf][20]   = [ 214, 356,  42,  42,  17,   nil]
   end
 
-  def experience_array(lvl=nil)
-    return @experience_req if lvl == nil
-    return @experience_req[lvl]
+  def experience_array(lvl=nil, race=:dwarf)
+    if race == :dwarf
+      return @experience_reqd if lvl == nil
+      return @experience_reqd[lvl]
+    elsif race == :human
+      return @experience_reqh if lvl == nil
+      return @experience_reqh[lvl]
+    elsif race == :elf
+      return @experience_reqe if lvl == nil
+      return @experience_reqe[lvl]
+    end
   end
 
   def level_stats_array(race=nil, lvl=nil)

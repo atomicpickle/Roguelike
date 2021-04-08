@@ -291,12 +291,12 @@ class Game_Main
     draw_stats_main
     bag = @player.read_item_bag(:items).dup
     pa "#{Game_DB.tx(:other, 0)}"
-    pa "ITEMS"
-    pa "Inventory:"
-    bag.each {|id, amt| pa "  (#{id}) #{Game_DB.items_array(id, 0)} x #{amt} #{Game_DB.items_array(id, 8)}" if amt > 0}
+    pa "ITEMS", :blue
+    pa "Inventory:", :blue
+    bag.each {|id, amt| pa "  (#{id}) #{Game_DB.items_array(id, 0)} x #{amt} #{Game_DB.items_array(id, 8)}", :blue, :bright if amt > 0}
     pa "#{Game_DB.tx(:other, 0)}"
-    pa "Use which item? (choose number or 0 to cancel)"
-    pa "You can use items even if you dont need them."
+    pa "Use which item? (choose number or 0 to cancel)", :blue
+    pa "You can use items even if you dont need them.", :blue
     pa "#{Game_DB.tx(:other, 0)}"
     key = 0
     loop do
@@ -322,11 +322,10 @@ class Game_Main
     clr
     draw_stats_main
     spells.each do |e|
-      pa "(#{e}): #{Game_DB.spellbook(e, 0)}"
-      pa "   > Cost: #{Game_DB.spellbook(e, 3)} MP"
-      pa "   > Info: #{Game_DB.spellbook(e, 4)}"
+      pa "(#{e}): #{Game_DB.spellbook(e, 0)}, Info: #{Game_DB.spellbook(e, 4)}", :blue
+      pa "   > Cost: #{Game_DB.spellbook(e, 3)} MP", :blue, :bright
     end
-    pa "Select a spell by using its (ID). Press (0) to cancel."
+    pa "Select a spell by using its (ID). Press (0) to cancel.", :blue
     loop do
       key = gets.chomp.to_i
       if spells.include?(key)
@@ -657,7 +656,7 @@ class Game_Main
     badge = @player.read_current_badge_arena.dup
     badger = badge[0]
     enemies_keys = Game_DB.populate_arena_enemies(badger)
-    return 404 if enemies_keys == []
+    return 404 if enemies_keys == [] || enemies_keys == nil
     dice = rand(1..100)
     return enemies_keys[0] if dice <= 50
     return enemies_keys[1] if dice > 50
@@ -668,8 +667,8 @@ class Game_Main
   #[lvl, hp, mhp, mp, mmp, exp, expneed, gold, name]
   def draw_stats_main
     lvl1 = @player.level + 1
-    expneed = Game_DB.experience_array(lvl1)
-    explast = Game_DB.experience_array(@player.level)
+    expneed = Game_DB.experience_array(lvl1, @player.race)
+    explast = Game_DB.experience_array(@player.level, @player.race)
     curexpnxt = @player.exp - explast[1]
     @stats[0] = @player.level
     @stats[1] = @player.read_cur_hpmp(:hp)
@@ -979,6 +978,7 @@ class Game_Main
           id = calculate_arena_enemy
           if id == 404
             pa "You've reached the maximum current badge level!"
+            pa "You should bug the game developer to add more levels..."
             key = gets
           else
             start_battle(id, true)
@@ -1279,6 +1279,8 @@ class Game_Main
           bagkeys = shopbag.keys
           bagkeys.delete_if {|i| i == 0}
           bagkeys.delete_if {|i| i >= 12}
+          shopbag.delete_if {|i| i == 0}
+          shopbag.delete_if {|i| i >= 12}
           shopbag.each {|id, value| pa  "(#{id}): #{value[0]}, #{value[8]}\n   > COST: #{value[7]}", :green unless id == 0 }
           pa "#{Game_DB.tx(:other, 0)}"
           pa "#{Game_DB.tx(:common, 22)}", :green, :bright
@@ -1400,10 +1402,10 @@ class Game_Main
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "#{Game_DB.tx(:cmd, 18)}"
-      pa "#{Game_DB.tx(:cmd, 19)}"
-      pa "#{Game_DB.tx(:cmd, 20)}"
-      pa "#{Game_DB.tx(:cmd, 26)}"
+      pa "#{Game_DB.tx(:cmd, 18)}", :red
+      pa "#{Game_DB.tx(:cmd, 19)}", :green
+      pa "#{Game_DB.tx(:cmd, 20)}", :blue, :bright
+      pa "#{Game_DB.tx(:cmd, 26)}", :cyan
       @submenu[1] = false
       loop do
         key = gets.chomp.to_i
@@ -1515,16 +1517,16 @@ class Game_Main
     if @itemmenu[0] #weapons screen selected
       bag = @player.read_item_bag(:weapons)
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "WEAPONS"
-      pa "Equipped:"
-      pa "    LEFT:  #{equiptextdata[:left][0]}, +#{equiptextdata[:left][1]} Attack, +#{equiptextdata[:left][2]} Speed"
-      pa "    RIGHT: #{equiptextdata[:right][0]}, +#{equiptextdata[:right][1]} Attack, +#{equiptextdata[:right][2]} Speed"
-      pa "Inventory: "
-      bag.each {|id, amt| pa "  (#{id}) #{Game_DB.weapons_array(id, 0)}   x #{amt}" if amt > 0}
+      pa "WEAPONS", :red
+      pa "Equipped:", :red
+      pa "    LEFT:  #{equiptextdata[:left][0]}, +#{equiptextdata[:left][1]} Attack, +#{equiptextdata[:left][2]} Speed", :red, :bright
+      pa "    RIGHT: #{equiptextdata[:right][0]}, +#{equiptextdata[:right][1]} Attack, +#{equiptextdata[:right][2]} Speed", :red, :bright
+      pa "Inventory: ", :red
+      bag.each {|id, amt| pa "  (#{id}) #{Game_DB.weapons_array(id, 0)}   x #{amt}", :red, :bright if amt > 0}
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "#{Game_DB.tx(:cmd, 21)}" #1 equip, 2 unequip, 4 back
-      pa "#{Game_DB.tx(:cmd, 22)}"
-      pa "#{Game_DB.tx(:cmd, 26)}"
+      pa "#{Game_DB.tx(:cmd, 21)}", :red #1 equip, 2 unequip, 4 back
+      pa "#{Game_DB.tx(:cmd, 22)}", :red
+      pa "#{Game_DB.tx(:cmd, 26)}", :cyan
       loop do
         key = gets.chomp.to_i
         case key
@@ -1532,14 +1534,14 @@ class Game_Main
           clr
           draw_stats_main
           pa "#{Game_DB.tx(:other, 0)}"
-          pa "WEAPONS"
-          pa "Equipped:"
-          pa "    LEFT:  #{equiptextdata[:left][0]}, +#{equiptextdata[:left][1]} Attack, +#{equiptextdata[:left][2]} Speed"
-          pa "    RIGHT: #{equiptextdata[:right][0]}, +#{equiptextdata[:right][1]} Attack, +#{equiptextdata[:right][2]} Speed"
-          pa "Inventory: "
-          bag.each {|id, amt| pa "  (#{id}) #{Game_DB.weapons_array(id, 0)}   x #{amt}" if amt > 0}
+          pa "WEAPONS", :red
+          pa "Equipped:", :red
+          pa "    LEFT:  #{equiptextdata[:left][0]}, +#{equiptextdata[:left][1]} Attack, +#{equiptextdata[:left][2]} Speed", :red, :bright
+          pa "    RIGHT: #{equiptextdata[:right][0]}, +#{equiptextdata[:right][1]} Attack, +#{equiptextdata[:right][2]} Speed", :red, :bright
+          pa "Inventory: ", :red
+          bag.each {|id, amt| pa "  (#{id}) #{Game_DB.weapons_array(id, 0)}   x #{amt}", :red, :bright if amt > 0}
           pa "#{Game_DB.tx(:other, 0)}"
-          pa "Equip which weapon? (choose number, or (0) to cancel)"
+          pa " Equip which weapon? (choose number, or (0) to cancel)", :red
           loop do
             key = gets.chomp.to_i
             break if bag.key?(key) == false
@@ -1548,19 +1550,19 @@ class Game_Main
               id = key
               twohd = Game_DB.weapons_array(id, 3)
               oldtwohd = Game_DB.weapons_array(@player.get_equipment_id(:lh), 3)
-              pa "(1) Left hand or (2) Right hand?     (0): Cancel"
+              pa " (1) Left hand or (2) Right hand?     (0): Cancel", :red
               key = gets.chomp.to_i
               if key == 1
                 @player.unequip_weapon(3) if oldtwohd
                 @player.equip_weapon(id, 1) unless twohd
                 @player.equip_weapon(id, 3) if twohd
-                pa "Weapon #{@player.get_equipment_text(:left)[0]} has been equipped!"
+                pa " Weapon #{@player.get_equipment_text(:left)[0]} has been equipped!", :red
                 key = gets
               elsif key == 2
                 @player.unequip_weapon(3) if oldtwohd
                 @player.equip_weapon(id, 2) unless twohd
                 @player.equip_weapon(id, 3) if twohd
-                pa "Weapon #{@player.get_equipment_text(:right)[0]} has been equipped!"
+                pa " Weapon #{@player.get_equipment_text(:right)[0]} has been equipped!", :red
                 key = gets
               else
                 break
@@ -1573,14 +1575,14 @@ class Game_Main
           clr
           draw_stats_main
           pa "#{Game_DB.tx(:other, 0)}"
-          pa "WEAPONS"
-          pa "Equipped:"
-          pa "    LEFT:  #{equiptextdata[:left][0]}, +#{equiptextdata[:left][1]} Attack, +#{equiptextdata[:left][2]} Speed"
-          pa "    RIGHT: #{equiptextdata[:right][0]}, +#{equiptextdata[:right][1]} Attack, +#{equiptextdata[:right][2]} Speed"
-          pa "Inventory: "
-          bag.each {|id, amt| pa "  (#{id}) #{Game_DB.weapons_array(id, 0)}   x #{amt}" if amt > 0}
+          pa "WEAPONS", :red
+          pa "Equipped:", :red
+          pa "    LEFT:  #{equiptextdata[:left][0]}, +#{equiptextdata[:left][1]} Attack, +#{equiptextdata[:left][2]} Speed", :red, :bright
+          pa "    RIGHT: #{equiptextdata[:right][0]}, +#{equiptextdata[:right][1]} Attack, +#{equiptextdata[:right][2]} Speed", :red, :bright
+          pa "Inventory: ", :red
+          bag.each {|id, amt| pa "  (#{id}) #{Game_DB.weapons_array(id, 0)}   x #{amt}", :red, :bright if amt > 0}
           pa "#{Game_DB.tx(:other, 0)}"
-          pa "Unequip which weapon? (1) Left hand or (2) Right hand?     (0): Cancel"
+          pa "Unequip which weapon? (1) Left hand or (2) Right hand?     (0): Cancel", :red
           twohd = Game_DB.weapons_array(@player.get_equipment_id(:lh), 3)
           loop do
             key = gets.chomp.to_i
@@ -1590,9 +1592,9 @@ class Game_Main
               if @player.get_equipment_id(:lh) != 0
                 @player.unequip_weapon(1)
                 @player.unequip_weapon(2) if twohd
-                pa "You unequipped your weapon from your Left hand and placed it in your bag"
+                pa "You unequipped your weapon from your Left hand and placed it in your bag", :red
               else
-                pa "You can't unequip your Fists..."
+                pa "You can't unequip your Fists...", :red
               end
               key = gets
               break
@@ -1600,9 +1602,9 @@ class Game_Main
               if @player.get_equipment_id(:rh) != 0
                 @player.unequip_weapon(2)
                 @player.unequip_weapon(1) if twohd
-                pa "You unequipped your weapon from your Right hand and placed it in your bag"
+                pa "You unequipped your weapon from your Right hand and placed it in your bag", :red
               else
-                pa "You can't unequip your Fists..."
+                pa "You can't unequip your Fists...", :red
               end
               key = gets
               break
@@ -1618,15 +1620,15 @@ class Game_Main
     elsif @itemmenu[1] #armor screen selected
       bag = @player.read_item_bag(:armor)
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "ARMOR"
-      pa "Equipped:"
-      pa "    BODY:  #{equiptextdata[:armor][0]}, +#{equiptextdata[:armor][1]} Defense, +#{equiptextdata[:armor][2]} Speed"
-      pa "Inventory: "
-      bag.each {|id, amt| pa "  (#{id}) #{Game_DB.armor_array(id, 0)}   x #{amt}" if amt > 0}
+      pa "ARMOR", :green
+      pa "Equipped:", :green
+      pa "    BODY:  #{equiptextdata[:armor][0]}, +#{equiptextdata[:armor][1]} Defense, +#{equiptextdata[:armor][2]} Speed", :green, :bright
+      pa "Inventory: ", :green
+      bag.each {|id, amt| pa "  (#{id}) #{Game_DB.armor_array(id, 0)}   x #{amt}", :green, :bright if amt > 0}
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "#{Game_DB.tx(:cmd, 21)}" #1 equip, 2 unequip, 4 back
-      pa "#{Game_DB.tx(:cmd, 22)}"
-      pa "#{Game_DB.tx(:cmd, 26)}"
+      pa "#{Game_DB.tx(:cmd, 21)}", :green #1 equip, 2 unequip, 4 back
+      pa "#{Game_DB.tx(:cmd, 22)}", :green
+      pa "#{Game_DB.tx(:cmd, 26)}", :cyan
       loop do
         key = gets.chomp.to_i
         case key
@@ -1634,20 +1636,20 @@ class Game_Main
           clr
           draw_stats_main
           pa "#{Game_DB.tx(:other, 0)}"
-          pa "ARMOR"
-          pa "Equipped:"
-          pa "    BODY:  #{equiptextdata[:armor][0]}, +#{equiptextdata[:armor][1]} Defense, +#{equiptextdata[:armor][2]} Speed"
-          pa "Inventory: "
-          bag.each {|id, amt| pa "  (#{id}) #{Game_DB.armor_array(id, 0)}   x #{amt}" if amt > 0}
+          pa "ARMOR", :green
+          pa "Equipped:", :green
+          pa "    BODY:  #{equiptextdata[:armor][0]}, +#{equiptextdata[:armor][1]} Defense, +#{equiptextdata[:armor][2]} Speed", :green, :bright
+          pa "Inventory: ", :green
+          bag.each {|id, amt| pa "  (#{id}) #{Game_DB.armor_array(id, 0)}   x #{amt}", :green, :bright if amt > 0}
           pa "#{Game_DB.tx(:other, 0)}"
-          pa "Equip which Armor? (choose numer, or (0 to cancel))"
+          pa "Equip which Armor? (choose numer, or (0 to cancel))", :green
           loop do
             key = gets.chomp.to_i
             break if bag.key?(key) == false
             break if key == 0
             if bag.key?(key) && bag[key] > 0
               @player.equip_armor(key)
-              pa "Armor #{@player.get_equipment_text(:armor)[0]} has been equipped!"
+              pa "Armor #{@player.get_equipment_text(:armor)[0]} has been equipped!", :green
               key = gets
               break
             end
@@ -1657,25 +1659,25 @@ class Game_Main
           clr
           draw_stats_main
           pa "#{Game_DB.tx(:other, 0)}"
-          pa "ARMOR"
-          pa "Equipped:"
-          pa "    BODY:  #{equiptextdata[:armor][0]}, +#{equiptextdata[:armor][1]} Defense, +#{equiptextdata[:armor][2]} Speed"
-          pa "Inventory: "
-          bag.each {|id, amt| pa "  (#{id}) #{Game_DB.armor_array(id, 0)}   x #{amt}" if amt > 0}
+          pa "ARMOR", :green
+          pa "Equipped:", :green
+          pa "    BODY:  #{equiptextdata[:armor][0]}, +#{equiptextdata[:armor][1]} Defense, +#{equiptextdata[:armor][2]} Speed", :green, :bright
+          pa "Inventory: ", :green
+          bag.each {|id, amt| pa "  (#{id}) #{Game_DB.armor_array(id, 0)}   x #{amt}", :green, :bright if amt > 0}
           pa "#{Game_DB.tx(:other, 0)}"
-          pa "Unequip your armor? Are you sure?"
+          pa "Unequip your armor? Are you sure?", :green
           pa "#{Game_DB.tx(:other, 0)}"
-          pa "#{Game_DB.tx(:cmd, 16)}" # 1 = yes, 2 = no
-          pa "#{Game_DB.tx(:cmd, 17)}"
+          pa "#{Game_DB.tx(:cmd, 16)}", :green # 1 = yes, 2 = no
+          pa "#{Game_DB.tx(:cmd, 17)}", :green
           loop do
             key = gets.chomp.to_i
             break if key == 2 || key != 1
             if key == 1
               if @player.get_equipment_id(:ar) != 0
                 @player.unequip_armor
-                pa "You unequipped your armor and placed it in your bag"
+                pa "You unequipped your armor and placed it in your bag", :green
               else
-                pa "You cant unequip your underwear."
+                pa "You cant unequip your underwear.", :green
               end
               key = gets
               break
@@ -1693,12 +1695,12 @@ class Game_Main
       draw_stats_main
       bag = @player.read_item_bag(:items)
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "ITEMS"
-      pa "Inventory:"
-      bag.each {|id, amt| pa "  (#{id}) #{Game_DB.items_array(id, 0)} x #{amt} #{Game_DB.items_array(id, 8)}" if amt > 0}
+      pa "ITEMS", :blue
+      pa "Inventory:", :blue
+      bag.each {|id, amt| pa "  (#{id}) #{Game_DB.items_array(id, 0)} x #{amt} #{Game_DB.items_array(id, 8)}", :blue, :bright if amt > 0}
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "Use which item? (choose number or 0 to cancel)"
-      pa "You can use items even if you dont need them."
+      pa "Use which item? (choose number or 0 to cancel)", :blue
+      pa "You can use items even if you dont need them.", :blue
       pa "#{Game_DB.tx(:other, 0)}"
       loop do
         key = gets.chomp.to_i
