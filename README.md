@@ -1,4 +1,4 @@
-# Ruby Arena version BETA 1.0.2
+# Ruby Arena version BETA 1.0.3
 
 To support this games development, you can buy it here for your choice
 of price: https://gumpnerd.itch.io/ruby-arena
