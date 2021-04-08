@@ -657,6 +657,7 @@ class Game_Main
     badge = @player.read_current_badge_arena.dup
     badger = badge[0]
     enemies_keys = Game_DB.populate_arena_enemies(badger)
+    return 404 if enemies_keys == []
     dice = rand(1..100)
     return enemies_keys[0] if dice <= 50
     return enemies_keys[1] if dice > 50
@@ -976,7 +977,12 @@ class Game_Main
         end
         if keyb == 2 #start arena battle
           id = calculate_arena_enemy
-          start_battle(id, true)
+          if id == 404
+            pa "You've reached the maximum current badge level!"
+            key = gets
+          else
+            start_battle(id, true)
+          end
           break
         elsif keyb == 1
           @location[1] = @location[0]
@@ -1145,6 +1151,7 @@ class Game_Main
                 break
               else
                 pa " You don't have enough gold!", :red
+                key = gets
                 break
               end
             elsif key == 0
@@ -1164,16 +1171,16 @@ class Game_Main
           pa "#{Game_DB.tx(:common, 23)}", :green, :bright
           loop do
             key = gets.chomp.to_i
-            if pbagkeys.include?(key)
+            if key == 0
+              @shopmenu[0] = false
+              break
+            elsif pbag[key] > 0
               amt = fullbag[key][4] / 2; amt = amt.to_i
               @player.add_gold(amt)
               @player.remove_item(:weapon, key)
               pa "#{Game_DB.tx(:other, 0)}"
-              pa "You sold #{fullbag[key][0]} for a mere #{amt} Gold. You feel somewhat cheated...", :green, :bright
+              pa " You sold #{fullbag[key][0]} for a mere #{amt} Gold. You feel somewhat cheated...", :green, :bright
               key = gets
-              break
-            elsif key == 0
-              @shopmenu[0] = false
               break
             end
           end
@@ -1215,6 +1222,7 @@ class Game_Main
                 break
               else
                 pa " You don't have enough gold!", :red
+                key = gets
                 break
               end
             elsif key == 0
@@ -1234,16 +1242,16 @@ class Game_Main
           pa "#{Game_DB.tx(:common, 23)}", :green, :bright
           loop do
             key = gets.chomp.to_i
-            if pbagkeys.include?(key)
+            if key == 0
+              @shopmenu[0] = false
+              break
+            elsif pbag[key] > 0
               amt = fullbag[key][3] / 2; amt = amt.to_i
               @player.add_gold(amt)
               @player.remove_item(:armor, key)
               pa "#{Game_DB.tx(:other, 0)}"
-              pa "You sold #{fullbag[key][0]} for a mere #{amt} Gold. You feel somewhat cheated...", :green, :bright
+              pa " You sold #{fullbag[key][0]} for a mere #{amt} Gold. You feel somewhat cheated...", :green, :bright
               key = gets
-              break
-            elsif key == 0
-              @shopmenu[1] = false
               break
             end
           end
@@ -1286,6 +1294,7 @@ class Game_Main
                 break
               else
                 pa " You don't have enough gold!", :red
+                key = gets
                 break
               end
             elsif key == 0
@@ -1305,16 +1314,16 @@ class Game_Main
           pa "#{Game_DB.tx(:common, 23)}", :green, :bright
           loop do
             key = gets.chomp.to_i
-            if pbagkeys.include?(key)
+            if key == 0
+              @shopmenu[0] = false
+              break
+            elsif pbag[key] > 0
               amt = fullbag[key][7] / 2; amt = amt.to_i
               @player.add_gold(amt)
               @player.remove_item(:item, key)
               pa "#{Game_DB.tx(:other, 0)}"
-              pa "You sold #{fullbag[key][0]} for a mere #{amt} Gold. You feel somewhat cheated...", :green, :bright
+              pa " You sold #{fullbag[key][0]} for a mere #{amt} Gold. You feel somewhat cheated...", :green, :bright
               key = gets
-              break
-            elsif key == 0
-              @shopmenu[2] = false
               break
             end
           end

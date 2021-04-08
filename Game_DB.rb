@@ -285,7 +285,7 @@ module Game_DB
           Special Thanks: _powder_ (reddit.com)
           Special Thanks: Andrek8 (reddit.com)
           Icon Made by 'Good Ware' from www.flaticon.com"
-    @textdb[:other][12]= " Version: BETA 1.0.2            Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: BETA 1.0.3            Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section=nil, id=nil)
@@ -511,6 +511,7 @@ module Game_DB
     return base
   end
 
+  #need 0 to 10
   def populate_arena_enemies(badge_string=nil)
     return if badge_string == nil
     enemyids = []
@@ -519,7 +520,8 @@ module Game_DB
     enemyids.push(:b0, :b1) if truekey == 0
     enemyids.push(:b2, :b3) if truekey == 1
     enemyids.push(:b4, :b5) if truekey == 2
-    enemyids.push(:b4, :b5) if truekey >= 2
+    enemyids.push(:b6, :b7) if truekey == 3
+    enemyids.push(:b8, :b9) if truekey == 4
     return enemyids
   end
 
@@ -599,7 +601,7 @@ module Game_DB
   end
 
   def populate_enemies_db #races: ghost(0), dwarf(1), human(2), elf(3), animal(4), demon(5)
-    #                #[Enemy name,             race, lvl,  mhp,  mmp,  atk,  def,  spd,   exp,   gold, [drops],drop%,  [spells], sp%]
+    #              #[Enemy name,             race, lvl,  mhp,  mmp,  atk,  def,  spd,   exp,   gold, [drops],drop%,  [spells], sp%]
     @enemies[:g1] = ["Lost Spirit",             0,   0,    1,    3,    0,    0,    5,     4,      0,  [8, 7],    5,    [1, 0],  33]
     @enemies[:g2] = ["Angry Spirit",            0,   5,   33,   24,    5,    0,   15,    10,      0,  [8, 7],   10,    [1, 4],  40]
     @enemies[:g3] = ["Girl From The Ring",      0,   7,  166,   48,   22,    9,   19,    66,      6,  [8, 7],   10,    [1, 8],  40]
@@ -608,28 +610,53 @@ module Game_DB
     @enemies[1]  =  ["Butterfly",               4,   0,    7,    0,    2,    1,    6,     2,      1,  [1, 2],   25,    [0, 0],   0]
     @enemies[2]  =  ["Innocent Rabbit",         4,   1,    8,    0,    2,    1,    7,     3,      3,  [1, 2],   20,    [0, 0],   0]
     @enemies[3]  =  ["Large Rat",               4,   1,    9,    0,    4,    1,    9,     4,      3,  [1, 2],   20,    [0, 0],   0]
+
     @enemies[4]  =  ["Beautiful Hawk",          4,   2,   15,    0,    8,    3,   10,     7,      9,  [1, 2],   10,    [0, 0],   0]
     @enemies[5]  =  ["Blacktail Deer",          4,   2,   18,    0,    8,    4,   12,     9,      5,  [1, 2],   10,    [0, 0],   0]
+
     @enemies[6]  =  ["Adorable Fox",            4,   3,   19,    0,   12,    5,   13,    12,     15,  [1, 2],   10,    [0, 0],   0]
     @enemies[7]  =  ["Angry Bird",              4,   3,   22,    0,   14,    6,   14,    18,     22,  [1, 2],   10,    [0, 0],   0]
+
     @enemies[8]  =  ["Blazing Skull",           5,   4,   30,   10,   18,    6,   15,    26,     28, [10, 9],    5,    [1, 4],  45]
     @enemies[9]  =  ["Syren",                   5,   4,   34,   16,   20,    9,   16,    34,     35,  [6, 5],    5,    [1, 5],  45]
     @enemies[10] =  ["Ipotane",                 4,   4,   38,   14,   22,   12,   17,    40,     30,  [6, 7],    5,    [1, 6],  45]
+
     @enemies[11] =  ["F**king Tiger",           4,   5,   50,    0,   29,   15,   19,    52,     40,  [3, 9],    8,    [0, 0],   0]
     @enemies[12] =  ["Black Zebra",             4,   5,   58,    0,   25,   20,   20,    42,     75,  [3, 7],    8,    [0, 0],   0]
+
     @enemies[13] =  ["Giant C**t of a Rhino",   4,   6,   92,    0,   39,   36,   22,   110,     35, [10, 9],    5,    [0, 0],   0]
     @enemies[14] =  ["Shortneck Angry Giraffe", 4,   6,  110,    0,   30,   45,   26,    86,    100,  [8, 7],    5,    [0, 0],   0]
     @enemies[15] =  ["Longma",                  4,   6,  120,   30,   31,   44,   30,   100,    110,  [8, 6],   10,    [2, 7],  40]
-    @enemies[16] =  ["Gay Horny Jinn",          5,   7,  152,   42,   44,   52,   35,   186,    165,  [9, 7],   15,   [2, 11],  48]
-    @enemies[17] =  ["Cute Velociraptor",       4,   7,  192,   22,   49,   58,   40,   224,    204, [9, 10],   10,    [2, 0],  25]
-    @enemies[18] =  ["Electric Floating Skull", 5,   8,  256,   70,   54,   50,   32,   300,    225,  [8, 9],   12,   [2, 11],  40]
+
+    @enemies[16] =  ["Horny Jinn",              5,   7,  152,   42,   44,   52,   35,   186,    165,  [9, 7],   15,   [2, 11],  48]
+    @enemies[17] =  ["Baby Velociraptor",       4,   7,  156,   14,   40,   50,   38,   144,     90, [9, 10],    5,    [2, 0],  25]
+    @enemies[18] =  ["Cute Velociraptor",       4,   7,  192,   22,   49,   58,   40,   224,    204, [9, 10],   10,    [2, 0],  25]
+
+    @enemies[19] =  ["Electric Floating Skull", 5,   8,  256,   70,   54,   50,   32,   300,    225,  [8, 9],   12,   [2, 11],  40]
+    @enemies[20] =  ["F**king Lion",            4,   8,  280,    0,   58,   62,   48,   310,    240, [9, 10],   10,    [0, 0],   0]
+
+    @enemies[21] =  ["Lunatic Vagrant",         2,   9,  340,   56,   64,   68,   54,   375,    360, [3,  9],   10,    [2, 0],  25]
+    @enemies[22] =  ["Land Dolphin",            4,   9,  384,   90,   70,   74,   56,   420,    420, [5,  6],   10,    [2, 7],  20]
+
+    @enemies[23] =  ["Psycho Tom",              2,  10,  475,   75,   77,   64,   60,   500,    560, [9, 10],   10,    [2, 8],  20]
+    @enemies[24] =  ["Komodo Dragon",           4,  10,  525,    0,   86,   70,   64,   525,    515, [9, 10],   10,    [0, 0],   0]
+
+    #              #[Enemy name,             race, lvl,  mhp,  mmp,  atk,  def,  spd,   exp,   gold, [drops],drop%,  [spells], sp%]
 
     @enemies[:b0] = ["Rosco the Drunk",         2,   4,  120,   24,   30,   15,   15,   150,    100, [3, 10],   10,    [1, 0],  35]
     @enemies[:b1] = ["Babba-Yagga",             5,   5,  128,   28,   24,   15,   18,   120,    175,  [1, 6],   12,    [1, 3],  35]
-    @enemies[:b2] = ["Big Gay Yeti",            4,   6,  244,   30,   45,   35,   24,   275,    400,  [4, 5],   30,    [1, 7],  35]
-    @enemies[:b3] = ["Tiny",                    1,   6,  325,    0,   60,   25,   20,   350,    750,  [3, 9],   10,    [0, 0],   0]
-    @enemies[:b4] = ["Lana",                    1,   7,  777,   86,   72,   46,   30,   800,   1200, [10, 9],   25,    [2, 6],  40]
-    @enemies[:b5] = ["Sexual Harrasment Panda", 4,   8, 1040,  108,   88,   50,   34,  1355,   2000, [8, 10],   33,    [2, 6],  40]
+
+    @enemies[:b2] = ["Big Happy Yeti",          4,   6,  244,   30,   48,   55,   32,   355,    500,  [4, 5],   30,    [1, 7],  35]
+    @enemies[:b3] = ["Tiny",                    2,   6,  325,    0,   61,   58,   36,   386,    650,  [3, 9],   10,    [0, 0],   0]
+
+    @enemies[:b4] = ["Lana",                    2,   7,  575,   86,   56,   53,   40,   550,   1000, [10, 9],   25,    [2, 6],  40]
+    @enemies[:b5] = ["Sexual Harrasment Panda", 4,   7,  625,  108,   64,   60,   40,   625,   1250, [8, 10],   33,    [2, 6],  40]
+
+    @enemies[:b6] = ["Hatchet Patrick",         2,   8,  775,    0,   77,   64,   55,   750,   1500, [10, 9],   25,    [0, 0],   0]
+    @enemies[:b7] = ["Royal Mage Jimmy",        2,   8,  850,  175,   64,   60,   50,   775,   1550, [8, 11],   33,    [2, 8],  45]
+
+    @enemies[:b8] = ["Ninja Bob",               2,   9, 1040,    0,   78,   70,   60,  1250,   1850,  [7, 9],   25,    [0, 0],   0]
+    @enemies[:b9] = ["Angry Lana",              2,   9, 1110,  250,   85,   80,   64,  1550,   2050, [8, 11],   33,    [2,11],  30]
   end
 
   #key for experience_req = level (So experience_req[3] = exp for level 3)

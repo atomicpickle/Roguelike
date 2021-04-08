@@ -1,5 +1,8 @@
 # Ruby Arena version BETA 1.0.2
 
+To support this games development, you can buy it here for your choice
+of price: https://gumpnerd.itch.io/ruby-arena
+
 This is a Roguelike text adventure game I have made while teaching myself Ruby.
 This game is in active development.
 
@@ -15,6 +18,12 @@ in a playable state with all the core stuff.
  Screenshots: https://imgur.com/gallery/Z8P1mB6
 
  BETA Versions updates and fixes:
+
+    BETA 1.0.3
+    - added more enemies and arena bosses
+    - added more badge levels; arena now has 5 completed levels
+    - added more logic to shops and fixed a sell exploit
+    - did a bunch of balancing of enemy stats
 
     BETA 1.0.2:
     - fixed error obtaining new badges beyond 2nd badge
