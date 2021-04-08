@@ -22,6 +22,12 @@ in a playable state with all the core stuff.
     BETA 1.0.1:
     - initial stable release with all core functions
 
+Bug reporting: If you find a bug, please report it under Issues and I'll take a look.
+Please include your player and world save files if they are relevant to the bug you've
+found. both the save files are currently unencrypted as this game is a beta.
+
+
+
  in progress (not ordered):
   - addition of more arena bosses
   - formatting various screens to look prettier
