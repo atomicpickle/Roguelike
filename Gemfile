@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-ruby: "2.7.2"
+ruby "2.7.2"
 # compiled with 2.7.2p137
 
 git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
