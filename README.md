@@ -10,6 +10,8 @@ in a playable state with all the core stuff.
  If you don't have Ruby, Run the game with the RubyArena.exe file in the Compiled
  folder.
 
+ Screenshots: https://imgur.com/gallery/Z8P1mB6
+
  BETA Versions updates and fixes:
 
     BETA 1.0.2:
