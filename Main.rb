@@ -71,6 +71,43 @@ class Game_Main
     update
   end
 
+  def re_initialize_game
+    clr
+    @init = true
+    # only used for setup. maybe not needed
+    @character_base = {}
+    @character_base[:race] = []
+    @character_base[:name] = []
+    # location variables (current, last) used to remember last location for menu usage
+    @location = [:town, :town]
+    # used as player class object
+    @player = 0
+    # used for writing stats on screen via draw_stats_main method
+    @stats = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    # stores wandering enemies when player is hunting
+    @enemies = {}
+    @enemies[:wandering] = []
+    @enemies[:amount] = 0
+    # if true, player is actively hunting
+    @hunting = false
+    # if true, player is in a battle
+    @battle = false
+    @arenabattle = false
+    # used as enemy class object for battles
+    @enemy = 0
+    @enemyturn = false
+    # hit first did the enemy hit a first strike attack?
+    @enemyhitfirst = false
+    # used for update method function
+    @update = false
+    # Used to navigate the player menu [stats, bag, spells, save game, exit game]
+    @submenu = [false, false, false, false, false]
+    # used to navigate item menu [weapons, armor, items]
+    @itemmenu = [false, false, false]
+    @shopmenu = [false, false, false]
+    startup_titlecard
+  end
+
   def spawn_player
     clr
     draw_stats_main
@@ -546,7 +583,7 @@ class Game_Main
       pa "                  Total Damage Done:  #{@player.total_damage}", :red
       pa "                  Total Damage Taken: #{@player.damage_taken}", :red
       key = gets
-      exit
+      re_initialize_game
     elsif @enemy.alive? == false
       #enemy dead!
       pa "#{Game_DB.tx(:other, 0)}"
@@ -1145,8 +1182,9 @@ class Game_Main
               if @player.gold >= shopbag[key][4]
                 @player.remove_gold(shopbag[key][4])
                 @player.add_item(:weapon, key)
+                weap = shopbag[key][0]; weapstr = weap.delete " "
                 pa "#{Game_DB.tx(:other, 0)}"
-                pa " You purchased #{shopbag[key][0]} for #{shopbag[key][4]} gold! Dont forget to equip it!", :green, :bright
+                pa " You purchased #{weapstr} for #{shopbag[key][4]} gold! Dont forget to equip it!", :green, :bright
                 key = gets
                 break
               else
@@ -1216,8 +1254,9 @@ class Game_Main
               if @player.gold >= shopbag[key][3]
                 @player.remove_gold(shopbag[key][3])
                 @player.add_item(:armor, key)
+                arms = shopbag[key][0]; armstr = arms.delete " "
                 pa "#{Game_DB.tx(:other, 0)}"
-                pa " You purchased #{shopbag[key][0]} for #{shopbag[key][3]} gold! Dont forget to equip it!", :green, :bright
+                pa " You purchased #{armstr} for #{shopbag[key][3]} gold! Dont forget to equip it!", :green, :bright
                 key = gets
                 break
               else
@@ -1290,8 +1329,9 @@ class Game_Main
               if @player.gold >= shopbag[key][7]
                 @player.remove_gold(shopbag[key][7])
                 @player.add_item(:item, key)
+                weap = shopbag[key][0]; weapstr = weap.delete " "
                 pa "#{Game_DB.tx(:other, 0)}"
-                pa " You purchased #{shopbag[key][0]} for #{shopbag[key][7]} gold!", :green, :bright
+                pa " You purchased #{weapstr} for #{shopbag[key][7]} gold!", :green, :bright
                 key = gets
                 break
               else
@@ -1392,8 +1432,14 @@ class Game_Main
       key = gets.chomp.downcase
       @player.add_gold(75000) if key == "makemerich"
       if key == "forcelvlexp"
+        p "type in lvl"
         key = gets.chomp.to_i
-        @player.add_exp(key)
+        @player.lvl_up_override(key)
+      end
+      if key == "forcebadge"
+        p "type in EXACT badge string"
+        key = gets.chomp
+        @player.force_badge(key)
       end
       @submenu[0] = false
     elsif @submenu[1] #player inventory
@@ -1495,6 +1541,8 @@ class Game_Main
         key = gets.chomp.to_i
         case key
         when 1
+          pa "#{Game_DB.tx(:other, 20)}", :green, :bright
+          key = gets
           exit
         when 2
           @submenu[4] = false

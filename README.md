@@ -1,4 +1,4 @@
-# Ruby Arena version BETA 1.0.4 (rel april 8th 2021)
+# Ruby Arena version BETA 1.0.5
 
 To support this games development, you can buy it here for your choice
 of price: https://gumpnerd.itch.io/ruby-arena
@@ -18,6 +18,13 @@ in a playable state with all the core stuff.
  Screenshots: https://imgur.com/gallery/Z8P1mB6
 
  BETA Versions updates and fixes:
+
+    BETA 1.0.5
+    - lots of rebalancing (enemies, items, spells)
+    - added a couple new weapons and armor
+    - Game now restarts when player gets a game over instead of exiting
+    - improved text formatting in various instances
+
 
     BETA 1.0.4
     - fixed bug where having only a 1 handed weapon in your right hand caused an error.
@@ -50,7 +57,6 @@ found. both the save files are currently unencrypted as this game is a beta.
  in progress (not ordered):
   - addition of more arena bosses
   - formatting various screens to look prettier
-  - more colorization
   - adding more areas
   - adding npcs to describe things in world (how to hunt and level, tips etc)
   - adding of basic quests (such as kill x mob for reward)

@@ -76,6 +76,13 @@ class Player
     add_badge_progress(strings) if bool
   end
 
+  def force_badge(badge)
+    curr = @badges.fetch(-1)
+    @badge_progress[curr] = 5
+    @badge_progress[badge] = 1
+    add_badge(badge, false)
+  end
+
   def add_next_badge
     string = @curr_badge_arena
     string = string[0]
@@ -362,8 +369,24 @@ class Player
     end
   end
 
-  def lvl_up_override_4870(a=false)
-    @levelUP = true if a == true
+  def lvl_up_override(maxlvl=0)
+    return if @level >= 20
+    lvlnext = @level + 1
+    loop do
+      nextlvlary = Game_DB.level_stats_array(@race, lvlnext)
+      expnext = Game_DB.experience_array(lvlnext, @race)
+      @exp = expnext[1]
+      level_up(true)
+      set_stat(:hp, nextlvlary[0])
+      set_stat(:mp, nextlvlary[1])
+      set_stat(:atk, nextlvlary[2])
+      set_stat(:def, nextlvlary[3])
+      set_stat(:spd, nextlvlary[4])
+      learn_spell(nextlvlary[5]) if nextlvlary[5] != nil
+      lvlnext += 1
+      add_badge(Game_DB.tx(:badges, 0)) if @level == 4
+      break if @level >= maxlvl
+    end
   end
 
   def level_up(bool)
