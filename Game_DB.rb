@@ -151,14 +151,14 @@ module Game_DB
     @textdb[:cmd][6] = ["(L)ook (A)round"]
 
     @textdb[:cmd][7]  = ["(1) Menu"]
-    @textdb[:cmd][8]  = ["(1) Player Stats"]
-    @textdb[:cmd][9]  = ["(2) Inventory"]
+    @textdb[:cmd][8]  = "(1) PLAYER STATUS"
+    @textdb[:cmd][9]  = "  (2) INVENTORY"
+    @textdb[:cmd][10] = "    (3) SPELLS"
+    @textdb[:cmd][11] = "      (4) BACK TO GAME"
+    @textdb[:cmd][12] = "        (5) SAVE GAME"
+    @textdb[:cmd][13] = "          (0) EXIT GAME"
     @textdb[:cmd][101]= ["(1) Use"]
     @textdb[:cmd][102]= ["(2) Back"]
-    @textdb[:cmd][10] = ["(3) Spells"]
-    @textdb[:cmd][11] = ["(4) Back to Game"]
-    @textdb[:cmd][12] = ["(5) Save Game"]
-    @textdb[:cmd][13] = ["(0) Exit Game"]
 
     @textdb[:cmd][14] = ["(N) New Game"]
     @textdb[:cmd][15] = ["(L) Load Game"]
@@ -288,8 +288,9 @@ module Game_DB
           Special Thanks: Teague Hammell
           Special Thanks: _powder_ (reddit.com)
           Special Thanks: Andrek8 (reddit.com)
+          Special Thanks: Zaxero
           Icon Made by 'Good Ware' from www.flaticon.com"
-    @textdb[:other][12]= " Version: BETA 1.0.5            Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: BETA 1.0.6            Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section=nil, id=nil)
@@ -539,20 +540,20 @@ module Game_DB
 
   def populate_weapons_db
     #             [Weapon name,              atk, spd, 2hand,  cost]
-    @weapons[0] = ["Fists          ",          0,   0, false,      0]
-    @weapons[1] = ["Pole           ",          2,   3, false,     10]
-    @weapons[2] = ["Wooden-Sword   ",          5,   5, false,     25]
-    @weapons[3] = ["Mage-Staff     ",          7,  13,  true,     80]
-    @weapons[4] = ["Wooden-Club    ",          9,   5, false,     90]
-    @weapons[5] = ["Iron-Hatchet   ",         17,   7, false,    220]
-    @weapons[6] = ["Iron-Lance     ",         40,   2,  true,    390]
+    @weapons[0] = ["Fists           ",          0,   0, false,      0]
+    @weapons[1] = ["Pole            ",          2,   3, false,     10]
+    @weapons[2] = ["Wooden-Sword    ",          5,   5, false,     25]
+    @weapons[3] = ["Mage-Staff      ",          7,  13,  true,     80]
+    @weapons[4] = ["Wooden-Club     ",          9,   5, false,     90]
+    @weapons[5] = ["Iron-Hatchet    ",         17,   7, false,    220]
+    @weapons[6] = ["Iron-Lance      ",         40,   2,  true,    390]
 
-    @weapons[7] = ["Iron-Sword     ",         34,   8, false,    950]
-    @weapons[8] = ["Sage-Staff     ",         25,  26,  true,   1250]
-    @weapons[9] = ["Steel-Sword    ",         52,  12, false,   2500]
-    @weapons[10]= ["Broadsword     ",        112,   4,  true,   7500]
-    @weapons[11]= ["Sword-of-Malice",         76,  14, false,   9001]
-    @weapons[12]= ["Bastard-Sword  ",        136,  15, false,  17500]
+    @weapons[7] = ["Iron-Sword      ",         34,   8, false,    950]
+    @weapons[8] = ["Sage-Staff      ",         25,  26,  true,   1250]
+    @weapons[9] = ["Steel-Sword     ",         52,  12, false,   2500]
+    @weapons[10]= ["Broadsword      ",        112,   4,  true,   7500]
+    @weapons[11]= ["Sword-of-Malice ",         76,  14, false,   9001]
+    @weapons[12]= ["Bastard-Sword   ",        136,  15, false,  17500]
   end
 
   def populate_armor_db
@@ -579,15 +580,24 @@ module Game_DB
     @items[4]  = ["Wolfsbane-Potion",       0,   80,     0,    0,     0,     0,      120,    "Heals +100 MP"]
     @items[5]  = ["White-Orchid-Potion",  400,    0,     0,    0,     0,     0,      300,    "Heals +400 HP"]
     @items[6]  = ["Night-Shade-Elixer",   500,  250,     0,    0,     0,     0,     1000,    "Heals +500 HP and +250 MP"]
-    @items[7]  = ["Angels-Tear",            0,    0,     5,    0,     0,     0,     2500,    "Permanently increases HP up to -1 to +5"]
-    @items[8]  = ["Necromancers-Eye",      0,    0,     0,    5,     0,     0,     3000,    "Permanently increases MP up to -1 to +5"]
-    @items[9]  = ["Dragons-Talon",         0,    0,     0,    0,     6,     0,     3500,    "Permanently increases ATTACK up to -1 to +6"]
-    @items[10] = ["Fairy-Dust",             0,    0,     0,    0,     0,     6,     3500,    "Permanently increases DEFENSE up to -1 to +6"]
-    @items[11] = ["Godspeck",               0,    0,    10,   10,    10,    10,     9001,    "Permanently increases HP, MP, ATK, DEF up to -1 to +10"]
+
+    @items[7]  = ["Angels-Hair",            0,    0,     5,    0,     0,     0,     1500,    "After Use: Permanently increases HP up to -1 to +5"]
+    @items[8]  = ["Necromancers-Eye",       0,    0,     0,    5,     0,     0,     1500,    "After Use: Permanently increases MP up to -1 to +5"]
+    @items[9]  = ["Dragons-Talon",          0,    0,     0,    0,     6,     0,     2000,    "After Use: Permanently increases ATTACK up to -1 to +6"]
+    @items[10] = ["Fairy-Dust",             0,    0,     0,    0,     0,     6,     2000,    "After Use: Permanently increases DEFENSE up to -1 to +6"]
+    @items[11] = ["Godspeck",               0,    0,    10,   10,    10,    10,     9001,    "After Use: Permanently increases HP, MP, ATK, DEF and SPEED up to -1 to +10"]
+
     @items[12] = ["Speed-Reader",           0,    0,     0,    0,     0,     0,    12500,    "After Use: Permanently enables the ability to see your enemies Speed"]
     @items[13] = ["Attack-Reader",          0,    0,     0,    0,     0,     0,    12500,    "After Use: Permanently enables the ability to see your enemies Attack"]
     @items[14] = ["Defense-Reader",         0,    0,     0,    0,     0,     0,    12500,    "After Use: Permanently enables the ability to see your enemies Defense"]
     @items[15] = ["Rewards-Reader",         0,    0,     0,    0,     0,     0,    12500,    "After Use: Permanently enables the ability to see your enemies Rewards"]
+
+    @items[16] = ["...Item16...",           0,    0,     0,    0,     0,     0,     5252,    "..............."]
+
+    @items[17] = ["Earth Jewel",            0,    0,     2,    0,     0,     0,      500,    "After Use: Permanently increases HP up to -1 to +2"]
+    @items[18] = ["Moon Jewel",             0,    0,     0,    2,     0,     0,      500,    "After Use: Permanently increases MP up to -1 to +2"]
+    @items[19] = ["Fire Jewel",             0,    0,     0,    0,     3,     0,      600,    "After Use: Permanently increases ATTACK up to -1 to +3"]
+    @items[20] = ["Dense Jewel",            0,    0,     0,    0,     0,     3,      600,    "After Use: Permanently increases DEFENSE up to -1 to +3"]
   end
 
   def populate_spells_db
@@ -621,46 +631,46 @@ module Game_DB
     @enemies[2]  =  ["Innocent Rabbit",         4,   1,    8,    0,    3,    1,    7,     3,      3,  [1, 2],   20,    [0, 0],   0]
     @enemies[3]  =  ["Large Rat",               4,   1,    9,    0,    4,    1,    9,     4,      3,  [1, 2],   20,    [0, 0],   0]
 
-    @enemies[4]  =  ["Beautiful Hawk",          4,   2,   15,    0,    8,    3,   10,     7,      9,  [1, 2],   10,    [0, 0],   0]
-    @enemies[5]  =  ["Blacktail Deer",          4,   2,   18,    0,    8,    4,   12,     9,      5,  [1, 2],   10,    [0, 0],   0]
+    @enemies[4]  =  ["Beautiful Hawk",          4,   2,   15,    0,    8,    3,   10,     7,      9, [1, 17],   10,    [0, 0],   0]
+    @enemies[5]  =  ["Blacktail Deer",          4,   2,   18,    0,    8,    4,   12,     9,      5, [1, 18],   10,    [0, 0],   0]
 
-    @enemies[6]  =  ["Adorable Fox",            4,   3,   19,    0,   12,    5,   13,    12,     15,  [1, 2],   10,    [0, 0],   0]
-    @enemies[7]  =  ["Angry Bird",              4,   3,   22,    0,   16,    7,   14,    18,     22,  [1, 2],   10,    [0, 0],   0]
+    @enemies[6]  =  ["Adorable Fox",            4,   3,   19,    0,   12,    5,   13,    12,     15, [1, 18],   10,    [0, 0],   0]
+    @enemies[7]  =  ["Angry Bird",              4,   3,   22,    0,   16,    7,   14,    18,     22, [1, 19],   15,    [0, 0],   0]
 
-    @enemies[8]  =  ["Blazing Skull",           5,   4,   30,   10,   19,    7,   15,    26,     28, [10, 9],    3,    [1, 4],  45]
-    @enemies[9]  =  ["Syren",                   5,   4,   34,   16,   21,    9,   16,    34,     35,  [6, 5],    5,    [1, 5],  45]
-    @enemies[10] =  ["Ipotane",                 4,   4,   38,   14,   22,   12,   17,    40,     30,  [6, 7],    5,    [1, 6],  45]
+    @enemies[8]  =  ["Blazing Skull",           5,   4,   30,   10,   19,    7,   15,    26,     28, [20,19],   10,    [1, 4],  45]
+    @enemies[9]  =  ["Syren",                   5,   4,   34,   16,   21,    9,   16,    34,     35, [17,18],   12,    [1, 5],  45]
+    @enemies[10] =  ["Ipotane",                 4,   4,   38,   14,   22,   12,   17,    40,     30, [18,17],   15,    [1, 6],  45]
 
     @enemies[11] =  ["F**king Tiger",           4,   5,   50,    0,   29,   15,   19,    52,     40,  [3, 9],    8,    [0, 0],   0]
-    @enemies[12] =  ["Black Zebra",             4,   5,   58,    0,   31,   20,   20,    42,     75,  [3, 7],    8,    [0, 0],   0]
+    @enemies[12] =  ["Black Zebra",             4,   5,   58,    0,   31,   20,   20,    42,     75, [3, 17],   10,    [0, 0],   0]
 
-    @enemies[13] =  ["Giant C**t of a Rhino",   4,   6,   92,    0,   39,   36,   22,   110,     35, [10, 9],    4,    [0, 0],   0]
-    @enemies[14] =  ["Shortneck Angry Giraffe", 4,   6,  110,    0,   35,   45,   26,    86,    100,  [8, 7],    5,    [0, 0],   0]
-    @enemies[15] =  ["Longma",                  4,   6,  120,   30,   33,   44,   30,   100,    110,  [8, 6],    6,    [2, 7],  40]
+    @enemies[13] =  ["Giant C**t of a Rhino",   4,   6,   92,    0,   39,   36,   22,   110,     35, [20, 9],   10,    [0, 0],   0]
+    @enemies[14] =  ["Shortneck Angry Giraffe", 4,   6,  110,    0,   35,   45,   26,    86,    100, [18, 7],   10,    [0, 0],   0]
+    @enemies[15] =  ["Longma",                  4,   6,  120,   30,   33,   44,   30,   100,    110, [18, 6],    8,    [2, 7],  40]
 
-    @enemies[16] =  ["Bit-too-Happy Jinn",      5,   7,  152,   42,   48,   52,   35,   186,    165,  [9, 7],    8,   [2, 11],  48]
-    @enemies[17] =  ["Baby Velociraptor",       4,   7,  156,   14,   51,   50,   38,   144,     90, [9, 10],    6,    [2, 0],  25]
+    @enemies[16] =  ["Bit-too-Happy Jinn",      5,   7,  152,   42,   48,   52,   35,   186,    165, [19, 7],    9,   [2, 11],  48]
+    @enemies[17] =  ["Baby Velociraptor",       4,   7,  156,   14,   51,   50,   38,   144,     90, [9, 20],    7,    [2, 0],  25]
     @enemies[18] =  ["Cute Velociraptor",       4,   7,  188,   22,   60,   58,   40,   224,    204, [9, 10],    6,    [2, 0],  25]
 
-    @enemies[19] =  ["Electric Floating Skull", 5,   8,  196,   70,   77,   56,   32,   300,    225,  [8, 9],   11,   [2, 11],  40]
+    @enemies[19] =  ["Electric Floating Skull", 5,   8,  196,   70,   77,   56,   32,   300,    225, [18,19],   15,   [2, 11],  40]
     @enemies[20] =  ["F**king Lion",            4,   8,  224,    0,   88,   64,   48,   310,    240, [9, 10],   12,    [0, 0],   0]
 
-    @enemies[21] =  ["Lunatic Vagrant",         2,   9,  275,   56,  105,   86,   54,   375,    360, [3,  9],   12,    [2, 9],  25]
-    @enemies[22] =  ["Land Dolphin",            4,   9,  290,   90,  108,   91,   56,   420,    420, [5,  6],   12,   [2, 11],  20]
+    @enemies[21] =  ["Lunatic Vagrant",         2,   9,  275,   56,  105,   86,   54,   375,    360, [3, 19],   15,    [2, 9],  25]
+    @enemies[22] =  ["Land Dolphin",            4,   9,  290,   90,  108,   91,   56,   420,    420, [18, 6],   15,   [2, 11],  20]
 
     @enemies[23] =  ["Psycho Tom",              2,  10,  325,   75,  120,  100,   66,   500,    560, [9, 10],   15,    [2, 8],  25]
     @enemies[24] =  ["Komodo Dragon",           4,  10,  375,    0,  124,  112,   69,   525,    515, [9, 10],   15,    [0, 0],   0]
 
     #              #[Enemy name,             race, lvl,  mhp,  mmp,  atk,  def,  spd,   exp,   gold, [drops],drop%,  [spells], sp%]
 
-    @enemies[:b0] = ["Rosco the Drunk",         2,   4,  120,   24,   32,   15,   15,   150,    100, [3, 10],   10,    [1, 0],  35]
+    @enemies[:b0] = ["Rosco the Drunk",         2,   4,  120,   24,   34,   15,   15,   150,    100, [3, 10],   10,    [1, 0],  35]
     @enemies[:b1] = ["Babba-Yagga",             5,   5,  128,   28,   26,   18,   18,   120,    175,  [1, 6],   12,    [1, 6],  35]
 
-    @enemies[:b2] = ["Big Happy Yeti",          4,   6,  244,   30,   48,   55,   32,   355,    500,  [4, 5],   30,    [1, 7],  35]
-    @enemies[:b3] = ["Tiny",                    2,   6,  325,    0,   61,   58,   36,   386,    650,  [3, 9],   10,    [0, 0],   0]
+    @enemies[:b2] = ["Big Happy Yeti",          4,   6,  244,   30,   48,   48,   32,   355,    500,  [4, 5],   30,    [1, 7],  35]
+    @enemies[:b3] = ["Tiny",                    2,   6,  325,    0,   61,   52,   36,   386,    650,  [3, 9],   10,    [0, 0],   0]
 
-    @enemies[:b4] = ["Lana",                    2,   7,  400,   86,   56,   64,   40,   550,   1000, [10, 9],   25,    [2, 6],  40]
-    @enemies[:b5] = ["Sexual Harrasment Panda", 4,   7,  430,  108,   64,   70,   40,   625,   1250, [8, 10],   33,    [2, 6],  40]
+    @enemies[:b4] = ["Lana",                    2,   7,  400,   86,   67,   64,   40,   550,   1000, [10, 9],   25,    [2, 6],  40]
+    @enemies[:b5] = ["Sexual Harrasment Panda", 4,   7,  430,  108,   70,   70,   40,   625,   1250, [8, 10],   33,    [2, 6],  40]
 
     @enemies[:b6] = ["Hatchet Patrick",         2,   8,  550,    0,   77,   77,   55,   750,   1500, [10, 9],   25,    [0, 0],   0]
     @enemies[:b7] = ["Royal Mage Jimmy",        2,   8,  585,  175,   70,   80,   50,   775,   1550, [8, 11],   33,    [2, 8],  45]

@@ -1,4 +1,4 @@
-# Ruby Arena version BETA 1.0.5
+# Ruby Arena version BETA 1.0.6
 
 To support this games development, you can buy it here for your choice
 of price: https://gumpnerd.itch.io/ruby-arena
@@ -19,6 +19,12 @@ in a playable state with all the core stuff.
 
  BETA Versions updates and fixes:
 
+    BETA 1.0.6
+    - formatting changes on some strings
+    - added some new usable items (jewels) which can be dropped by all enemies
+    - jewels permanently increase stats when used
+    - fixed a bug where trying to cast spells from battle and not knowing any would crash the game
+
     BETA 1.0.5
     - lots of rebalancing (enemies, items, spells)
     - added a couple new weapons and armor
@@ -27,10 +33,10 @@ in a playable state with all the core stuff.
 
 
     BETA 1.0.4
-    - fixed bug where having only a 1 handed weapon in your right hand caused an error.
+    - fixed bug where having only a 1 handed weapon in your right hand caused an error
     - level-tree is now expanded, all races can get up to level 20
     - all races now have different exp requirements to level up
-    - drawfs are easiest to level, humans mid range, elves hardest
+    - dwarfs are easiest to level, humans mid range, elves hardest
     - new spells added, Mega Heal, Tsunami, Deathknell
     - colorized Weapon, Armor and Item sub menus (status screen)
     - colorized Item sub menu (battle screen)

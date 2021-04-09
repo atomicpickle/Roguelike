@@ -303,7 +303,7 @@ class Game_Main
       when "s"  #spell
         enemyfs = Game_DB.battle_enemy_hit_first(@enemy.read_stat(:spd), @player.final_stat(:spd))
         spellid = spell_selection
-        break if spellid == 0
+        break if spellid == 0 || spellid == nil
         process_battle_attack(enemyfs, true, spellid)
         process_battle_attack(false, true, spellid)
         break
@@ -599,12 +599,18 @@ class Game_Main
       pa "#{Game_DB.tx(:other, 0)}"
       dropinfo = @enemy.dropinfo
       dropchance = @enemy.dropinfo(true)
-      dice = rand(1..100); dice2 = rand(1..10)
+      dice = rand(1..100); dice2 = rand(1..100)
       if dice <= dropchance
-        id = dropinfo[0] if dice2 <= 7
-        id = dropinfo[1] if dice2 > 7
+        id = dropinfo[0] if dice2 <= 65
+        id = dropinfo[1] if dice2 > 65
         @player.add_item(:item, id)
         pa "                    #{@enemy.read_name} dropped an item! You found 1x #{Game_DB.items_array(id, 0)}", :yellow, :bright
+      elsif dice2 <= 3 || dice >= 97
+        dice2 = rand(1..4)
+        ary = [17, 18, 19, 20]
+        id = ary[dice2]
+        @player.add_item(:item, id)
+        pa "   ************  Whats this? You found a #{Game_DB.items_array(id, 0)} next to the corpse!!!  ************", :blue, :bright
       end
       pa "#{Game_DB.tx(:other, 0)}"
       pa "                           #{Game_DB.tx(:other, 7)}"
@@ -845,17 +851,22 @@ class Game_Main
       pa "          #{Game_DB.tx(:other, 1)}", :magenta
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "                  #{Game_DB.tx(:cmd, 8)}", :magenta, :bright
+      pa "                                 #{Game_DB.tx(:cmd, 8)}", :blue, :bright
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "                  #{Game_DB.tx(:cmd, 9)}", :magenta, :bright
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "                  #{Game_DB.tx(:cmd, 10)}", :magenta, :bright
+      pa "                                 #{Game_DB.tx(:cmd, 9)}", :blue
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "                  #{Game_DB.tx(:cmd, 11)}", :magenta, :bright
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "                  #{Game_DB.tx(:cmd, 12)}", :magenta, :bright
+      pa "                                 #{Game_DB.tx(:cmd, 10)}", :magenta, :bright
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "                  #{Game_DB.tx(:cmd, 13)}", :magenta, :bright
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "                                 #{Game_DB.tx(:cmd, 11)}", :magenta
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "                                 #{Game_DB.tx(:cmd, 12)}", :green, :bright
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "                                 #{Game_DB.tx(:cmd, 13)}", :red
       pa "#{Game_DB.tx(:other, 0)}"
       process_input
       update

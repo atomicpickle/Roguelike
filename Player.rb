@@ -204,18 +204,21 @@ class Player
       pa "You used 1x #{array[0]} and your DEFENSE was DECREASED by #{res}!", :blue, :bright if res < 0
     elsif id == 11
       hp = rand(-1..array[3]); mp = rand(-1..array[4])
-      atk = rand(-1..array[5]); deb = rand(-1..array[6])
+      atk = rand(-1..array[5]); deb = rand(-1..array[6]); spd = rand(-1..10)
       add_bonus_stat(:hp, hp); add_bonus_stat(:mp, mp)
       add_bonus_stat(:atk, atk); add_bonus_stat(:def, deb)
+      add_bonus_stat(:spd, spd)
       pa "You used 1x #{array[0]}...", :blue, :bright
       pa "Your MAX HP was INCREASED by #{hp}", :blue, :bright if hp >= 0
-      pa "Your MAX HP was DECREASED by #{hp}", :blue, :bright if hp < 0
+      pa "Your MAX HP was DECREASED by #{hp}", :blue if hp < 0
       pa "Your MAX MP was INCREASED by #{mp}", :blue, :bright if mp >= 0
-      pa "Your MAX MP was DECREASED by #{mp}", :blue, :bright if mp < 0
+      pa "Your MAX MP was DECREASED by #{mp}", :blue if mp < 0
       pa "Your ATTACK was INCREASED by #{atk}", :blue, :bright if atk >= 0
-      pa "Your ATTACK was DECREASED by #{atk}", :blue, :bright if atk < 0
+      pa "Your ATTACK was DECREASED by #{atk}", :blue if atk < 0
       pa "Your DEFENSE was INCREASED by #{deb}", :blue, :bright if deb >= 0
-      pa "Your DEFENSE was DECREASED by #{deb}", :blue, :bright if deb < 0
+      pa "Your DEFENSE was DECREASED by #{deb}", :blue if deb < 0
+      pa "Your SPEED was INCREASED by #{spd}", :blue, :bright if deb >= 0
+      pa "Your SPEED was DECREASED by #{spd}", :blue if deb < 0
     elsif id == 12
       add_perm_reader(0)
       pa " You used a #{array[0]}, you can now permanently see an enemies Speed in battle!", :blue, :bright
@@ -228,6 +231,26 @@ class Player
     elsif id == 15
       add_perm_reader(3)
       pa " You used a #{array[0]}, you can now permanently see an enemies Rewards in battle!", :blue, :bright
+    elsif id == 17
+      res = rand(-1..array[3])
+      add_bonus_stat(:hp, res)
+      pa "You used 1x #{array[0]} and your MAX HP was INCREASED by #{res}!", :blue, :bright if res >= 0
+      pa "You used 1x #{array[0]} and your MAX HP was DECREASED by #{res}!", :blue, :bright if res < 0
+    elsif id == 18
+      res = rand(-1..array[4])
+      add_bonus_stat(:mp, res)
+      pa "You used 1x #{array[0]} and your MAX MP was INCREASED by #{res}!", :blue, :bright if res >= 0
+      pa "You used 1x #{array[0]} and your MAX MP was DECREASED by #{res}!", :blue, :bright if res < 0
+    elsif id == 19
+      res = rand(-1..array[5])
+      add_bonus_stat(:atk, res)
+      pa "You used 1x #{array[0]} and your ATTACK was INCREASED by #{res}!", :blue, :bright if res >= 0
+      pa "You used 1x #{array[0]} and your ATTACK was DECREASED by #{res}!", :blue, :bright if res < 0
+    elsif id == 20
+      res = rand(-1..array[6])
+      add_bonus_stat(:def, res)
+      pa "You used 1x #{array[0]} and your DEFENSE was INCREASED by #{res}!", :blue, :bright if res >= 0
+      pa "You used 1x #{array[0]} and your DEFENSE was DECREASED by #{res}!", :blue, :bright if res < 0
     end
   end
   #  [speed,  atk,   def, rewards]
