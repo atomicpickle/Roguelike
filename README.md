@@ -19,6 +19,9 @@ in a playable state with all the core stuff.
 
  BETA Versions updates and fixes:
 
+    BETA 1.0.6.hotfix.a
+    - fixes display error when finding jewels on a hard to get roll option
+
     BETA 1.0.6
     - formatting changes on some strings
     - added some new usable items (jewels) which can be dropped by all enemies

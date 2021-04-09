@@ -606,7 +606,7 @@ class Game_Main
         @player.add_item(:item, id)
         pa "                    #{@enemy.read_name} dropped an item! You found 1x #{Game_DB.items_array(id, 0)}", :yellow, :bright
       elsif dice2 <= 3 || dice >= 97
-        dice2 = rand(1..4)
+        dice2 = rand(0..3)
         ary = [17, 18, 19, 20]
         id = ary[dice2]
         @player.add_item(:item, id)
