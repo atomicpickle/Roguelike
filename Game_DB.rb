@@ -78,13 +78,9 @@ module Game_DB
     @textdb[:intro][3] = ["3: Elf -  primary magic user. faster. Take less magic damage."]
     @textdb[:intro][4] = " Type your name (Maximum 20 characters, may have spaces)"
     @textdb[:intro][5] = " Error, invalid name length... Try that again."
-    @textdb[:intro][6] = " This world is very unforgiving. Keep that in mind and save\n often. Some things for an adventerur to know: You can stay at\n taverns to heal for the right price. You can equip a one\n handed weapon in each hand... Its time to start your journey through \n Ruby Arena... Wake up!"
+    @textdb[:intro][6] = " This world is very unforgiving. Keep that in mind and save\n often. Some things for an adventurer to know: You can stay at\n taverns to heal for the right price. You can equip a one\n handed weapon in each hand... Its time to start your journey through \n Ruby Arena... Wake up!"
     @textdb[:intro][7] = " You wake up on the side of town square. Your head hurts. \n Your whole body hurts. You have no recent memory of how you \n got here. You stand up, foggy and in pain, and look around."
     @textdb[:intro][8] = "
-                  HUMAN:
-                   - well rounded
-                   - weak magic user (magic spells are 10% less effective)
-
                   DWARF:
                    - no mp, cant use spells
                    - higher attack and defense
@@ -92,6 +88,10 @@ module Game_DB
                    - higher hp
                    - weak to magic (take 10% more magic damage)
                    - strong attacker (physical attacks are 10% more effective)
+
+                  HUMAN:
+                    - well rounded
+                    - weak magic user (magic spells are 10% less effective)
 
                   ELF:
                    - higher mp, lower hp
@@ -112,8 +112,8 @@ module Game_DB
     @textdb[:common][7]  = " All other directions seemed covered in overgrowth. Will you \n (L)ook (A)round the Forest, or go NORTH back to the city?"
     @textdb[:common][109]= " "
 
-    @textdb[:common][8]  = " You stand at the entrance to the Arena. An angry looking man \n guards the main enterance. He takes one look at you, and motions\n you forward. He stops you and says 'show Badge! No Badge, no\n enter!' Not having any badges, you walk away..."
-    @textdb[:common][101]= " You stand at the entrance to the Arena. An angry looking man \n guards the main enterance. He takes one look at you, and motions\n you forward. He stops you and says 'show Badge! No Badge, no\n enter!' You show him your Badges. He smiles, and motions you\n inside."
+    @textdb[:common][8]  = " You stand at the entrance to the Arena. An angry looking man \n guards the main entrance. He takes one look at you, and motions\n you forward. He stops you and says 'show Badge! No Badge, no\n enter!' Not having any badges, you walk away..."
+    @textdb[:common][101]= " You stand at the entrance to the Arena. An angry looking man \n guards the main entrance. He takes one look at you, and motions\n you forward. He stops you and says 'show Badge! No Badge, no\n enter!' You show him your Badges. He smiles, and motions you\n inside."
     @textdb[:common][102]= " You are in the Arena Front Hall. A Lady behind a counter and \n glass motions you forward. 'Hey buddy, you can only fight on the level'\n 'that you are qualified for. Let me see your badges.'\n After showing her your badges, she points you to a short hall\n that leads to a fighting pit. A crowd can be heard mingling."
     @textdb[:common][107]= " You stand at the edge of the fighting pit. A crowd of patrons\n cheer from the stands, atop a stone wall surrounding the pit."
     @textdb[:common][103]= " To your SOUTH is the Arena entrance and Front Hall."
@@ -144,6 +144,9 @@ module Game_DB
     @textdb[:common][26] = " All other directions seem to be swampland. Will you leave this\n place, or (L)ook (A)round?"
     @textdb[:common][27] = " You make your way through the swamp. a fog envelopes you and \n chirps and howls can be heard in all directions... You definitely\n hear something close by. (L)ook (A)round or select a target."
 
+    @textdb[:common][28] = " SLICE!!!! Ouch! While wandering in the forest you scratched \n yourself on a large branch!"
+    @textdb[:common][29] = " SPLASH!!! THUD!!! Ouch! While slogging through the swamp, \n your foot gets stuck in some mud. You fall down into the\n water and smack your head on a log!"
+
     @textdb[:cmd][0] = ["(N)orth"]
     @textdb[:cmd][1] = ["(W)est"]
     @textdb[:cmd][2] = ["(E)ast"]
@@ -163,7 +166,7 @@ module Game_DB
     @textdb[:cmd][10] = "    (3) SPELLS"
     @textdb[:cmd][11] = "      (4) BACK TO GAME"
     @textdb[:cmd][12] = "        (5) SAVE GAME"
-    @textdb[:cmd][13] = "          (0) EXIT GAME"
+    @textdb[:cmd][13] = "          (X) EXIT GAME"
     @textdb[:cmd][101]= ["(1) Use"]
     @textdb[:cmd][102]= ["(2) Back"]
 
@@ -296,8 +299,9 @@ module Game_DB
           Special Thanks: _powder_ (reddit.com)
           Special Thanks: Andrek8 (reddit.com)
           Special Thanks: Zaxero
+          Special Thanks: Voxnee (twitch.tv)
           Icon Made by 'Good Ware' from www.flaticon.com"
-    @textdb[:other][12]= " Version: BETA 1.0.8          Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: BETA 1.0.9          Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section=nil, id=nil)

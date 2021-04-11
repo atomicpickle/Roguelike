@@ -775,6 +775,72 @@ class Game_Main
       end
       @enemies[:amount] = @enemies[:wandering].length
     end
+    calculate_trap(area)
+  end
+
+  def calculate_trap(area)
+    return if area == nil
+    readname = ["Forest", "Swamp"]
+    name = "Other"
+    if area == :forest
+      dice = rand(1..100)
+      if dice >= 92
+        clr
+        draw_stats_main
+        dmgary = [1, 3, 5, 7]
+        dmg = dmgary[rand(0..3)]
+        @player.damage(:hp, dmg)
+        @hunting = false
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "#{Game_DB.tx(:common, 28)}", :red
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "              You took #{dmg} damage!!!", :red, :bright
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "              #{Game_DB.tx(:other, 7)}"
+        key = gets
+        name = readname[0]
+      end
+    elsif area == :swamp
+      dice = rand(1..100)
+      if dice >= 92
+        clr
+        draw_stats_main
+        dmgary = [4, 7, 9, 11]
+        dmg = dmgary[rand(0..3)]
+        @player.damage(:hp, dmg)
+        @hunting = false
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "#{Game_DB.tx(:common, 29)}", :red
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "              You took #{dmg} damage!!!", :red, :bright
+        pa "#{Game_DB.tx(:other, 0)}"
+        pa "              #{Game_DB.tx(:other, 7)}"
+        key = gets
+        name = readname[0]
+      end
+    end
+    if @player.read_cur_hpmp(:hp) <= 0
+      #player dead!
+      ratio = 10.0 * @player.damage_taken / @player.total_damage
+      ratio = ratio.truncate(2)
+      ratio = 0 if @player.total_damage == 0
+      grade = Game_DB.calculate_go_ratio_grade(ratio)
+      pa "#{Game_DB.tx(:other, 14)}", :red
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "                  Name: #{@player.playername}, Race: #{@player.race}, Level: #{@player.level}", :red, :bright
+      pa "                  Enemy Killer: #{name}", :red
+      pa "                  Total Damage Done:  #{@player.total_damage}", :red
+      pa "                  Total Damage Taken: #{@player.damage_taken}", :red
+      pa "                  Total Damage Ratio: #{ratio}", :red
+      pa "                  "
+      pa "                  Final Grade: #{grade}", :red, :bright
+      key = gets
+      re_initialize_game
+    end
   end
 
   def calculate_arena_enemy
@@ -1335,11 +1401,10 @@ class Game_Main
     elsif area == :menu # @submenu = [stats, bag, spells, save game, exit game]
       loop do
         @update = true
-        key = gets.chomp.to_i
+        key = gets.chomp
+        keyst = key.downcase
+        key = key.to_i
         case key
-        when 0
-          @submenu[4] = true
-          break
         when 1
           @submenu[0] = true
           break
@@ -1354,6 +1419,10 @@ class Game_Main
           break
         when 5
           @submenu[3] = true
+          break
+        end
+        if keyst == "x"
+          @submenu[4] = true
           break
         end
       end
@@ -1716,11 +1785,11 @@ class Game_Main
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "#{Game_DB.tx(:other, 6)}", :red
+      pa "    #{Game_DB.tx(:other, 6)}", :blue, :bright
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "#{Game_DB.tx(:cmd, 16)}"
-      pa "#{Game_DB.tx(:cmd, 17)}"
+      pa "          #{Game_DB.tx(:cmd, 16)}", :cyan
+      pa "          #{Game_DB.tx(:cmd, 17)}", :cyan
       loop do
         key = gets.chomp.to_i
         case key
@@ -1739,11 +1808,11 @@ class Game_Main
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "#{Game_DB.tx(:other, 4)}", :red
+      pa "    #{Game_DB.tx(:other, 4)}", :red
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "#{Game_DB.tx(:cmd, 16)}"
-      pa "#{Game_DB.tx(:cmd, 17)}"
+      pa "          #{Game_DB.tx(:cmd, 16)}", :red
+      pa "          #{Game_DB.tx(:cmd, 17)}", :red
       loop do
         key = gets.chomp.to_i
         case key

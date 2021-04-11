@@ -41,6 +41,32 @@ return if @submenu.all? { |v| v == false}
 
 bag.each {|id, amt| pa "  (#{id}) #{Game_DB.weapons_array(id, 0)}   x #{amt}"}
 
+
+require 'logger'
+
+logger = Logger.new(STDOUT)
+logger.level = Logger::WARN
+
+logger.debug("Created logger")
+logger.info("Program started")
+logger.warn("Nothing to do!")
+
+path = "a_non_existent_file"
+
+begin
+  File.foreach(path) do |line|
+    unless line =~ /^(\w+) = (.*)$/
+      logger.error("Line in wrong format: #{line.chomp}")
+    end
+  end
+rescue => err
+  logger.fatal("Caught exception; exiting")
+  logger.fatal(err)
+end
+
+logger = Logger.new('logfile.log')
+
+
 " ██▀███   █    ██  ▄▄▄▄ ▓██   ██▓
 ▓██ ▒ ██▒ ██  ▓██▒▓█████▄▒██  ██▒
 ▓██ ░▄█ ▒▓██  ▒██░▒██▒ ▄██▒██ ██░

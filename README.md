@@ -1,4 +1,4 @@
-# Ruby Arena version BETA 1.0.8
+# Ruby Arena version BETA 1.0.9
 
 To support this games development, you can buy it here for your choice
 of price: https://gumpnerd.itch.io/ruby-arena
@@ -18,6 +18,14 @@ in a playable state with all the core stuff.
  Screenshots: https://imgur.com/gallery/Z8P1mB6
 
  BETA Versions updates and fixes:
+
+    BETA 1.0.9
+    - fixed spelling mistake in intro
+    - fixed some spelling mistakes in Arena
+    - fixed Final grade being A+ if damage done was 0
+    - fixed accidental exit screen trigger from main menu
+    - added traps! You can now randomly hit traps in Forest or Swamp
+    - added error logs, a debug.log file will be made when playing
 
     BETA 1.0.8
     - fixed bug where hunting wouldn't reset after moving sometimes
