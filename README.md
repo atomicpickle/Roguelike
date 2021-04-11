@@ -19,6 +19,9 @@ in a playable state with all the core stuff.
 
  BETA Versions updates and fixes:
 
+    BETA 1.0.7-c
+    - hotfix for enemy 0 spawning from item bag traps
+
     BETA 1.0.7-b
     - Droprate adjustment for jewels (lower)
     - Price fixing for jewels

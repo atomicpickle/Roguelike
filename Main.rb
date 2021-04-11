@@ -681,7 +681,7 @@ class Game_Main
           pa "#{Game_DB.tx(:other, 0)}"
           pa "                                  Its an Ambush!!!", :red
           calculate_enemies(:swamp, false)
-          dice2 = rand(0..@enemies[:wandering].size)
+          dice2 = rand(1..@enemies[:wandering].size)
           @enemy = 0
           @enemy = Enemy.new(@enemies[:wandering][dice2])
           pa "               #{@enemy.read_name} Jumped out from its hiding spot and attacks!!!", :red

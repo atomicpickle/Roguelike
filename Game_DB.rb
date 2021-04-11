@@ -297,7 +297,7 @@ module Game_DB
           Special Thanks: Andrek8 (reddit.com)
           Special Thanks: Zaxero
           Icon Made by 'Good Ware' from www.flaticon.com"
-    @textdb[:other][12]= " Version: BETA 1.0.7-b            Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: BETA 1.0.7-c            Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section=nil, id=nil)
