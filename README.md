@@ -19,6 +19,9 @@ in a playable state with all the core stuff.
 
  BETA Versions updates and fixes:
 
+    BETA 1.0.7-e
+    - Final patch fix for 1.0.7
+
     BETA 1.0.7-d
     - I need to test these new builds before pushing them
     - hotfix for nil return on extra enemy spawn

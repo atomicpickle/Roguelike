@@ -1,5 +1,5 @@
 class Enemy
-  attr_reader :id
+  attr_accessor :id
 #[Enemy name(0),race(1), lvl(2),  mhp(3),  mmp(4),  atk(5),  def(6),  spd(7),   exp(8),
 # gold(9),  [drops](10), drop%(11), [spells](12), sp%(13)]
   def initialize(id=0)
