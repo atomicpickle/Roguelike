@@ -611,11 +611,11 @@ class Game_Main
       dropchance = @enemy.dropinfo(true)
       dice = rand(1..100); dice2 = rand(1..100)
       if dice <= dropchance
-        id = dropinfo[0] if dice2 <= 65
-        id = dropinfo[1] if dice2 > 65
+        id = dropinfo[0] if dice2 <= 75
+        id = dropinfo[1] if dice2 > 75
         @player.add_item(:item, id)
         pa "                    #{@enemy.read_name} dropped an item! You found 1x #{Game_DB.items_array(id, 0)}", :yellow, :bright
-      elsif dice2 <= 2 || dice2 >= 99
+      elsif dice2 <= 2 || dice2 >= 98
         dice2 = rand(0..3)
         ary = [17, 18, 19, 20]
         id = ary[dice2]
@@ -681,7 +681,7 @@ class Game_Main
           pa "#{Game_DB.tx(:other, 0)}"
           pa "                                  Its an Ambush!!!", :red
           calculate_enemies(:swamp, false)
-          dice2 = rand(1..@enemies[:wandering].size)
+          dice2 = rand(1..@enemies[:wandering].size-1)
           @enemy = 0
           @enemy = Enemy.new(@enemies[:wandering][dice2])
           @enemy.id = 3 if @enemy.id == 0

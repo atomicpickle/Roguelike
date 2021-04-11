@@ -19,6 +19,11 @@ in a playable state with all the core stuff.
 
  BETA Versions updates and fixes:
 
+    BETA 1.0.7-f
+    - Final final patch for 1.0.7. Its fixed now
+    - fixed spawn bug
+    - adjusted common/rare item drop chance
+
     BETA 1.0.7-e
     - Final patch fix for 1.0.7
 
