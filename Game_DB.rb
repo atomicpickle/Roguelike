@@ -78,7 +78,7 @@ module Game_DB
     @textdb[:intro][3] = ["3: Elf -  primary magic user. faster. Take less magic damage."]
     @textdb[:intro][4] = " Type your name (Maximum 20 characters, may have spaces)"
     @textdb[:intro][5] = " Error, invalid name length... Try that again."
-    @textdb[:intro][6] = " This world is very unforgiving. Keep that in mind and save\n often. Its time to start your journey through Ruby Arena... Wake up!"
+    @textdb[:intro][6] = " This world is very unforgiving. Keep that in mind and save\n often. Some things for an adventerur to know: You can stay at\n taverns to heal for the right price. You can equip a one\n handed weapon in each hand... Its time to start your journey through \n Ruby Arena... Wake up!"
     @textdb[:intro][7] = " You wake up on the side of town square. Your head hurts. \n Your whole body hurts. You have no recent memory of how you \n got here. You stand up, foggy and in pain, and look around."
     @textdb[:intro][8] = "
                   HUMAN:
@@ -108,7 +108,9 @@ module Game_DB
 
     @textdb[:common][5]  = " You are standing in Surgalic Forest. The deeper you go, the more \n strange the sounds get. Surely if you venture in, you will \n find something you can kill, or something that will eat you."
     @textdb[:common][6]  = " To your NORTH, you see the city gates and the entrance to  \n Dracilix City. A Sentinal stares at you from the gates."
-    @textdb[:common][7]  = " All other directions seemed covered in overgrowth. Will you \n look around the Forest, or go NORTH back to the city?"
+    @textdb[:common][110]= " To your WEST, you see a massive swamp. A sign in front of a \n narrow trail leading in reads 'Modove Swamp'. "
+    @textdb[:common][7]  = " All other directions seemed covered in overgrowth. Will you \n (L)ook (A)round the Forest, or go NORTH back to the city?"
+    @textdb[:common][109]= " "
 
     @textdb[:common][8]  = " You stand at the entrance to the Arena. An angry looking man \n guards the main enterance. He takes one look at you, and motions\n you forward. He stops you and says 'show Badge! No Badge, no\n enter!' Not having any badges, you walk away..."
     @textdb[:common][101]= " You stand at the entrance to the Arena. An angry looking man \n guards the main enterance. He takes one look at you, and motions\n you forward. He stops you and says 'show Badge! No Badge, no\n enter!' You show him your Badges. He smiles, and motions you\n inside."
@@ -136,6 +138,11 @@ module Game_DB
     @textdb[:common][21] = " SHOP ITEMS:"
     @textdb[:common][22] = " Select an item to buy, choose number, or (0) to cancel."
     @textdb[:common][23] = " Select an item to sell, choose number, or (0) to cancel."
+
+    @textdb[:common][24] = " You enter Modove Swamp. The stench of the swamp is extremely \n overwhelming. You cover your nose and look around. Your eyes start\n to sting a little from contact with the air around you.\n Many unusual sounds come from the swamp. This place is starting\n to trigger your fight or flight response."
+    @textdb[:common][25] = " To your EAST, you see a trail leading to Surgalic Forest."
+    @textdb[:common][26] = " All other directions seem to be swampland. Will you leave this\n place, or (L)ook (A)round?"
+    @textdb[:common][27] = " You make your way through the swamp. a fog envelopes you and \n chirps and howls can be heard in all directions... You definitely\n hear something close by. (L)ook (A)round or select a target."
 
     @textdb[:cmd][0] = ["(N)orth"]
     @textdb[:cmd][1] = ["(W)est"]
@@ -290,7 +297,7 @@ module Game_DB
           Special Thanks: Andrek8 (reddit.com)
           Special Thanks: Zaxero
           Icon Made by 'Good Ware' from www.flaticon.com"
-    @textdb[:other][12]= " Version: BETA 1.0.6            Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: BETA 1.0.7            Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section=nil, id=nil)
@@ -320,7 +327,7 @@ module Game_DB
   end
 
   #returns TRUE if enemy gets first strike, includes RANDOM roll
-  def battle_enemy_hit_first(pspd=0, espd=0)
+  def battle_enemy_hit_first(pspd=0, espd=0, id=0)
     enemyspd = espd
     playerspd = pspd
     res = playerspd - enemyspd
@@ -337,6 +344,7 @@ module Game_DB
       val =  false if dice <= 30
       val =  true if dice > 30
     end
+    return false if id == :t1 || id == :t2 || id == :t3 || id == :t4
     return val
   end
 
@@ -623,8 +631,13 @@ module Game_DB
   def populate_enemies_db #races: ghost(0), dwarf(1), human(2), elf(3), animal(4), demon(5)
     #              #[Enemy name,             race, lvl,  mhp,  mmp,  atk,  def,  spd,   exp,   gold, [drops],drop%,  [spells], sp%]
     @enemies[:g1] = ["Lost Spirit",             0,   0,    1,    3,    0,    0,    5,     4,      0,  [8, 7],    5,    [1, 0],  33]
-    @enemies[:g2] = ["Angry Spirit",            0,   5,   33,   24,    5,    0,   15,    10,      0,  [8, 7],   10,    [1, 4],  40]
-    @enemies[:g3] = ["Girl From The Ring",      0,   7,  166,   48,   22,    9,   19,    66,      6,  [8, 7],   10,    [1, 8],  40]
+    @enemies[:g2] = ["Angry Spirit",            0,   5,   56,   24,    9,    5,   99,    20,      2,  [8, 7],   20,    [1, 4],  40]
+    @enemies[:g3] = ["Girl From The Ring",      0,   7,  166,   48,   33,   11,   99,    66,      6,  [8, 7],   20,    [1, 8],  40]
+
+    @enemies[:t1] = ["Blue Itembag",            0,   1,    1,    0,    0,    0,    0,     0,      1, [2, 18], 100,     [0, 0],   0]
+    @enemies[:t2] = ["Green Itembag",           0,   1,    1,    0,    0,    0,    0,     0,      1, [1, 17], 100,     [0, 0],   0]
+    @enemies[:t3] = ["Red Itembag",             0,   1,    1,    0,    0,    0,    0,     0,      1, [1, 19], 100,     [0, 0],   0]
+    @enemies[:t4] = ["White Itembag",           0,   1,    1,    0,    0,    0,    0,     0,      1, [1, 20], 100,     [0, 0],   0]
 
     @enemies[0]  =  ["Emptyness",               0,   0,    1,    0,    0,    0,    0,     0,      0,  [0, 0],    1,    [0, 0],   0]
     @enemies[1]  =  ["Butterfly",               4,   0,    7,    0,    2,    1,    6,     2,      1,  [1, 2],   25,    [0, 0],   0]
@@ -637,46 +650,46 @@ module Game_DB
     @enemies[6]  =  ["Adorable Fox",            4,   3,   19,    0,   12,    5,   13,    12,     15, [1, 18],   10,    [0, 0],   0]
     @enemies[7]  =  ["Angry Bird",              4,   3,   22,    0,   16,    7,   14,    18,     22, [1, 19],   15,    [0, 0],   0]
 
-    @enemies[8]  =  ["Blazing Skull",           5,   4,   30,   10,   19,    7,   15,    26,     28, [20,19],   10,    [1, 4],  45]
-    @enemies[9]  =  ["Syren",                   5,   4,   34,   16,   21,    9,   16,    34,     35, [17,18],   12,    [1, 5],  45]
-    @enemies[10] =  ["Ipotane",                 4,   4,   38,   14,   22,   12,   17,    40,     30, [18,17],   15,    [1, 6],  45]
+    @enemies[8]  =  ["Blazing Skull",           5,   4,   30,   10,   22,    7,   15,    26,     28, [20,19],   10,    [1, 4],  45]
+    @enemies[9]  =  ["Syren",                   5,   4,   34,   16,   25,    9,   16,    34,     35, [17,18],   12,    [1, 5],  45]
+    @enemies[10] =  ["Ipotane",                 4,   4,   38,   14,   26,   12,   17,    40,     30, [18,17],   15,    [1, 6],  45]
 
-    @enemies[11] =  ["F**king Tiger",           4,   5,   50,    0,   29,   15,   19,    52,     40,  [3, 9],    8,    [0, 0],   0]
-    @enemies[12] =  ["Black Zebra",             4,   5,   58,    0,   31,   20,   20,    42,     75, [3, 17],   10,    [0, 0],   0]
+    @enemies[11] =  ["F**king Tiger",           4,   5,   50,    0,   38,   15,   19,    52,     40,  [3, 9],    8,    [0, 0],   0]
+    @enemies[12] =  ["Black Zebra",             4,   5,   58,    0,   37,   20,   20,    42,     75, [3, 17],   10,    [0, 0],   0]
 
-    @enemies[13] =  ["Giant C**t of a Rhino",   4,   6,   92,    0,   39,   36,   22,   110,     35, [20, 9],   10,    [0, 0],   0]
-    @enemies[14] =  ["Shortneck Angry Giraffe", 4,   6,  110,    0,   35,   45,   26,    86,    100, [18, 7],   10,    [0, 0],   0]
-    @enemies[15] =  ["Longma",                  4,   6,  120,   30,   33,   44,   30,   100,    110, [18, 6],    8,    [2, 7],  40]
+    @enemies[13] =  ["Giant C**t of a Rhino",   4,   6,   92,    0,   44,   36,   22,   110,     35, [20, 9],   10,    [0, 0],   0]
+    @enemies[14] =  ["Shortneck Angry Giraffe", 4,   6,  110,    0,   40,   45,   26,    86,    100, [18, 7],   10,    [0, 0],   0]
+    @enemies[15] =  ["Longma",                  4,   6,  120,   30,   39,   44,   30,   100,    110, [18, 6],    8,    [2, 7],  40]
 
-    @enemies[16] =  ["Bit-too-Happy Jinn",      5,   7,  152,   42,   48,   52,   35,   186,    165, [19, 7],    9,   [2, 11],  48]
-    @enemies[17] =  ["Baby Velociraptor",       4,   7,  156,   14,   51,   50,   38,   144,     90, [9, 20],    7,    [2, 0],  25]
-    @enemies[18] =  ["Cute Velociraptor",       4,   7,  188,   22,   60,   58,   40,   224,    204, [9, 10],    6,    [2, 0],  25]
+    @enemies[16] =  ["Bit-too-Happy Jinn",      5,   7,  152,   42,   60,   52,   35,   186,    165, [19, 7],    9,   [2, 11],  48]
+    @enemies[17] =  ["Baby Velociraptor",       4,   7,  156,   14,   64,   50,   38,   144,     90, [9, 20],    7,    [2, 0],  25]
+    @enemies[18] =  ["Cute Velociraptor",       4,   7,  188,   22,   69,   58,   40,   224,    204, [9, 10],    6,    [2, 0],  25]
 
-    @enemies[19] =  ["Electric Floating Skull", 5,   8,  196,   70,   77,   56,   32,   300,    225, [18,19],   15,   [2, 11],  40]
-    @enemies[20] =  ["F**king Lion",            4,   8,  224,    0,   88,   64,   48,   310,    240, [9, 10],   12,    [0, 0],   0]
+    @enemies[19] =  ["Electric Floating Skull", 5,   8,  196,   70,   81,   56,   32,   300,    225, [18,19],   15,   [2, 11],  40]
+    @enemies[20] =  ["F**king Lion",            4,   8,  224,    0,   89,   64,   48,   310,    240, [9, 10],   12,    [0, 0],   0]
 
-    @enemies[21] =  ["Lunatic Vagrant",         2,   9,  275,   56,  105,   86,   54,   375,    360, [3, 19],   15,    [2, 9],  25]
-    @enemies[22] =  ["Land Dolphin",            4,   9,  290,   90,  108,   91,   56,   420,    420, [18, 6],   15,   [2, 11],  20]
+    @enemies[21] =  ["Lunatic Vagrant",         2,   9,  275,   56,  109,   86,   54,   375,    360, [3, 19],   15,    [2, 9],  25]
+    @enemies[22] =  ["Land Dolphin",            4,   9,  290,   90,  113,   91,   56,   420,    420, [18, 6],   15,   [2, 11],  20]
 
-    @enemies[23] =  ["Psycho Tom",              2,  10,  325,   75,  120,  100,   66,   500,    560, [9, 10],   15,    [2, 8],  25]
-    @enemies[24] =  ["Komodo Dragon",           4,  10,  375,    0,  124,  112,   69,   525,    515, [9, 10],   15,    [0, 0],   0]
+    @enemies[23] =  ["Psycho Tom",              2,  10,  325,   75,  126,  100,   66,   500,    560, [9, 10],   15,    [2, 8],  25]
+    @enemies[24] =  ["Komodo Dragon",           4,  10,  375,    0,  132,  112,   69,   525,    515, [9, 10],   15,    [0, 0],   0]
 
     #              #[Enemy name,             race, lvl,  mhp,  mmp,  atk,  def,  spd,   exp,   gold, [drops],drop%,  [spells], sp%]
 
-    @enemies[:b0] = ["Rosco the Drunk",         2,   4,  120,   24,   34,   15,   15,   150,    100, [3, 10],   10,    [1, 0],  35]
-    @enemies[:b1] = ["Babba-Yagga",             5,   5,  128,   28,   26,   18,   18,   120,    175,  [1, 6],   12,    [1, 6],  35]
+    @enemies[:b0] = ["Rosco the Drunk",         2,   4,  120,   24,   38,   15,   15,   150,    100, [3, 10],   10,    [1, 0],  35]
+    @enemies[:b1] = ["Babba-Yagga",             5,   5,  128,   28,   29,   18,   18,   120,    175,  [1, 6],   12,    [1, 6],  35]
 
-    @enemies[:b2] = ["Big Happy Yeti",          4,   6,  244,   30,   48,   48,   32,   355,    500,  [4, 5],   30,    [1, 7],  35]
-    @enemies[:b3] = ["Tiny",                    2,   6,  325,    0,   61,   52,   36,   386,    650,  [3, 9],   10,    [0, 0],   0]
+    @enemies[:b2] = ["Big Happy Yeti",          4,   6,  244,   30,   49,   48,   32,   355,    500,  [4, 5],   30,    [1, 7],  35]
+    @enemies[:b3] = ["Tiny",                    2,   6,  325,    0,   63,   52,   36,   386,    650,  [3, 9],   10,    [0, 0],   0]
 
-    @enemies[:b4] = ["Lana",                    2,   7,  400,   86,   67,   64,   40,   550,   1000, [10, 9],   25,    [2, 6],  40]
-    @enemies[:b5] = ["Sexual Harrasment Panda", 4,   7,  430,  108,   70,   70,   40,   625,   1250, [8, 10],   33,    [2, 6],  40]
+    @enemies[:b4] = ["Lana",                    2,   7,  400,   86,   82,   64,   40,   550,   1000, [10, 9],   25,    [2, 6],  40]
+    @enemies[:b5] = ["Sexual Harrasment Panda", 4,   7,  430,  108,   87,   70,   40,   625,   1250, [8, 10],   33,    [2, 6],  40]
 
-    @enemies[:b6] = ["Hatchet Patrick",         2,   8,  550,    0,   77,   77,   55,   750,   1500, [10, 9],   25,    [0, 0],   0]
-    @enemies[:b7] = ["Royal Mage Jimmy",        2,   8,  585,  175,   70,   80,   50,   775,   1550, [8, 11],   33,    [2, 8],  45]
+    @enemies[:b6] = ["Hatchet Patrick",         2,   8,  550,    0,   91,   77,   55,   750,   1500, [10, 9],   25,    [0, 0],   0]
+    @enemies[:b7] = ["Royal Mage Jimmy",        2,   8,  585,  175,   98,   80,   50,   775,   1550, [8, 11],   33,    [2, 8],  45]
 
-    @enemies[:b8] = ["Ninja Bob",               2,   9,  850,    0,  110,   90,   60,  1250,   1850,  [7, 9],   25,    [0, 0],   0]
-    @enemies[:b9] = ["Angry Lana",              2,   9,  920,  250,  116,  108,   64,  1550,   2050, [8, 11],   33,    [2,11],  30]
+    @enemies[:b8] = ["Ninja Bob",               2,   9,  850,    0,  124,   90,   60,  1250,   1850,  [7, 9],   25,    [0, 0],   0]
+    @enemies[:b9] = ["Angry Lana",              2,   9,  920,  250,  132,  108,   64,  1550,   2050, [8, 11],   33,    [2,11],  30]
   end
 
   #key for experience_req = level (So experience_req[3] = exp for level 3)

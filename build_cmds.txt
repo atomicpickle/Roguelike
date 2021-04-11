@@ -1,1 +1,15 @@
 ocra launch.rb --icon eeicon.ico --dll ruby_builtin_dlls\libssp-0.dll --debug --output RubyArena.exe
+
+
+
+
+
+
+Type these in while viewing your status screen..
+makemerich  - type in, hit enter. +75k gold
+forcelvlexp - type in, hit enter.
+            - enter desired level. Max 20 (don't go out of range) then hit enter.
+forcebadge  - type in, hit enter.
+            - type in EXACT badge string then hit enter.
+            - string example: <{2}>
+            - will properly force prgogress to that badge 

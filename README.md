@@ -1,4 +1,4 @@
-# Ruby Arena version BETA 1.0.6
+# Ruby Arena version BETA 1.0.7
 
 To support this games development, you can buy it here for your choice
 of price: https://gumpnerd.itch.io/ruby-arena
@@ -18,6 +18,16 @@ in a playable state with all the core stuff.
  Screenshots: https://imgur.com/gallery/Z8P1mB6
 
  BETA Versions updates and fixes:
+
+    BETA 1.0.7
+    - added file verification checking when loading a saved game
+    - exposed game cheats in build_cmds.txt which are used for testing (see github)
+    - New enemy: Item Bags. Usually enemies will use Item Bags to set traps
+    - Added new area: Swamp (accessible at level 5)
+    - Forest now has a level cap for enemies and will only spawn up to a certain levels
+    - Swamp spawns higher level monsters, spirits and item bags
+    - Forest spawns lower level monsters and item bags
+    - buffed attack power for various higher level enemies
 
     BETA 1.0.6.hotfix.a
     - fixes display error when finding jewels on a hard to get roll option

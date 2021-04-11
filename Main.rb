@@ -54,23 +54,33 @@ class Game_Main
   end
 
   def process_game_load_file
-    yaml_player = YAML.load(File.read("splayer.save"))
-    locdata = JSON.parse(File.read("sworld.save"))
-    locdata[0] = locdata[0].to_sym
-    locdata[1] = locdata[1].to_sym
-    @location = locdata
-    @player = Player.new
-    @player = yaml_player
-    @player.finish_reload
-    pa "SAVE FILE LOADED! Player Name: #{@player.playername}, Race: #{@player.race}, Level: #{@player.level}, Gold: #{@player.gold}", :cyan
-    pa "#{Game_DB.tx(:other, 7)}"
-    key = gets
-    @location[0] = @location[1]
-    @update = true
-    @init = false
+    crc = []
+    crc[0] = File.exist?("splayer.save")
+    crc[0] = File.exist?("sworld.save")
+    if crc.any? {|i| i == false}
+      pa "Error! No save file found or missing files!", :red, :bright
+      key = gets
+      startup_titlecard
+    else
+      yaml_player = YAML.load(File.read("splayer.save"))
+      locdata = JSON.parse(File.read("sworld.save"))
+      locdata[0] = locdata[0].to_sym
+      locdata[1] = locdata[1].to_sym
+      @location = locdata
+      @player = Player.new
+      @player = yaml_player
+      @player.finish_reload
+      pa "SAVE FILE LOADED! Player Name: #{@player.playername}, Race: #{@player.race}, Level: #{@player.level}, Gold: #{@player.gold}", :cyan
+      pa "#{Game_DB.tx(:other, 7)}"
+      key = gets
+      @location[0] = @location[1]
+      @update = true
+      @init = false
+    end
     update
   end
 
+  #method call to reload title card and restart game if player gets game over.
   def re_initialize_game
     clr
     @init = true
@@ -121,7 +131,7 @@ class Game_Main
       @update = false
       clr
       draw_stats_main
-      @hunting = false if @location[0] != :forest
+      @hunting = false if @location[0] != :forest && @location[0] != :swamp
       location_draw(@location[0]) unless @battle
       battle_draw if @battle
     elsif @update && @init
@@ -296,12 +306,12 @@ class Game_Main
       key = gets.chomp.downcase
       case key
       when "a"  #attack
-        enemyfs = Game_DB.battle_enemy_hit_first(@enemy.read_stat(:spd), @player.final_stat(:spd))
+        enemyfs = Game_DB.battle_enemy_hit_first(@enemy.read_stat(:spd), @player.final_stat(:spd), @enemy.id)
         process_battle_attack(enemyfs)
         process_battle_attack
         break
       when "s"  #spell
-        enemyfs = Game_DB.battle_enemy_hit_first(@enemy.read_stat(:spd), @player.final_stat(:spd))
+        enemyfs = Game_DB.battle_enemy_hit_first(@enemy.read_stat(:spd), @player.final_stat(:spd), @enemy.id)
         spellid = spell_selection
         break if spellid == 0 || spellid == nil
         process_battle_attack(enemyfs, true, spellid)
@@ -655,40 +665,107 @@ class Game_Main
           pa "                    You are now able to compete in the Arena.", :yellow
           @player.add_badge(Game_DB.tx(:badges, 0))
         end
+        if @player.level == 5
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "                    You have reached level 5! You have unlocked a new area!", :yellow
+          pa "                    You are now able to access Modove Swamp, west of Surgalic Forest", :yellow
+        end
         pa "#{Game_DB.tx(:other, 0)}"
         key = gets
       end
-      @battle = false
-      @enemy = 0
-      @enemyturn = false
-      @hunting = false
-      @location[0] = @location[1]
+      if @enemy.id == :t1 || @enemy.id == :t2 ||@enemy.id == :t3 || @enemy.id == :t4
+        dice = rand(1..100)
+        if dice >= 25
+          clr
+          draw_stats_main
+          pa "#{Game_DB.tx(:other, 0)}"
+          pa "                                  Its an Ambush!!!", :red
+          calculate_enemies(:swamp, false)
+          dice2 = rand(0..@enemies[:wandering].size)
+          @enemy = 0
+          @enemy = Enemy.new(@enemies[:wandering][dice2])
+          pa "               #{@enemy.read_name} Jumped out from its hiding spot and attacks!!!", :red
+          key = gets
+        else
+          @battle = false
+          @enemy = 0
+          @enemyturn = false
+          @hunting = false
+          @location[0] = @location[1]
+        end
+      else
+        @battle = false
+        @enemy = 0
+        @enemyturn = false
+        @hunting = false
+        @location[0] = @location[1]
+      end
     end
   end
 
-  def calculate_enemies
-    @enemies[:wandering].clear
-    @hunting = true
-    plvl = @player.level
-    enemy_lib = Game_DB.enemies_array
-    lvlmax = plvl + 3
-    valid_enemies = enemy_lib.select { |k, v| v[2] <= lvlmax }
-    valid_enemies.reject! { |k,v| k == 0}
-    valid_enemies.reject! { |k,v| k.is_a? Symbol}
-    enemies_keys = valid_enemies.keys
-    enemies_keys.each do |i|
-      break if @enemies[:wandering].length >= 5
-      dice = rand(1..100)
-      @enemies[:wandering] << i if valid_enemies[i][2] == plvl-1 && dice <= 50
-      @enemies[:wandering] << i if valid_enemies[i][2] == plvl && dice <= 75
-      @enemies[:wandering] << i if valid_enemies[i][2] == plvl+1 && dice > 75
-      @enemies[:wandering] << i if valid_enemies[i][2] == plvl+1 && dice <= 75
-      @enemies[:wandering] << i if valid_enemies[i][2] == plvl+1 && dice <= 50
-      @enemies[:wandering] << i if valid_enemies[i][2] == lvlmax-1 && dice <= 50
-      @enemies[:wandering] << i if valid_enemies[i][2] == lvlmax-1 && dice >= 75
-      @enemies[:wandering] << i if valid_enemies[i][2] == lvlmax && dice <= 50
+  def calculate_enemies(area=:forest, insertspecs=true)
+    if area == :forest
+      @enemies[:wandering].clear
+      @hunting = true
+      plvl = @player.level
+      enemy_lib = Game_DB.enemies_array
+      lvlmax = 5
+      valid_enemies = enemy_lib.select { |k, v| v[2] <= lvlmax }
+      valid_enemies.reject! { |k,v| k == 0}
+      valid_enemies.reject! { |k,v| k.is_a? Symbol}
+      enemies_keys = valid_enemies.keys
+      if insertspecs
+        trary = [:t1, :t2, :t3, :t4]
+        trand = rand(0..3)
+        dice5 = rand(1..100)
+        @enemies[:wandering] << trary[trand] if dice5 <= 50
+      end
+      enemies_keys.each do |i|
+        break if @enemies[:wandering].length >= 5
+        dice = rand(1..100)
+        @enemies[:wandering] << i if valid_enemies[i][2] == plvl-1 && dice <= 50
+        @enemies[:wandering] << i if valid_enemies[i][2] == plvl && dice <= 75
+        @enemies[:wandering] << i if valid_enemies[i][2] == plvl+1 && dice > 75
+        @enemies[:wandering] << i if valid_enemies[i][2] == plvl+1 && dice <= 75
+        @enemies[:wandering] << i if valid_enemies[i][2] == plvl+1 && dice <= 50
+        @enemies[:wandering] << i if valid_enemies[i][2] == lvlmax-1 && dice <= 50
+        @enemies[:wandering] << i if valid_enemies[i][2] == lvlmax-1 && dice >= 75
+        @enemies[:wandering] << i if valid_enemies[i][2] == lvlmax && dice <= 50
+      end
+      @enemies[:amount] = @enemies[:wandering].length
+    elsif area == :swamp
+      @enemies[:wandering].clear
+      @hunting = true
+      plvl = @player.level
+      enemy_lib = Game_DB.enemies_array
+      lvlmax = plvl +2
+      valid_enemies = enemy_lib.select {|k,v| v[2] <= lvlmax}
+      valid_enemies.reject! {|k,v| k == 0}
+      valid_enemies.reject! {|k,v| k.is_a? Symbol}
+      enemies_keys = valid_enemies.keys
+      if insertspecs
+        trary = [:t1, :t2, :t3, :t4]
+        trand = rand(0..3)
+        dice5 = rand(1..100)
+        @enemies[:wandering] << trary[trand] if dice5 <= 50
+        @enemies[:wandering] << :g2 if dice5 > 50 && dice5 <= 60
+        @enemies[:wandering] << :g3 if dice5 > 93
+      end
+      enemies_keys.each do |i|
+        break if @enemies[:wandering].length >= 5
+        dice = rand(1..100)
+        @enemies[:wandering] << i if i.is_a? Symbol
+        @enemies[:wandering] << i if valid_enemies[i][2] == plvl-1 && dice <= 50
+        @enemies[:wandering] << i if valid_enemies[i][2] == plvl && dice <= 75
+        @enemies[:wandering] << i if valid_enemies[i][2] == plvl+1 && dice > 75
+        @enemies[:wandering] << i if valid_enemies[i][2] == plvl+1 && dice <= 75
+        @enemies[:wandering] << i if valid_enemies[i][2] == plvl+1 && dice <= 50
+        @enemies[:wandering] << i if valid_enemies[i][2] == lvlmax-1 && dice <= 50
+        @enemies[:wandering] << i if valid_enemies[i][2] == lvlmax-1 && dice >= 75
+        @enemies[:wandering] << i if valid_enemies[i][2] == lvlmax && dice <= 50
+      end
+      @enemies[:amount] = @enemies[:wandering].length
     end
-    @enemies[:amount] = @enemies[:wandering].length
   end
 
   def calculate_arena_enemy
@@ -829,16 +906,36 @@ class Game_Main
     if area == :forest
       pa "#{Game_DB.tx(:common, 5)}", :green
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:common, 6)}", :green, :bright
       pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:common, 110)}", :green, :bright if @player.level >= 5
+      pa "#{Game_DB.tx(:other, 0)}" if @player.level >= 5
       pa "#{Game_DB.tx(:common, 7)}", :green, :bright
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "#{Game_DB.tx(:common, 10)}", :green  if @hunting
+      pa "#{Game_DB.tx(:common, 10)}", :green  if @hunting unless @player.level >= 5
       pa "#{Game_DB.tx(:other, 0)}" if @hunting
       print_hunt_results if @hunting
       pa "#{Game_DB.tx(:other, 0)}" if @hunting
       pa "#{Game_DB.tx(:cmd, 0)}", :cyan
+      pa "#{Game_DB.tx(:cmd, 1)}", :cyan if @player.level >= 5
+      pa "#{Game_DB.tx(:cmd, 6)}", :cyan
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:cmd, 7)}", :cyan
+      process_input
+      update
+    end
+    if area == :swamp
+      pa "#{Game_DB.tx(:common, 24)}", :green
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:common, 25)}", :green, :bright
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:common, 26)}", :green, :bright
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:common, 27)}", :green if @hunting
+      pa "#{Game_DB.tx(:other, 0)}" if @hunting
+      print_hunt_results if @hunting
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:cmd, 2)}", :cyan
       pa "#{Game_DB.tx(:cmd, 6)}", :cyan
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:cmd, 7)}", :cyan
@@ -893,9 +990,13 @@ class Game_Main
     i = 2
     @enemies[:wandering].each do |e|
       break if i > 6
-      pa "(#{i}): '#{Game_DB.enemies_array(e, 0)}', Level: #{Game_DB.enemies_array(e, 2)}", :blue, :bright if @player.level > Game_DB.enemies_array(e, 2)
-      pa "(#{i}): '#{Game_DB.enemies_array(e, 0)}', Level: #{Game_DB.enemies_array(e, 2)}", :red, :bright if @player.level == Game_DB.enemies_array(e, 2)
-      pa "(#{i}): '#{Game_DB.enemies_array(e, 0)}', Level: #{Game_DB.enemies_array(e, 2)}", :red if @player.level < Game_DB.enemies_array(e, 2)
+      if e.is_a? Symbol
+        pa "(#{i}): '#{Game_DB.enemies_array(e, 0)}', (Special Target)", :yellow, :bright
+      else
+        pa "(#{i}): '#{Game_DB.enemies_array(e, 0)}', Level: #{Game_DB.enemies_array(e, 2)}", :blue, :bright if @player.level > Game_DB.enemies_array(e, 2)
+        pa "(#{i}): '#{Game_DB.enemies_array(e, 0)}', Level: #{Game_DB.enemies_array(e, 2)}", :red, :bright if @player.level == Game_DB.enemies_array(e, 2)
+        pa "(#{i}): '#{Game_DB.enemies_array(e, 0)}', Level: #{Game_DB.enemies_array(e, 2)}", :red if @player.level < Game_DB.enemies_array(e, 2)
+      end
       i += 1
     end
   end
@@ -1050,10 +1151,88 @@ class Game_Main
             @location[0] = :town
             break
           when "l"
-            calculate_enemies
+            calculate_enemies(area)
             break
           when "a"
-            calculate_enemies
+            calculate_enemies(area)
+            break
+          when "w"
+            if @player.level >= 5
+              @location[1] = @location[0]
+              @location[0] = :swamp
+              break
+            end
+          end
+          if keyb == 1
+            @location[1] = @location[0]
+            @location[0] = :menu
+            break
+          end
+        end
+        if @hunting # 2, 3, 4, 5, 6, (0..5) = selection limit
+          @update = true
+          key = gets.chomp.downcase
+          keyb = key.to_i #for number check
+          keys = @enemies[:wandering]
+          length = @enemies[:wandering].length
+          case key
+          when "n"
+            @location[1] = @location[0]
+            @location[0] = :town
+            break
+          when "l"
+            calculate_enemies(area)
+            break
+          when "a"
+            calculate_enemies(area)
+            break
+          when "w"
+            if @player.level >= 5
+              @location[1] = @location[0]
+              @location[0] = :swamp
+              break
+            end
+          end
+          if keyb == 1
+            @location[1] = @location[0]
+            @location[0] = :menu
+            break
+          end
+          case keyb
+          when 2 #enemy 1
+            start_battle(@enemies[:wandering][0]) unless @enemies[:wandering][0] == nil
+            break
+          when 3 #enemy 2
+            start_battle(@enemies[:wandering][1]) unless @enemies[:wandering][1] == nil
+            break
+          when 4 #enemy 3
+            start_battle(@enemies[:wandering][2]) unless @enemies[:wandering][2] == nil
+            break
+          when 5 #enemy 4
+            start_battle(@enemies[:wandering][3]) unless @enemies[:wandering][3] == nil
+            break
+          when 6 #enemy 5
+            start_battle(@enemies[:wandering][4]) unless @enemies[:wandering][4] == nil
+            break
+          end
+        end
+      end
+    elsif area == :swamp
+      loop do
+        if !@hunting
+          @update = true
+          key = gets.chomp.downcase
+          keyb = key.to_i #for number check
+          case key
+          when "l"
+            calculate_enemies(area)
+            break
+          when "a"
+            calculate_enemies(area)
+            break
+          when "e"
+            @location[1] = @location[0]
+            @location[0] = :forest
             break
           end
           if keyb == 1
@@ -1074,10 +1253,10 @@ class Game_Main
             @location[0] = :town
             break
           when "l"
-            calculate_enemies
+            calculate_enemies(area)
             break
           when "a"
-            calculate_enemies
+            calculate_enemies(area)
             break
           end
           if keyb == 1
@@ -1888,6 +2067,7 @@ class Game_Main
           process_game_load_file if key == 1
           @update = true if key == 2
           update if key == 2
+          break if key == 1
         end
       when "e"
         #credits
