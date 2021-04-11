@@ -297,7 +297,7 @@ module Game_DB
           Special Thanks: Andrek8 (reddit.com)
           Special Thanks: Zaxero
           Icon Made by 'Good Ware' from www.flaticon.com"
-    @textdb[:other][12]= " Version: BETA 1.0.7-f            Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: BETA 1.0.8          Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section=nil, id=nil)
@@ -544,6 +544,17 @@ module Game_DB
     truekey += 1
     return @textdb[:badges][truekey-1] if truekey > 10
     return @textdb[:badges][truekey]
+  end
+
+  def calculate_go_ratio_grade(ratio=0.0)
+    grade = ""
+    grade = "A+" if ratio >= 5
+    grade = "A" if ratio <= 5 && ratio >= 3.75
+    grade = "B" if ratio < 3.75 && ratio >= 2.25
+    grade = "C" if ratio < 2.25 && ratio >= 1.25
+    grade = "D" if ratio < 1.25 && ratio >= 1
+    grade = "F" if ratio < 1
+    return grade
   end
 
   def populate_weapons_db

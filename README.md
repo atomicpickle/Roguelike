@@ -1,4 +1,4 @@
-# Ruby Arena version BETA 1.0.7
+# Ruby Arena version BETA 1.0.8
 
 To support this games development, you can buy it here for your choice
 of price: https://gumpnerd.itch.io/ruby-arena
@@ -18,6 +18,11 @@ in a playable state with all the core stuff.
  Screenshots: https://imgur.com/gallery/Z8P1mB6
 
  BETA Versions updates and fixes:
+
+    BETA 1.0.8
+    - fixed bug where hunting wouldn't reset after moving sometimes
+    - fixed bug where sometimes finding a rare item could cause a crash
+    - added damage ratio and grade to game over screen
 
     BETA 1.0.7-f
     - Final final patch for 1.0.7. Its fixed now

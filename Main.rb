@@ -587,11 +587,18 @@ class Game_Main
     draw_stats_main
     if @player.read_cur_hpmp(:hp) <= 0
       #player dead!
+      ratio = 10.0 * @player.damage_taken / @player.total_damage
+      ratio = ratio.truncate(2)
+      grade = Game_DB.calculate_go_ratio_grade(ratio)
       pa "#{Game_DB.tx(:other, 14)}", :red
       pa "#{Game_DB.tx(:other, 0)}"
       pa "                  Name: #{@player.playername}, Race: #{@player.race}, Level: #{@player.level}", :red, :bright
+      pa "                  Enemy Killer: #{@enemy.read_name}", :red
       pa "                  Total Damage Done:  #{@player.total_damage}", :red
       pa "                  Total Damage Taken: #{@player.damage_taken}", :red
+      pa "                  Total Damage Ratio: #{ratio}", :red
+      pa "                  "
+      pa "                  Final Grade: #{grade}", :red, :bright
       key = gets
       re_initialize_game
     elsif @enemy.alive? == false
@@ -611,11 +618,12 @@ class Game_Main
       dropchance = @enemy.dropinfo(true)
       dice = rand(1..100); dice2 = rand(1..100)
       if dice <= dropchance
-        id = dropinfo[0] if dice2 <= 75
-        id = dropinfo[1] if dice2 > 75
+        id = dropinfo[0] if dice2 <= 70
+        id = dropinfo[1] if dice2 > 70
         @player.add_item(:item, id)
+        id = 1 if id == nil
         pa "                    #{@enemy.read_name} dropped an item! You found 1x #{Game_DB.items_array(id, 0)}", :yellow, :bright
-      elsif dice2 <= 2 || dice2 >= 98
+      elsif dice2 <= 2 || dice2 >= 97
         dice2 = rand(0..3)
         ary = [17, 18, 19, 20]
         id = ary[dice2]
@@ -1161,6 +1169,9 @@ class Game_Main
             if @player.level >= 5
               @location[1] = @location[0]
               @location[0] = :swamp
+              @hunting = false
+              break
+            else
               break
             end
           end
@@ -1191,6 +1202,9 @@ class Game_Main
             if @player.level >= 5
               @location[1] = @location[0]
               @location[0] = :swamp
+              @hunting = false
+              break
+            else
               break
             end
           end
@@ -1234,6 +1248,7 @@ class Game_Main
           when "e"
             @location[1] = @location[0]
             @location[0] = :forest
+            @hunting = false
             break
           end
           if keyb == 1
@@ -1249,9 +1264,10 @@ class Game_Main
           keys = @enemies[:wandering]
           length = @enemies[:wandering].length
           case key
-          when "n"
+          when "e"
             @location[1] = @location[0]
-            @location[0] = :town
+            @location[0] = :forest
+            @hunting = false
             break
           when "l"
             calculate_enemies(area)
