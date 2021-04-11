@@ -19,6 +19,10 @@ in a playable state with all the core stuff.
 
  BETA Versions updates and fixes:
 
+    BETA 1.0.7-d
+    - I need to test these new builds before pushing them
+    - hotfix for nil return on extra enemy spawn
+
     BETA 1.0.7-c
     - hotfix for enemy 0 spawning from item bag traps
 

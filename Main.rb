@@ -684,6 +684,7 @@ class Game_Main
           dice2 = rand(1..@enemies[:wandering].size)
           @enemy = 0
           @enemy = Enemy.new(@enemies[:wandering][dice2])
+          @enemy = rand(3..10) if enemy == 0
           pa "               #{@enemy.read_name} Jumped out from its hiding spot and attacks!!!", :red
           key = gets
         else
