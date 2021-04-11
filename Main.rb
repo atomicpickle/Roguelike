@@ -615,7 +615,7 @@ class Game_Main
         id = dropinfo[1] if dice2 > 65
         @player.add_item(:item, id)
         pa "                    #{@enemy.read_name} dropped an item! You found 1x #{Game_DB.items_array(id, 0)}", :yellow, :bright
-      elsif dice2 <= 3 || dice >= 97
+      elsif dice2 <= 2 || dice2 >= 99
         dice2 = rand(0..3)
         ary = [17, 18, 19, 20]
         id = ary[dice2]
@@ -718,7 +718,7 @@ class Game_Main
         trary = [:t1, :t2, :t3, :t4]
         trand = rand(0..3)
         dice5 = rand(1..100)
-        @enemies[:wandering] << trary[trand] if dice5 <= 50
+        @enemies[:wandering] << trary[trand] if dice5 <= 66
       end
       enemies_keys.each do |i|
         break if @enemies[:wandering].length >= 5
@@ -747,8 +747,8 @@ class Game_Main
         trary = [:t1, :t2, :t3, :t4]
         trand = rand(0..3)
         dice5 = rand(1..100)
-        @enemies[:wandering] << trary[trand] if dice5 <= 50
-        @enemies[:wandering] << :g2 if dice5 > 50 && dice5 <= 60
+        @enemies[:wandering] << trary[trand] if dice5 <= 66
+        @enemies[:wandering] << :g2 if dice5 > 66 && dice5 <= 76
         @enemies[:wandering] << :g3 if dice5 > 93
       end
       enemies_keys.each do |i|

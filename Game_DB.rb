@@ -297,7 +297,7 @@ module Game_DB
           Special Thanks: Andrek8 (reddit.com)
           Special Thanks: Zaxero
           Icon Made by 'Good Ware' from www.flaticon.com"
-    @textdb[:other][12]= " Version: BETA 1.0.7            Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: BETA 1.0.7-b            Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section=nil, id=nil)
@@ -602,10 +602,10 @@ module Game_DB
 
     @items[16] = ["...Item16...",           0,    0,     0,    0,     0,     0,     5252,    "..............."]
 
-    @items[17] = ["Earth Jewel",            0,    0,     2,    0,     0,     0,      500,    "After Use: Permanently increases HP up to -1 to +2"]
-    @items[18] = ["Moon Jewel",             0,    0,     0,    2,     0,     0,      500,    "After Use: Permanently increases MP up to -1 to +2"]
-    @items[19] = ["Fire Jewel",             0,    0,     0,    0,     3,     0,      600,    "After Use: Permanently increases ATTACK up to -1 to +3"]
-    @items[20] = ["Dense Jewel",            0,    0,     0,    0,     0,     3,      600,    "After Use: Permanently increases DEFENSE up to -1 to +3"]
+    @items[17] = ["Earth Jewel",            0,    0,     2,    0,     0,     0,       35,    "After Use: Permanently increases HP up to -1 to +2"]
+    @items[18] = ["Moon Jewel",             0,    0,     0,    2,     0,     0,       35,    "After Use: Permanently increases MP up to -1 to +2"]
+    @items[19] = ["Fire Jewel",             0,    0,     0,    0,     3,     0,       35,    "After Use: Permanently increases ATTACK up to -1 to +3"]
+    @items[20] = ["Dense Jewel",            0,    0,     0,    0,     0,     3,       35,    "After Use: Permanently increases DEFENSE up to -1 to +3"]
   end
 
   def populate_spells_db

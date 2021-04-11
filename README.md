@@ -19,6 +19,11 @@ in a playable state with all the core stuff.
 
  BETA Versions updates and fixes:
 
+    BETA 1.0.7-b
+    - Droprate adjustment for jewels (lower)
+    - Price fixing for jewels
+    - Increased Item Bag spawn rate
+
     BETA 1.0.7
     - added file verification checking when loading a saved game
     - exposed game cheats in build_cmds.txt which are used for testing (see github)
