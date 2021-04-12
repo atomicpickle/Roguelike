@@ -129,6 +129,7 @@ class Game_Main
   def update
     if @update && !@init
       @update = false
+      Game_DB.backup_player_data(@player, @location)
       clr
       draw_stats_main
       game_over_check(true)

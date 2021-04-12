@@ -58,6 +58,7 @@ module Game_DB
   @textdb[:battle] = {}
   @textdb[:badges] = {}
   @textdb[:other] = {}
+  @playerdata = [0, 0]
 
   def populate_database
     populate_weapons_db
@@ -68,6 +69,16 @@ module Game_DB
     populate_experience_req_db
     populate_level_up_chart_db
     populate_text_db
+  end
+
+  def backup_player_data(playerobj, locationary)
+    @playerdata = Player.new if @playerdata == 0
+    @playerdata[0] = playerobj
+    @playerdata[1] = locationary
+  end
+
+  def debug_read_player_data
+    return @playerdata
   end
 
   def populate_text_db
@@ -302,7 +313,7 @@ module Game_DB
           Special Thanks: Zaxero
           Special Thanks: Voxnee (twitch.tv)
           Icon Made by 'Good Ware' from www.flaticon.com"
-    @textdb[:other][12]= " Version: BETA 1.2.1            Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: BETA 1.2.2            Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section=nil, id=nil)
