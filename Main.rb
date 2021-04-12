@@ -516,7 +516,7 @@ class Game_Main
         curmp = @player.read_cur_hpmp(:mp)
         spcost = Game_DB.spellbook(spellid, 3)
         sprange = Game_DB.spellbook(spellid, 2)
-        healing = true if spellid == 1 || spellid == 2
+        healing = true if spellid == 1 || spellid == 2 || spellid == 13
         if spcost <= curmp
           amount = Game_DB.calc_spell_damage(sprange, @player.level, @enemy.read_stat(:def), @enemy.read_stat(:lvl), healing, @player.race)
           @enemy.damage(amount) if !healing
@@ -674,12 +674,14 @@ class Game_Main
           draw_stats_main
           pa "#{Game_DB.tx(:other, 0)}"
           pa "                                  Its an Ambush!!!", :red
+          pa "Calling ambush for area #{@location[1]}"
           calculate_enemies(@location[1], false, true)
-          dice2 = rand(1..@enemies[:wandering].size) if @enemies[:wandering].size > 1
+          dice2 = rand(0..@enemies[:wandering].size-1) if @enemies[:wandering].size > 1
           dice2 = 0 if @enemies[:wandering].size == 1
+          enid = @enemies[:wandering][dice2]; enid = 1 if enid == 0
+          pa "selected enemy id: #{enid} from selection: #{@enemies[:wandering]}"
           @enemy = 0
-          @enemy = Enemy.new(@enemies[:wandering][dice2])
-          @enemy.id = 3 if @enemy.id == 0
+          @enemy = Enemy.new(enid)
           pa "               #{@enemy.read_name} Jumped out from its hiding spot and attacks!!!", :red
           key = gets
         else
@@ -728,7 +730,7 @@ class Game_Main
         @enemies[:wandering] << i if valid_enemies[i][2] == lvlmax-1 && dice >= 75
         @enemies[:wandering] << i if valid_enemies[i][2] == lvlmax && dice <= 50
       end
-      @enemies[:wandering] << 19 if @enemies[:wandering].length < 1
+      @enemies[:wandering] << 13 if @enemies[:wandering].length < 1
       @enemies[:amount] = @enemies[:wandering].length
     elsif area == :swamp
       @enemies[:wandering].clear
@@ -764,6 +766,7 @@ class Game_Main
       @enemies[:wandering] << 28 if @enemies[:wandering].length < 1
       @enemies[:amount] = @enemies[:wandering].length
     end
+    @enemies[:wandering] << 1 if @enemies[:wandering].length < 1
     calculate_trap(area) if disable_traps == false
   end
 
@@ -776,8 +779,9 @@ class Game_Main
       if dice >= 92
         clr
         draw_stats_main
-        dmgary = [1, 3, 5, 7]
-        dmg = dmgary[rand(0..3)]
+        phpss = @player.read_cur_hpmp(:hp) / 4; phpss = phpss.to_i
+        dmgary = [1, phpss, 5, phpss, 3]
+        dmg = dmgary[rand(0..4)]
         @player.damage(:hp, dmg)
         #@hunting = false
         pa "#{Game_DB.tx(:other, 0)}"
@@ -796,8 +800,9 @@ class Game_Main
       if dice >= 92
         clr
         draw_stats_main
-        dmgary = [4, 7, 9, 11]
-        dmg = dmgary[rand(0..3)]
+        phpss = @player.read_cur_hpmp(:hp) / 3; phpss = phpss.to_i
+        dmgary = [7, 7, 9, 8, phpss]
+        dmg = dmgary[rand(0..4)]
         @player.damage(:hp, dmg)
         #@hunting = false
         pa "#{Game_DB.tx(:other, 0)}"
@@ -1770,7 +1775,7 @@ class Game_Main
         curmp = @player.read_cur_hpmp(:mp)
         cost = sparray[3]
         if spellid != 0
-          if spellid == 1 || spellid == 2
+          if spellid == 1 || spellid == 2 || spellid == 13
             #heal
             if cost <= curmp
               draw_flash(:green, 6); healing = false

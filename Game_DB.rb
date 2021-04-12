@@ -300,7 +300,7 @@ module Game_DB
           Special Thanks: Zaxero
           Special Thanks: Voxnee (twitch.tv)
           Icon Made by 'Good Ware' from www.flaticon.com"
-    @textdb[:other][12]= " Version: BETA 1.1.0-b         Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: BETA 1.1.0-c         Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section=nil, id=nil)
@@ -649,7 +649,7 @@ module Game_DB
     @enemies[:g2] = ["Angry Spirit",            0,   5,   56,   24,    9,    5,   99,    20,      2,  [8, 7],   20,    [1, 4],  40]
     @enemies[:g3] = ["Girl From The Ring",      0,   7,  166,   48,   33,   11,   99,    66,      6,  [8, 7],   20,    [1, 8],  40]
 
-    @enemies[:t1] = ["Blue Itembag",            0,   1,    1,    0,    0,    0,    0,     0,      1, [2, 18], 100,     [0, 0],   0]
+    @enemies[:t1] = ["Blue Itembag",            0,   1,    1,    0,    0,    0,    0,     0,      1, [1, 18], 100,     [0, 0],   0]
     @enemies[:t2] = ["Green Itembag",           0,   1,    1,    0,    0,    0,    0,     0,      1, [1, 17], 100,     [0, 0],   0]
     @enemies[:t3] = ["Red Itembag",             0,   1,    1,    0,    0,    0,    0,     0,      1, [1, 19], 100,     [0, 0],   0]
     @enemies[:t4] = ["White Itembag",           0,   1,    1,    0,    0,    0,    0,     0,      1, [1, 20], 100,     [0, 0],   0]

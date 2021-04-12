@@ -217,8 +217,8 @@ class Player
       pa "Your ATTACK was DECREASED by #{atk}", :blue if atk < 0
       pa "Your DEFENSE was INCREASED by #{deb}", :blue, :bright if deb >= 0
       pa "Your DEFENSE was DECREASED by #{deb}", :blue if deb < 0
-      pa "Your SPEED was INCREASED by #{spd}", :blue, :bright if deb >= 0
-      pa "Your SPEED was DECREASED by #{spd}", :blue if deb < 0
+      pa "Your SPEED was INCREASED by #{spd}", :blue, :bright if spd >= 0
+      pa "Your SPEED was DECREASED by #{spd}", :blue if spd < 0
     elsif id == 12
       add_perm_reader(0)
       pa " You used a #{array[0]}, you can now permanently see an enemies Speed in battle!", :blue, :bright
