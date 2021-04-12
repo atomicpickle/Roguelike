@@ -675,7 +675,8 @@ class Game_Main
           pa "#{Game_DB.tx(:other, 0)}"
           pa "                                  Its an Ambush!!!", :red
           calculate_enemies(@location[1], false, true)
-          dice2 = rand(1..@enemies[:wandering].size-1)
+          dice2 = rand(1..@enemies[:wandering].size) if @enemies[:wandering].size > 1
+          dice2 = 0 if @enemies[:wandering].size == 1
           @enemy = 0
           @enemy = Enemy.new(@enemies[:wandering][dice2])
           @enemy.id = 3 if @enemy.id == 0
@@ -727,6 +728,7 @@ class Game_Main
         @enemies[:wandering] << i if valid_enemies[i][2] == lvlmax-1 && dice >= 75
         @enemies[:wandering] << i if valid_enemies[i][2] == lvlmax && dice <= 50
       end
+      @enemies[:wandering] << 19 if @enemies[:wandering].length < 1
       @enemies[:amount] = @enemies[:wandering].length
     elsif area == :swamp
       @enemies[:wandering].clear
@@ -759,6 +761,7 @@ class Game_Main
         @enemies[:wandering] << i if valid_enemies[i][2] == lvlmax-1 && dice >= 75
         @enemies[:wandering] << i if valid_enemies[i][2] == lvlmax && dice <= 50
       end
+      @enemies[:wandering] << 28 if @enemies[:wandering].length < 1
       @enemies[:amount] = @enemies[:wandering].length
     end
     calculate_trap(area) if disable_traps == false

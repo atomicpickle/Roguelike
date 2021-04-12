@@ -1,4 +1,4 @@
-# Ruby Arena version BETA 1.1.0
+# Ruby Arena version BETA 1.1.0-b
 
 To support this games development, you can buy it here for your choice
 of price: https://gumpnerd.itch.io/ruby-arena
@@ -18,6 +18,9 @@ in a playable state with all the core stuff.
  Screenshots: https://imgur.com/gallery/Z8P1mB6
 
  BETA Versions updates and fixes:
+
+    BETA 1.1.0-b
+    - fixed bag ambush spawning no enemy when player level is too high
 
     BETA 1.1.0
     - fixed traps triggering before a bag ambush

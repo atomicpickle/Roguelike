@@ -300,7 +300,7 @@ module Game_DB
           Special Thanks: Zaxero
           Special Thanks: Voxnee (twitch.tv)
           Icon Made by 'Good Ware' from www.flaticon.com"
-    @textdb[:other][12]= " Version: BETA 1.1.0.apr.11       Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: BETA 1.1.0-b         Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section=nil, id=nil)
