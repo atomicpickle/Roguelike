@@ -674,12 +674,10 @@ class Game_Main
           draw_stats_main
           pa "#{Game_DB.tx(:other, 0)}"
           pa "                                  Its an Ambush!!!", :red
-          pa "Calling ambush for area #{@location[1]}"
           calculate_enemies(@location[1], false, true)
           dice2 = rand(0..@enemies[:wandering].size-1) if @enemies[:wandering].size > 1
           dice2 = 0 if @enemies[:wandering].size == 1
           enid = @enemies[:wandering][dice2]; enid = 1 if enid == 0
-          pa "selected enemy id: #{enid} from selection: #{@enemies[:wandering]}"
           @enemy = 0
           @enemy = Enemy.new(enid)
           pa "               #{@enemy.read_name} Jumped out from its hiding spot and attacks!!!", :red
