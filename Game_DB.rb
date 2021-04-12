@@ -232,7 +232,6 @@ module Game_DB
                     ░   ░   ▒   ▒▒ ░░  ░      ░ ░ ░  ░
                   ░ ░   ░   ░   ▒   ░      ░      ░
                         ░       ░  ░       ░      ░  ░
-
                    ▒█████   ██▒   █▓▓█████  ██▀███
                   ▒██▒  ██▒▓██░   █▒▓█   ▀ ▓██ ▒ ██▒
                   ▒██░  ██▒ ▓██  █▒░▒███   ▓██ ░▄█ ▒
@@ -301,7 +300,7 @@ module Game_DB
           Special Thanks: Zaxero
           Special Thanks: Voxnee (twitch.tv)
           Icon Made by 'Good Ware' from www.flaticon.com"
-    @textdb[:other][12]= " Version: BETA 1.0.9          Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: BETA 1.1.0.apr.11       Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section=nil, id=nil)
@@ -539,6 +538,7 @@ module Game_DB
     enemyids.push(:b4, :b5) if truekey == 2
     enemyids.push(:b6, :b7) if truekey == 3
     enemyids.push(:b8, :b9) if truekey == 4
+    enemyids.push(:b10, :b11) if truekey == 5
     return enemyids
   end
 
@@ -625,17 +625,17 @@ module Game_DB
 
   def populate_spells_db
     #            [Spell name,             Heal?,   [Minmax], Cost,   Description]
-    @spells[0] = ["Burp!",                false,     [0, 0],    0,   "Drunkely misprounounce the heal spell and cause minor damage"]
+    @spells[0] = ["Burp!",                false,     [0, 0],    0,   "Drunkenly misprounounce the heal spell and cause minor damage"]
     @spells[1] = ["Heal",                  true,    [7, 24],    4,   "Simple healing spell"]
     @spells[2] = ["Greater Heal",          true,  [45, 125],    9,   "Less simple healing spell"]
     @spells[3] = ["Tremor",               false,   [10, 30],    6,   "Sends a tremor out and throws the target"]
-    @spells[4] = ["Gust",                 false,   [15, 30],    7,   "A Sharp gust of wind impacts the target"]
+    @spells[4] = ["Gust",                 false,   [15, 30],    7,   "A sharp gust of wind impacts the target"]
     @spells[5] = ["Water Talons",         false,   [15, 40],    9,   "Pull water out of the air into talons and shoot at target"]
     @spells[6] = ["Shock",                false,   [28, 40],    9,   "Electricity shoots from your mouth and strikes"]
     @spells[7] = ["Blizzard",             false,   [32, 86],   12,   "Blizzard swirls up around the target"]
-    @spells[8] = ["Fireball",             false,  [75, 125],   16,   "A Fireball pops into existance and strikes"]
+    @spells[8] = ["Fireball",             false,  [75, 125],   16,   "A fireball pops into existance and strikes"]
     @spells[9] = ["Quake",                false,  [50, 185],   10,   "Earth opens and crushes your target"]
-    @spells[10]= ["Hurricane",            false,  [95, 175],   16,   "A Hurricaine hits the target, then disappears"]
+    @spells[10]= ["Hurricane",            false,  [95, 175],   16,   "A hurricaine hits the target, then disappears"]
     @spells[11]= ["Bolt",                 false, [125, 180],   24,   "Electricity shoots from all of your orifices and strikes"]
     @spells[12]= ["Wall of Fire",         false, [100, 256],   32,   "A Wall of Fire emerges and envelopes everything"]
     @spells[13]= ["Mega Heal",             true, [200, 320],   33,   "Complicated healing spell"]
@@ -689,6 +689,12 @@ module Game_DB
     @enemies[23] =  ["Psycho Tom",              2,  10,  325,   75,  126,  100,   66,   500,    560, [9, 10],   15,    [2, 8],  25]
     @enemies[24] =  ["Komodo Dragon",           4,  10,  375,    0,  132,  112,   69,   525,    515, [9, 10],   15,    [0, 0],   0]
 
+    @enemies[25] =  ["Cataran Knight",          2,  11,  425,   35,  138,  115,   73,   850,    950, [9, 11],    5,    [2, 8],  25]
+    @enemies[26] =  ["Big Red Dragon",          4,  11,  450,  128,  140,  112,   75,   825,   1215, [9, 11],    5,   [2, 12],  30]
+
+    @enemies[27] =  ["Cataran General",         2,  12,  486,   65,  145,  124,   79,  1000,   1050, [8, 11],    5,   [13, 8],  25]
+    @enemies[28] =  ["Big Blue Dragon",         4,  12,  504,  186,  152,  122,   82,  1125,   1425, [8, 10],    5,   [2, 14],  30]
+
     #              #[Enemy name,             race, lvl,  mhp,  mmp,  atk,  def,  spd,   exp,   gold, [drops],drop%,  [spells], sp%]
 
     @enemies[:b0] = ["Rosco the Drunk",         2,   4,  120,   24,   38,   15,   15,   150,    100, [3, 10],   10,    [1, 0],  35]
@@ -705,6 +711,9 @@ module Game_DB
 
     @enemies[:b8] = ["Ninja Bob",               2,   9,  850,    0,  124,   90,   60,  1250,   1850,  [7, 9],   25,    [0, 0],   0]
     @enemies[:b9] = ["Angry Lana",              2,   9,  920,  250,  132,  108,   64,  1550,   2050, [8, 11],   33,    [2,11],  30]
+
+    @enemies[:b10]= ["Master Juan",             2,  10, 1100,    0,  139,  118,   70,  1750,   2150,  [7, 9],   25,    [0, 0],   0]
+    @enemies[:b11]= ["Vaporizer",               2,  11, 1265,  333,  146,  124,   77,  1950,   2550, [8, 11],   33,    [2,12],  30]
   end
 
   #key for experience_req = level (So experience_req[3] = exp for level 3)

@@ -131,6 +131,7 @@ class Game_Main
       @update = false
       clr
       draw_stats_main
+      game_over_check(true)
       @hunting = false if @location[0] != :forest && @location[0] != :swamp
       location_draw(@location[0]) unless @battle
       battle_draw if @battle
@@ -585,23 +586,8 @@ class Game_Main
   def process_alive_checking
     clr
     draw_stats_main
-    if @player.read_cur_hpmp(:hp) <= 0
-      #player dead!
-      ratio = 10.0 * @player.damage_taken / @player.total_damage
-      ratio = ratio.truncate(2)
-      grade = Game_DB.calculate_go_ratio_grade(ratio)
-      pa "#{Game_DB.tx(:other, 14)}", :red
-      pa "#{Game_DB.tx(:other, 0)}"
-      pa "                  Name: #{@player.playername}, Race: #{@player.race}, Level: #{@player.level}", :red, :bright
-      pa "                  Enemy Killer: #{@enemy.read_name}", :red
-      pa "                  Total Damage Done:  #{@player.total_damage}", :red
-      pa "                  Total Damage Taken: #{@player.damage_taken}", :red
-      pa "                  Total Damage Ratio: #{ratio}", :red
-      pa "                  "
-      pa "                  Final Grade: #{grade}", :red, :bright
-      key = gets
-      re_initialize_game
-    elsif @enemy.alive? == false
+    game_over_check(true, @enemy.read_name)
+    if @enemy.alive? == false
       #enemy dead!
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
@@ -688,7 +674,7 @@ class Game_Main
           draw_stats_main
           pa "#{Game_DB.tx(:other, 0)}"
           pa "                                  Its an Ambush!!!", :red
-          calculate_enemies(:swamp, false)
+          calculate_enemies(@location[1], false, true)
           dice2 = rand(1..@enemies[:wandering].size-1)
           @enemy = 0
           @enemy = Enemy.new(@enemies[:wandering][dice2])
@@ -712,7 +698,7 @@ class Game_Main
     end
   end
 
-  def calculate_enemies(area=:forest, insertspecs=true)
+  def calculate_enemies(area=:forest, insertspecs=true, disable_traps=false)
     if area == :forest
       @enemies[:wandering].clear
       @hunting = true
@@ -775,12 +761,12 @@ class Game_Main
       end
       @enemies[:amount] = @enemies[:wandering].length
     end
-    calculate_trap(area)
+    calculate_trap(area) if disable_traps == false
   end
 
   def calculate_trap(area)
     return if area == nil
-    readname = ["Forest", "Swamp"]
+    readname = ["Forest", "Swamp", "accident"]
     name = "Other"
     if area == :forest
       dice = rand(1..100)
@@ -790,7 +776,7 @@ class Game_Main
         dmgary = [1, 3, 5, 7]
         dmg = dmgary[rand(0..3)]
         @player.damage(:hp, dmg)
-        @hunting = false
+        #@hunting = false
         pa "#{Game_DB.tx(:other, 0)}"
         pa "#{Game_DB.tx(:other, 0)}"
         pa "#{Game_DB.tx(:other, 0)}"
@@ -800,7 +786,7 @@ class Game_Main
         pa "#{Game_DB.tx(:other, 0)}"
         pa "              #{Game_DB.tx(:other, 7)}"
         key = gets
-        name = readname[0]
+        name = "#{readname[0]} - #{readname[2]}"
       end
     elsif area == :swamp
       dice = rand(1..100)
@@ -810,7 +796,7 @@ class Game_Main
         dmgary = [4, 7, 9, 11]
         dmg = dmgary[rand(0..3)]
         @player.damage(:hp, dmg)
-        @hunting = false
+        #@hunting = false
         pa "#{Game_DB.tx(:other, 0)}"
         pa "#{Game_DB.tx(:other, 0)}"
         pa "#{Game_DB.tx(:other, 0)}"
@@ -820,19 +806,27 @@ class Game_Main
         pa "#{Game_DB.tx(:other, 0)}"
         pa "              #{Game_DB.tx(:other, 7)}"
         key = gets
-        name = readname[0]
+        name = "#{readname[0]} - #{readname[2]}"
       end
     end
+    game_over_check(true, name)
+  end
+
+  def game_over_check(bool=false, name="The World")
+    return unless bool
     if @player.read_cur_hpmp(:hp) <= 0
       #player dead!
-      ratio = 10.0 * @player.damage_taken / @player.total_damage
+      clr
+      draw_stats_main
+      ratio = 0.0
+      ratio = @player.total_damage / @player.damage_taken
       ratio = ratio.truncate(2)
       ratio = 0 if @player.total_damage == 0
       grade = Game_DB.calculate_go_ratio_grade(ratio)
       pa "#{Game_DB.tx(:other, 14)}", :red
       pa "#{Game_DB.tx(:other, 0)}"
       pa "                  Name: #{@player.playername}, Race: #{@player.race}, Level: #{@player.level}", :red, :bright
-      pa "                  Enemy Killer: #{name}", :red
+      pa "                  Enemy Killer:       #{name}", :red
       pa "                  Total Damage Done:  #{@player.total_damage}", :red
       pa "                  Total Damage Taken: #{@player.damage_taken}", :red
       pa "                  Total Damage Ratio: #{ratio}", :red
@@ -1716,6 +1710,18 @@ class Game_Main
         p "type in EXACT badge string"
         key = gets.chomp
         @player.force_badge(key)
+      end
+      if key =="ineedjewels"
+        ids = [17, 18, 19, 20]
+        ind = 0
+        ids.each do |i|
+          @player.add_item(:item, ids[ind])
+          @player.add_item(:item, ids[ind])
+          @player.add_item(:item, ids[ind])
+          @player.add_item(:item, ids[ind])
+          @player.add_item(:item, ids[ind])
+          ind += 1
+        end
       end
       @submenu[0] = false
     elsif @submenu[1] #player inventory

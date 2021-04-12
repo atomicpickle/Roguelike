@@ -233,25 +233,56 @@ class Player
       pa " You used a #{array[0]}, you can now permanently see an enemies Rewards in battle!", :blue, :bright
     elsif id == 17
       res = rand(-1..array[3])
-      add_bonus_stat(:hp, res)
-      pa "You used 1x #{array[0]} and your MAX HP was INCREASED by #{res}!", :blue, :bright if res >= 0
-      pa "You used 1x #{array[0]} and your MAX HP was DECREASED by #{res}!", :blue, :bright if res < 0
+      lvlcap = item_lvlcap?(:hp)
+      if lvlcap
+        pa " You need to be a higher level to boost that stat!"
+        add_item(:item, id)
+      else
+        add_bonus_stat(:hp, res)
+        pa "You used 1x #{array[0]} and your MAX HP was INCREASED by #{res}!", :blue, :bright if res >= 0
+        pa "You used 1x #{array[0]} and your MAX HP was DECREASED by #{res}!", :blue, :bright if res < 0
+      end
     elsif id == 18
       res = rand(-1..array[4])
-      add_bonus_stat(:mp, res)
-      pa "You used 1x #{array[0]} and your MAX MP was INCREASED by #{res}!", :blue, :bright if res >= 0
-      pa "You used 1x #{array[0]} and your MAX MP was DECREASED by #{res}!", :blue, :bright if res < 0
+      lvlcap = item_lvlcap?(:mp)
+      if lvlcap
+        pa " You need to be a higher level to boost that stat!"
+        add_item(:item, id)
+      else
+        add_bonus_stat(:mp, res)
+        pa "You used 1x #{array[0]} and your MAX MP was INCREASED by #{res}!", :blue, :bright if res >= 0
+        pa "You used 1x #{array[0]} and your MAX MP was DECREASED by #{res}!", :blue, :bright if res < 0
+      end
     elsif id == 19
       res = rand(-1..array[5])
-      add_bonus_stat(:atk, res)
-      pa "You used 1x #{array[0]} and your ATTACK was INCREASED by #{res}!", :blue, :bright if res >= 0
-      pa "You used 1x #{array[0]} and your ATTACK was DECREASED by #{res}!", :blue, :bright if res < 0
+      lvlcap = item_lvlcap?(:atk)
+      if lvlcap
+        pa " You need to be a higher level to boost that stat!"
+        add_item(:item, id)
+      else
+        add_bonus_stat(:atk, res)
+        pa "You used 1x #{array[0]} and your ATTACK was INCREASED by #{res}!", :blue, :bright if res >= 0
+        pa "You used 1x #{array[0]} and your ATTACK was DECREASED by #{res}!", :blue, :bright if res < 0
+      end
     elsif id == 20
       res = rand(-1..array[6])
-      add_bonus_stat(:def, res)
-      pa "You used 1x #{array[0]} and your DEFENSE was INCREASED by #{res}!", :blue, :bright if res >= 0
-      pa "You used 1x #{array[0]} and your DEFENSE was DECREASED by #{res}!", :blue, :bright if res < 0
+      lvlcap = item_lvlcap?(:def)
+      if lvlcap
+        pa " You need to be a higher level to boost that stat!"
+        add_item(:item, id)
+      else
+        add_bonus_stat(:def, res)
+        pa "You used 1x #{array[0]} and your DEFENSE was INCREASED by #{res}!", :blue, :bright if res >= 0
+        pa "You used 1x #{array[0]} and your DEFENSE was DECREASED by #{res}!", :blue, :bright if res < 0
+      end
     end
+  end
+
+  def item_lvlcap?(stat)
+    lvlcap = false
+    lvlcap = true if @level <= 1 && @added_stats[stat] >= 3
+    lvlcap = true if @added_stats[stat] > @level * 4
+    return lvlcap
   end
   #  [speed,  atk,   def, rewards]
   def add_perm_reader(stat=0)

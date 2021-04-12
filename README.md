@@ -1,4 +1,4 @@
-# Ruby Arena version BETA 1.0.9
+# Ruby Arena version BETA 1.1.0
 
 To support this games development, you can buy it here for your choice
 of price: https://gumpnerd.itch.io/ruby-arena
@@ -18,6 +18,14 @@ in a playable state with all the core stuff.
  Screenshots: https://imgur.com/gallery/Z8P1mB6
 
  BETA Versions updates and fixes:
+
+    BETA 1.1.0
+    - fixed traps triggering before a bag ambush
+    - fixed hunting results not being visible after hitting a trap
+    - modified gameover checking so it happens via the update function
+    - added 6th level to the Arena
+    - added enemies up to level 12 (4 new enemies)
+    - put a soft level based cap on how much you can use jewels
 
     BETA 1.0.9
     - fixed spelling mistake in intro
