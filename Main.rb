@@ -1739,12 +1739,12 @@ class Game_Main
       pa "                  Bonus Speed:    #{@player.read_stat(:spd, :bonus)}", :yellow, :bright
       pa "                  Total Speed:    #{@player.final_stat(:spd)}", :yellow, :bright
       pa "                  Spells Known:   #{names_conc}", :yellow, :bright
-      pa "                  Equipment:     Bonuses: None", :magenta
-      pa "                  Equipment:     Bonuses: +#{mult}% Damage (1 Sword Equipped)", :red if @player.race == :human && mult == 7
-      pa "                  Equipment:     Bonuses: +#{mult}% Damage (2 Swords Equipped)", :red if @player.race == :human && mult == 10
-      pa "                  Equipment:     Bonuses: +#{mult}% Damage (Lance Equipped)", :red if @player.race == :dwarf && mult > 0
-      pa "                  Equipment:     Bonuses: +#{mult}% Magic Attack & Defense (Staff OR Robe Equipped)", :blue if @player.race == :elf && mult == 35
-      pa "                  Equipment:     Bonuses: +#{mult}% Magic Attack & Defense (Staff AND Robe Equipped)", :blue if @player.race == :elf && mult > 35
+      pa "                  Equipment and Bonuses:", :magenta
+      pa "                  Equipment Bonus: +#{mult}% Damage (1 Sword Equipped)", :red if @player.race == :human && mult == 7
+      pa "                  Equipment Bonus: +#{mult}% Damage (2 Swords Equipped)", :red if @player.race == :human && mult == 10
+      pa "                  Equipment Bonus: +#{mult}% Damage (Lance Equipped)", :red if @player.race == :dwarf && mult > 0
+      pa "                  Equipment Bonus: +#{mult}% Magic Attack & Defense (Staff OR Robe Equipped)", :blue if @player.race == :elf && mult == 35
+      pa "                  Equipment Bonus: +#{mult}% Magic Attack & Defense (Staff AND Robe Equipped)", :blue if @player.race == :elf && mult > 35
       pa "                    Left Hand:   #{equiptextdata[:left][0]} +#{equiptextdata[:left][1]} Attack, +#{equiptextdata[:left][2]} Speed", :magenta, :bright
       pa "                    Right Hand:  #{equiptextdata[:right][0]} +#{equiptextdata[:right][1]} Attack, +#{equiptextdata[:right][2]} Speed", :magenta, :bright
       pa "                    Armor:       #{equiptextdata[:armor][0]} +#{equiptextdata[:armor][1]} Defense, +#{equiptextdata[:armor][2]} Speed", :magenta, :bright

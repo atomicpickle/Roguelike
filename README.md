@@ -1,4 +1,4 @@
-# Ruby Arena version BETA 1.2
+# Ruby Arena version BETA 1.2.1
 
 To support this games development, you can buy it here for your choice
 of price: https://gumpnerd.itch.io/ruby-arena
@@ -16,6 +16,10 @@ Ruby, run the game with the RubyArena.exe file in the Compiled folder.
  Screenshots: https://imgur.com/gallery/Z8P1mB6
 
  BETA Versions updates and fixes:
+
+    BETA 1.2.1
+    - fixed formatting in status menu
+    - added missing humans info in game intro
 
     BETA 1.2
     - fixed crashing issue with selling out of range items

@@ -82,7 +82,7 @@ module Game_DB
     @textdb[:intro][7] = " You wake up on the side of town square. Your head hurts. \n Your whole body hurts. You have no recent memory of how you \n got here. You stand up, foggy and in pain, and look around."
     @textdb[:intro][8] = "
                   DWARF:
-                   - Higher HP, No MP, doesn't use spells
+                   - Higher HP, no MP, doesn't use spells
                    - Higher Attack and Defense
                    - Lower Speed
                    - Attack Power buffed when using a Lance
@@ -90,16 +90,17 @@ module Game_DB
                    - Strong attacker (physical attacks are 10% more effective)
 
                   HUMAN:
-                    - well rounded
-                    - weak magic user (magic spells are 10% less effective)
+                    - Well rounded
+                    - Attack power buffed when using 1 or 2 Swords
+                    - Weak magic user (magic spells are 10% less effective)
 
                   ELF:
-                   - higher mp, lower hp
-                   - lower attack, lower defense
-                   - higher speed
+                   - Higher MP, lower HP
+                   - Lower Attack and Defense
+                   - Higher Speed
                    - Magic Attack and Defense buffed when using Staffs or Robes
-                   - resistant to magic (take 20% less magic damage)
-                   - weak attacker (physical attacks are 10% less effective)"
+                   - Resistant to magic (take 20% less magic damage)
+                   - Weak attacker (physical attacks are 10% less effective)"
 
     @textdb[:common][0]  = " You are standing in the middle of Draclix City. The city is \n bustling with activity all around you."
     @textdb[:common][1]  = " To your NORTH, you notice a large Arena. A large banner    \n reads 'ARENA: FIGHT TO THE DEATH! PROVE YOUR WORTH! GET RICH!'"
@@ -301,7 +302,7 @@ module Game_DB
           Special Thanks: Zaxero
           Special Thanks: Voxnee (twitch.tv)
           Icon Made by 'Good Ware' from www.flaticon.com"
-    @textdb[:other][12]= " Version: BETA 1.2            Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: BETA 1.2.1            Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section=nil, id=nil)
