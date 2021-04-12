@@ -82,12 +82,12 @@ module Game_DB
     @textdb[:intro][7] = " You wake up on the side of town square. Your head hurts. \n Your whole body hurts. You have no recent memory of how you \n got here. You stand up, foggy and in pain, and look around."
     @textdb[:intro][8] = "
                   DWARF:
-                   - no mp, cant use spells
-                   - higher attack and defense
-                   - lower speed
-                   - higher hp
-                   - weak to magic (take 10% more magic damage)
-                   - strong attacker (physical attacks are 10% more effective)
+                   - Higher HP, No MP, doesn't use spells
+                   - Higher Attack and Defense
+                   - Lower Speed
+                   - Attack Power buffed when using a Lance
+                   - Weak to magic (take 10% more magic damage)
+                   - Strong attacker (physical attacks are 10% more effective)
 
                   HUMAN:
                     - well rounded
@@ -97,6 +97,7 @@ module Game_DB
                    - higher mp, lower hp
                    - lower attack, lower defense
                    - higher speed
+                   - Magic Attack and Defense buffed when using Staffs or Robes
                    - resistant to magic (take 20% less magic damage)
                    - weak attacker (physical attacks are 10% less effective)"
 
@@ -300,7 +301,7 @@ module Game_DB
           Special Thanks: Zaxero
           Special Thanks: Voxnee (twitch.tv)
           Icon Made by 'Good Ware' from www.flaticon.com"
-    @textdb[:other][12]= " Version: BETA 1.1.0-c         Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: BETA 1.2            Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section=nil, id=nil)
@@ -561,6 +562,36 @@ module Game_DB
     return grade
   end
 
+  def enemy_is_itembag?(enemy_id)
+    name = @enemies[enemy_id][0]
+    return true if name.include? "Itembag"
+    return false
+  end
+
+  def item_isa_robe?(id)
+    name = @armors[id][0]
+    return true if name.include? "Robe"
+    return false
+  end
+
+  def item_isa_staff?(id)
+    name = @weapons[id][0]
+    return true if name.include? "Staff"
+    return false
+  end
+
+  def item_isa_lance?(id)
+    name = @weapons[id][0]
+    return true if name.include? "Lance"
+    return false
+  end
+
+  def item_isa_sword?(id)
+    name = @weapons[id][0]
+    return true if name.include? "Sword"
+    return false
+  end
+
   def populate_weapons_db
     #             [Weapon name,              atk, spd, 2hand,  cost]
     @weapons[0] = ["Fists           ",          0,   0, false,      0]
@@ -572,11 +603,12 @@ module Game_DB
     @weapons[6] = ["Iron-Lance      ",         40,   2,  true,    390]
 
     @weapons[7] = ["Iron-Sword      ",         34,   8, false,    950]
-    @weapons[8] = ["Sage-Staff      ",         25,  26,  true,   1250]
+    @weapons[8] = ["Sage-Staff      ",         25,  27,  true,   1250]
     @weapons[9] = ["Steel-Sword     ",         52,  12, false,   2500]
-    @weapons[10]= ["Broadsword      ",        112,   4,  true,   7500]
+    @weapons[10]= ["Broad-Lance     ",        110,   4,  true,   7500]
     @weapons[11]= ["Sword-of-Malice ",         76,  14, false,   9001]
     @weapons[12]= ["Bastard-Sword   ",        136,  15, false,  17500]
+    @weapons[13]= ["Ancient-Staff   ",         66,  44,  true,  10000]
   end
 
   def populate_armor_db

@@ -1,4 +1,4 @@
-# Ruby Arena version BETA 1.1.0-c
+# Ruby Arena version BETA 1.2
 
 To support this games development, you can buy it here for your choice
 of price: https://gumpnerd.itch.io/ruby-arena
@@ -10,14 +10,25 @@ The Beta version is now available, which means all core systems are completed.
 More content, formatting and stuff is now being added to the game. It is Now
 in a playable state with all the core stuff.
 
- If you have Ruby installed, run the name by starting launch.rb
-
- If you don't have Ruby, Run the game with the RubyArena.exe file in the Compiled
- folder.
+If you have Ruby installed, run the name by starting launch.rb If you don't have
+Ruby, run the game with the RubyArena.exe file in the Compiled folder.
 
  Screenshots: https://imgur.com/gallery/Z8P1mB6
 
  BETA Versions updates and fixes:
+
+    BETA 1.2
+    - fixed crashing issue with selling out of range items
+    - damage done to item bags doesn't count towards total damage done
+    - added feedback to status screen for new human/elf/dwarf bonuses
+    - Elf: Buffed magic atk/def if Staff or Robe equipped (or both)
+      - 1 staff or 1 robe equipped: 35% bonus
+      - both staff and robe equipped: 60% bonus
+    - Dwarf: Buffed attack power if a Lance is equipped
+      - Lance equipped: 35% bonus
+    - Human: Buffed attack power if one or two swords are equipped
+      - 1 sword: 7% bonus
+      - 2 swords: 10% bonus
 
     BETA 1.1.0-c
     - debug.log is now cleared when you launch the game

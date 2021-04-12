@@ -143,6 +143,32 @@ class Player
     @mp = 0 if @mp < 0
   end
 
+  def calc_elf_equip_bonuses
+    mult = 0.0
+    hand = get_equipment_id(:lh)
+    shirt = get_equipment_id(:ar)
+    mult += 0.35 if Game_DB.item_isa_staff?(hand)
+    mult += 0.35 if Game_DB.item_isa_robe?(shirt)
+    mult = 0.6 if mult > 0.6
+    return mult
+  end
+
+  def calc_dwarf_equip_bonuses
+    mult = 0.0
+    hand = get_equipment_id(:lh)
+    mult += 0.35 if Game_DB.item_isa_lance?(hand)
+    return mult
+  end
+
+  def calc_human_equip_bonuses
+    mult = 0.0
+    hand = get_equipment_id(:lh)
+    rhand = get_equipment_id(:rh)
+    mult += 0.07 if Game_DB.item_isa_sword?(hand)
+    mult += 0.03 if Game_DB.item_isa_sword?(rhand)
+    return mult
+  end
+
   # TYPES: :hp, :mp, :full
   def heal(type, value=0)
     if type == :hp

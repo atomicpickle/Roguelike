@@ -417,6 +417,12 @@ class Game_Main
             spcost = Game_DB.spellbook(en_spells[1], 3)
             sprange = Game_DB.spellbook(en_spells[1], 2)
             amount = Game_DB.calc_enemy_spell_damage(sprange, @enemy.read_stat(:lvl), @player.final_stat(:def), @player.level, false, @player.race)
+            if @player.race == :elf
+              mult = @player.calc_elf_equip_bonuses
+              bonus = amount * mult
+              amount = amount - bonus
+              amount = amount.to_i
+            end
             @player.damage(:hp, amount)
             @enemy.useMP(spcost)
             pa "#{Game_DB.tx(:other, 0)}"
@@ -469,6 +475,12 @@ class Game_Main
             spcost = Game_DB.spellbook(en_spells[1], 3)
             sprange = Game_DB.spellbook(en_spells[1], 2)
             amount = Game_DB.calc_enemy_spell_damage(sprange, @enemy.read_stat(:lvl), @player.final_stat(:def), @player.level, false, @player.race)
+            if @player.race == :elf
+              mult = @player.calc_elf_equip_bonuses
+              bonus = amount * mult
+              amount = amount - bonus
+              amount = amount.to_i
+            end
             @player.damage(:hp, amount)
             @enemy.useMP(spcost)
             pa "#{Game_DB.tx(:other, 0)}"
@@ -503,8 +515,20 @@ class Game_Main
         enemydef = @enemy.read_stat(:def)
         enemylvl = @enemy.read_stat(:lvl)
         amount = Game_DB.calc_damage_alt2(playeratk, playerlvl, enemydef, enemylvl, false, @player.race)
+        if @player.race == :dwarf
+          mult = @player.calc_dwarf_equip_bonuses
+          bonus = amount * mult
+          amount = amount + bonus
+          amount = amount.to_i
+        end
+        if @player.race == :human
+          mult = @player.calc_human_equip_bonuses
+          bonus = amount * mult
+          amount = amount + bonus
+          amount = amount.to_i
+        end
         @enemy.damage(amount)
-        @player.total_damage += amount
+        @player.total_damage += amount unless Game_DB.enemy_is_itembag?(@enemy.id)
         pa "#{Game_DB.tx(:other, 0)}"
         pa "#{Game_DB.tx(:other, 0)}"
         pa "#{Game_DB.tx(:other, 0)}"
@@ -519,6 +543,12 @@ class Game_Main
         healing = true if spellid == 1 || spellid == 2 || spellid == 13
         if spcost <= curmp
           amount = Game_DB.calc_spell_damage(sprange, @player.level, @enemy.read_stat(:def), @enemy.read_stat(:lvl), healing, @player.race)
+          if @player.race == :elf && !healing
+            mult = @player.calc_elf_equip_bonuses
+            bonus = amount * mult
+            amount = amount + bonus
+            amount = amount.to_i
+          end
           @enemy.damage(amount) if !healing
           @player.heal(:hp, amount) if healing
           @player.damage(:mp, Game_DB.spellbook(spellid, 3))
@@ -533,6 +563,7 @@ class Game_Main
             draw_flash(:blue, 6)
             pa "             You cast the spell #{Game_DB.spellbook(spellid, 0)} and did #{amount} damage!!!!", :red, :bright
             pa "             #{Game_DB.spellbook(spellid, 4)}", :red, :bright
+            @player.total_damage += amount unless Game_DB.enemy_is_itembag?(@enemy.id)
           end
         else
            pa "              You try to cast a spell without enough MP and waste your turn!", :magenta, :bright
@@ -1488,7 +1519,7 @@ class Game_Main
             if key == 0
               @shopmenu[0] = false
               break
-            elsif pbag[key] > 0
+            elsif pbagkeys.include?(key) && pbag[key] > 0
               amt = fullbag[key][4] / 2; amt = amt.to_i
               @player.add_gold(amt)
               @player.remove_item(:weapon, key)
@@ -1560,7 +1591,7 @@ class Game_Main
             if key == 0
               @shopmenu[0] = false
               break
-            elsif pbag[key] > 0
+            elsif pbagkeys.include?(key) && pbag[key] > 0
               amt = fullbag[key][3] / 2; amt = amt.to_i
               @player.add_gold(amt)
               @player.remove_item(:armor, key)
@@ -1635,7 +1666,7 @@ class Game_Main
             if key == 0
               @shopmenu[0] = false
               break
-            elsif pbag[key] > 0
+            elsif pbagkeys.include?(key) && pbag[key] > 0
               amt = fullbag[key][7] / 2; amt = amt.to_i
               @player.add_gold(amt)
               @player.remove_item(:item, key)
@@ -1673,11 +1704,24 @@ class Game_Main
       sp_names.each {|i| names_conc << i + ", "}
       bgs = @player.read_badges(true)
       b_names = ""
+      mult = 0
       expneed = Game_DB.experience_array(@player.level+1)
       if @player.badges.size > 0
         @player.badges.each {|i|
           lvl = bgs[i]; lvl = lvl.to_s
           b_names << i + lvl + "  "}
+      end
+      if @player.race == :dwarf
+        mult = @player.calc_dwarf_equip_bonuses
+        mult *= 100; mult = mult.to_i
+      end
+      if @player.race == :elf
+        mult = @player.calc_elf_equip_bonuses
+        mult *= 100; mult = mult.to_i
+      end
+      if @player.race == :human
+        mult = @player.calc_human_equip_bonuses
+        mult *= 100; mult = mult.to_i
       end
       pa "                  Name:           #{@player.playername}", :blue, :bright
       pa "                  Race:           #{@player.race}", :blue, :bright
@@ -1695,7 +1739,12 @@ class Game_Main
       pa "                  Bonus Speed:    #{@player.read_stat(:spd, :bonus)}", :yellow, :bright
       pa "                  Total Speed:    #{@player.final_stat(:spd)}", :yellow, :bright
       pa "                  Spells Known:   #{names_conc}", :yellow, :bright
-      pa "                  Equipment:", :magenta
+      pa "                  Equipment:     Bonuses: None", :magenta
+      pa "                  Equipment:     Bonuses: +#{mult}% Damage (1 Sword Equipped)", :red if @player.race == :human && mult == 7
+      pa "                  Equipment:     Bonuses: +#{mult}% Damage (2 Swords Equipped)", :red if @player.race == :human && mult == 10
+      pa "                  Equipment:     Bonuses: +#{mult}% Damage (Lance Equipped)", :red if @player.race == :dwarf && mult > 0
+      pa "                  Equipment:     Bonuses: +#{mult}% Magic Attack & Defense (Staff OR Robe Equipped)", :blue if @player.race == :elf && mult == 35
+      pa "                  Equipment:     Bonuses: +#{mult}% Magic Attack & Defense (Staff AND Robe Equipped)", :blue if @player.race == :elf && mult > 35
       pa "                    Left Hand:   #{equiptextdata[:left][0]} +#{equiptextdata[:left][1]} Attack, +#{equiptextdata[:left][2]} Speed", :magenta, :bright
       pa "                    Right Hand:  #{equiptextdata[:right][0]} +#{equiptextdata[:right][1]} Attack, +#{equiptextdata[:right][2]} Speed", :magenta, :bright
       pa "                    Armor:       #{equiptextdata[:armor][0]} +#{equiptextdata[:armor][1]} Defense, +#{equiptextdata[:armor][2]} Speed", :magenta, :bright
