@@ -88,14 +88,18 @@ class Game_Main
   end
 
   # forces autosave when certian items are used
-  def autosave_itemuse(id)
+  def autosave_itemuse(id, force=false)
     if id > 6
-      process_game_file_save
+      process_game_file_save(true)
+      pa " Your game has been autosaved!", :green, :bright
+    end
+    if force
+      process_game_file_save(true)
       pa " Your game has been autosaved!", :green, :bright
     end
   end
 
-  def process_game_file_save
+  def process_game_file_save(auto=false)
     File.delete("splayer.save") if File.exists?("splayer.save")
     File.delete("sworld.save") if File.exists?("sworld.save")
     File.delete("sgame.save") if File.exists?("sgame.save")
@@ -108,9 +112,9 @@ class Game_Main
     save_file = File.new("sgame.save", "w")
     save_file.write @quests.to_yaml
     save_file.close
-    pa "#{Game_DB.tx(:other, 8)}", :green, :bright
-    pa "#{Game_DB.tx(:other, 7)}"
-    key = gets
+    pa "#{Game_DB.tx(:other, 8)}", :green, :bright unless auto
+    pa "#{Game_DB.tx(:other, 7)}" unless auto
+    key = gets unless auto
   end
 
   def process_game_load_file
@@ -867,6 +871,7 @@ class Game_Main
         clr
         draw_stats_main
         phpss = @player.read_cur_hpmp(:hp) / 4; phpss = phpss.to_i
+        phpss = 2 if phpss < 2
         dmgary = [1, phpss, 5, phpss, 3]
         dmg = dmgary[rand(0..4)]
         @player.damage(:hp, dmg)
@@ -877,6 +882,8 @@ class Game_Main
         pa "#{Game_DB.tx(:common, 28)}", :red
         pa "#{Game_DB.tx(:other, 0)}"
         pa "              You took #{dmg} damage!!!", :red, :bright
+        pa "#{Game_DB.tx(:other, 0)}"
+        autosave_itemuse(0, true)
         pa "#{Game_DB.tx(:other, 0)}"
         pa "              #{Game_DB.tx(:other, 7)}"
         slp
@@ -889,6 +896,7 @@ class Game_Main
         clr
         draw_stats_main
         phpss = @player.read_cur_hpmp(:hp) / 3; phpss = phpss.to_i
+        phpss = 3 if phpss < 3
         dmgary = [7, phpss, 9, 8, phpss]
         dmg = dmgary[rand(0..4)]
         @player.damage(:hp, dmg)
@@ -899,6 +907,8 @@ class Game_Main
         pa "#{Game_DB.tx(:common, 29)}", :red
         pa "#{Game_DB.tx(:other, 0)}"
         pa "              You took #{dmg} damage!!!", :red, :bright
+        pa "#{Game_DB.tx(:other, 0)}"
+        autosave_itemuse(0, true)
         pa "#{Game_DB.tx(:other, 0)}"
         pa "              #{Game_DB.tx(:other, 7)}"
         slp
@@ -1037,14 +1047,18 @@ class Game_Main
       pa "#{Game_DB.tx(:common, 11)}", :green
       pa " The Bartender offers you a room to sleep in for #{price} Gold.", :magenta, :bright
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "#{Game_DB.tx(:common, 30)}", :blue, :bright if @player.level >= 4
-      pa "#{Game_DB.tx(:common, 31)}", :blue, :bright if @player.level <= 3 && @player.level >= 0
+      pa "#{Game_DB.tx(:common, 30)}", :blue, :bright
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:common, 31)}", :blue, :bright
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:common, 35)}", :blue, :bright
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:common, 12)}", :green, :bright
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:cmd, 27)} for #{price} Gold", :cyan
-      pa "#{Game_DB.tx(:cmd, 29)}", :cyan, :bright if @player.level <= 3 && @player.level >= 0
-      pa "#{Game_DB.tx(:cmd, 28)}", :cyan, :bright if @player.level >= 4
+      pa "#{Game_DB.tx(:cmd, 29)}", :cyan, :bright
+      pa "#{Game_DB.tx(:cmd, 28)}", :cyan, :bright
+      pa "#{Game_DB.tx(:cmd, 30)}", :cyan, :bright
       pa "#{Game_DB.tx(:cmd, 2)}", :cyan
       process_input
       update
@@ -1525,7 +1539,7 @@ class Game_Main
           key = gets
           break
         elsif keyi == 3 #talk to tiny
-          break unless @player.level <= 3 && @player.level >= 0
+          #break unless @player.level <= 3 && @player.level >= 0
           clr
           draw_stats_main
           qid = 1
@@ -1550,6 +1564,11 @@ class Game_Main
             key = gets
             break
           elsif @quests[qid] == nil#quest not started
+            if @player.level > 2
+              pa "#{Game_DB.tx(:common, 32)}", :green
+              key = gets
+              break
+            end
             pa "#{Game_DB.tx(:other, 0)}"
             pa "#{Game_DB.tx(:quest, 0)}", :green #intro to quest
             pa "#{Game_DB.tx(:other, 0)}"
@@ -1559,10 +1578,9 @@ class Game_Main
             case key
             when 1 #yes
               @quests[qid] = Quest.new(qid)
-              pa "#{Game_DB.tx(:quest, 3)}"
-              pa @quests[qid].name
-              pa @quests[qid].details
-              pa @quests[qid].rewards
+              pa "#{Game_DB.tx(:quest, 3)}", :blue, :bright
+              pa "#{@quests[qid].name}", :blue, :bright
+              pa "#{@quests[qid].details}", :blue, :bright
               key = gets
               break
             when 2 #no
@@ -1570,7 +1588,6 @@ class Game_Main
             end
           end
         elsif keyi == 4 #talk to rosco
-          break unless @player.level >= 4
           clr
           draw_stats_main
           qid = 0
@@ -1595,6 +1612,11 @@ class Game_Main
             key = gets
             break
           elsif @quests[qid] == nil#quest not started
+            if @player.level <= 4
+              pa "#{Game_DB.tx(:common, 33)}", :green
+              key = gets
+              break
+            end
             pa "#{Game_DB.tx(:other, 0)}"
             pa "#{Game_DB.tx(:quest, 6)}", :green #intro to quest
             pa "#{Game_DB.tx(:other, 0)}"
@@ -1605,9 +1627,56 @@ class Game_Main
             when 1 #yes
               @quests[qid] = Quest.new(qid)
               pa "#{Game_DB.tx(:quest, 3)}"
-              pa @quests[qid].name
-              pa @quests[qid].details
-              pa @quests[qid].rewards
+              pa "#{@quests[qid].name}", :blue, :bright
+              pa "#{@quests[qid].details}", :blue, :bright
+              key = gets
+              break
+            when 2 #no
+              break
+            end
+          end
+        elsif keyi == 5 #talk to Lana
+          clr
+          draw_stats_main
+          qid = 2
+          initchk = false
+          @quests.each {|k,v| initchk = true if k == qid}
+          if @quests.size > 0 && @quests[qid] != nil
+            if initchk
+              if @quests[qid].complete? #quest complete
+                pa "#{Game_DB.tx(:quest, 11)}", :yellow
+                pa "#{@quests[qid].complete?(false)}", :yellow, :bright
+                reward_quest(qid)
+                key = gets
+                break
+              elsif !@quests[qid].complete? # quest not complete
+                pa "#{Game_DB.tx(:quest, 10)}", :green
+                key = gets
+                break
+              end
+            end
+          elsif @quests[qid] != nil #quest not complete
+            pa "#{Game_DB.tx(:quest, 10)}", :green
+            key = gets
+            break
+          elsif @quests[qid] == nil#quest not started
+            if @player.level < 5
+              pa "#{Game_DB.tx(:common, 34)}", :green
+              key = gets
+              break
+            end
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa "#{Game_DB.tx(:quest, 9)}", :green #intro to quest
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa "#{Game_DB.tx(:cmd, 16)}", :cyan
+            pa "#{Game_DB.tx(:cmd, 17)}", :cyan
+            key = gets.chomp.to_i
+            case key
+            when 1 #yes
+              @quests[qid] = Quest.new(qid)
+              pa "#{Game_DB.tx(:quest, 3)}", :blue, :bright
+              pa "#{@quests[qid].name}", :blue, :bright
+              pa "#{@quests[qid].details}", :blue, :bright
               key = gets
               break
             when 2 #no
@@ -1615,6 +1684,7 @@ class Game_Main
             end
           end
         end
+
       end
     elsif area == :menu # @submenu = [stats, bag, spells, save game, exit game, quests]
       loop do
@@ -1830,8 +1900,8 @@ class Game_Main
                 weap = shopbag[key][0]; weapstr = weap.delete " "
                 pa "#{Game_DB.tx(:other, 0)}"
                 pa " You purchased #{weapstr} for #{shopbag[key][7]} gold!", :green, :bright
+                process_quests_iterate(:item, key)
                 key = gets
-                process_quests_iterate(:item, id)
                 break
               else
                 pa " You don't have enough gold!", :red
@@ -2102,10 +2172,17 @@ class Game_Main
         @quests.each {|id, value|
           if value != nil
             str = @quests[id].read_current_progress
-            pa "#{@quests[id].name}", :blue
-            pa "#{str}", :blue, :bright
-            pa "#{Game_DB.tx(:quest, 4)}" if @quests[id].complete?
-            pa "#{Game_DB.tx(:quest, 5)}" if !@quests[id].complete?
+            if @quests[id].complete?
+              pa "#{Game_DB.tx(:quest, 4)}", :blue, :bright
+              pa "#{@quests[id].name}", :blue, :bright
+              pa "#{@quests[id].details}", :blue, :bright
+              pa "#{str}", :blue, :bright
+            else
+              pa "#{Game_DB.tx(:quest, 5)}", :yellow, :bright
+              pa "#{@quests[id].name}", :yellow, :bright
+              pa "#{@quests[id].details}", :yellow, :bright
+              pa "#{str}", :yellow, :bright
+            end
             pa "#{Game_DB.tx(:other, 0)}"
           end
          }

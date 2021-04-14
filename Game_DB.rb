@@ -36,6 +36,17 @@ Game_DB.spellbook(spellid, value)
 Game_DB.tx(:section, id)
 - pass section and id to fetch specific text line
 
+
+Empty quest layout:
+@quests[:name][2] = ""
+@quests[:details][2] = ""
+@quests[:require][2] = [{}, {}]
+@quests[:rewards][2] = [{}, {}]
+@quests[:complete][2] = ""
+
+
+
+
 =end
 module Game_DB
 
@@ -92,17 +103,23 @@ module Game_DB
   end
   # @quests[:require][0][0][:enemy] = [enemyid, amount]
   def populate_quest_db
-    @quests[:name][0] = "Rosco: Kill 10 Tigers and 2 Rhinos"
+    @quests[:name][0] = "Rosco: Welcome to the Jungle"
     @quests[:details][0] = "Kill 10 F**king Tigers and 2 Giant C**t of a Rhinos \n then return to Rosco the Drunk"
     @quests[:require][0] = [{:enemy => [11, 10]}, {:enemy => [13, 10]}]
     @quests[:rewards][0] = [{:item => [9, 1]}, {:gold => 250}]
     @quests[:complete][0]= " Congrats! You Finished Rosco the Drunks quest! \n You have gained 1x Dragons-Talon and 250 gold!"
 
-    @quests[:name][1] = "Tiny: Kill 8 Large Rats and get 1 Mugwart-Root"
-    @quests[:details][1] = "Kill 8 Large Rats then return to Tiny"
+    @quests[:name][1] = "Tiny: Rat Culling"
+    @quests[:details][1] = "Kill 8 Large Rats and get 1 Mugwart-Root then return to Tiny"
     @quests[:require][1] = [{:enemy => [3, 8]}, {:item => [1, 1]}]
-    @quests[:rewards][1] = [{:weapon => [4, 1]}, {:item => [19, 1]}, {:gold => 25}]
-    @quests[:complete][1]= " Congrats! You have finished Tinys quest! \n You have gained 1x Wooden-Club, 1x Fire-Jewel and 25 gold!"
+    @quests[:rewards][1] = [{:weapon => [2, 1]}, {:item => [19, 1]}, {:gold => 25}]
+    @quests[:complete][1]= " Congrats! You have finished Tinys quest! \n You have gained 1x Wooden-Sword, 1x Fire-Jewel and 25 gold!"
+
+    @quests[:name][2] = "Lana: Raptor Menace"
+    @quests[:details][2] = "Kill 10 Baby Velociraptors then return to Lana"
+    @quests[:require][2] = [{:enemy => [17, 10]}]
+    @quests[:rewards][2] = [{:weapon => [4, 1]}, {:gold => 100}]
+    @quests[:complete][2] = " Congrats! You have finished Lanas quest! \n You have gained 1x Iron-Hatchet and 100 gold!"
   end
 
   def read_quest_array(id=nil, value=nil)
@@ -198,6 +215,11 @@ module Game_DB
 
     @textdb[:common][30] = " You see Rosco the Drunk sitting at the bar. He glares at you."
     @textdb[:common][31] = " You see Tiny sitting at a table. He stares, and waves you over."
+    @textdb[:common][35] = " You see Lana sitting at a table in the back. She appears to\n be staring out the window, a blank expression on her face."
+
+    @textdb[:common][32] = " Me Tiny. Me see you in Arena one day."
+    @textdb[:common][33] = " Rosco: Whaddaya want ya weak *hic* looking sad excuse for \n *hic* a person. Come back when you're level 4 or higher."
+    @textdb[:common][34] = " Lana: Stay out of my person bubble! I'd have some work for \n you but you're not strong enough yet. Come back at level 5."
 
     @textdb[:quest][0] = " Me Tiny. Me need you to find me 1 Mugwart-root and kill 8\n Large Rats. Will you help me?"
     @textdb[:quest][1] = " Me Tiny. You come back when you finish helping Tiny!!!"
@@ -208,6 +230,10 @@ module Game_DB
     @textdb[:quest][6] = " Rosco: Kill me 10 Tigers an *hic*... 2 Rhinos.."
     @textdb[:quest][7] = " Rosco: finish what I want you to do.."
     @textdb[:quest][8] = " Rosco: Ooooh.. *hic* thanks for taking care of that."
+    @textdb[:quest][9] = " Lana: Hey hun. I got a job for ya if you think you can \n handle it. There are too many Velociraptors wandering the \n Swamp. I need you to kill 10 Baby Velociraptors. Think you\n can handle it, little guy?"
+    @textdb[:quest][10]= " Lana: Come back when youre done. Stop wasting time."
+    @textdb[:quest][11]= " Lana: Thanks for killing those for me. Maybe I'll let \n you do a few more..."
+
 
     @textdb[:cmd][0] = ["(N)orth"]
     @textdb[:cmd][1] = ["(W)est"]
@@ -252,6 +278,7 @@ module Game_DB
     @textdb[:cmd][27] = ["(2) Rent Room"]
     @textdb[:cmd][28] = ["(4) Talk to Rosco"]
     @textdb[:cmd][29] = ["(3) Talk to Tiny"]
+    @textdb[:cmd][30] = ["(5) Talk to Lana"]
 
     @textdb[:battle][6] = ["(A)ttack"]
     @textdb[:battle][7] = ["(S)pell"]
@@ -364,8 +391,9 @@ module Game_DB
           Special Thanks: Andrek8 (reddit.com)
           Special Thanks: Zaxero
           Special Thanks: Voxnee (twitch.tv)
-          Icon Made by 'Good Ware' from www.flaticon.com"
-    @textdb[:other][12]= " Version: BETA 1.3          Author: Matt Sully(@GumpNerd)"
+          Icon Made by 'Good Ware' from www.flaticon.com
+          ASCII Art generated using software made by Patrick Gillespie (@patorjk)"
+    @textdb[:other][12]= " Version: BETA 1.4          Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section=nil, id=nil)

@@ -1,4 +1,4 @@
-# Ruby Arena version BETA 1.3
+# Ruby Arena version BETA 1.4
 
 To support this games development, you can buy it here for your choice
 of price: https://gumpnerd.itch.io/ruby-arena
@@ -17,9 +17,19 @@ Ruby, run the game with the RubyArena.exe file in the Compiled folder.
 
  BETA Versions updates and fixes:
 
+    BETA 1.4
+    - added a new quest that can be started at level 5
+    - fixed crash where buying an item needed for a quest would raise an exception
+    - cleaned up quest debugging text
+    - modified layout of quest details screen
+    - modified first quest to cap at level 2
+    - fixed level checking to allow turning in of quests that are now too low
+    - fixed an issue with traps(accidents) where sometimes they did no damage
+    - added autosave function in a couple more places
+
     BETA 1.3
     - quest system added! quests can be taken at the tavern and have a lvl req
-      - one 2 quests so far. one below or level 3 and one above 4
+      - only 2 quests so far. one below or level 3 and one above 4
       - copy sgame.save over with the exe to make your old save file work
     - fixed item select error when a bonus jewel is found
     - fixed a load check for location file
