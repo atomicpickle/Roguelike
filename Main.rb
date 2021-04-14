@@ -31,53 +31,13 @@ class Game_Main
     @enemyhitfirst = false
     # used for update method function
     @update = false
-    # Used to navigate the player menu [stats, bag, spells, save game, exit game]
-    @submenu = [false, false, false, false, false]
+    # Used to navigate the player menu [stats, bag, spells, save game, exit game, quests]
+    @submenu = [false, false, false, false, false, false]
     # used to navigate item menu [weapons, armor, items]
     @itemmenu = [false, false, false]
     @shopmenu = [false, false, false]
+    @quests = {0 => nil, 1 => nil}
     startup_titlecard
-  end
-
-  def process_game_file_save
-    File.delete("splayer.save") if File.exists?("splayer.save")
-    File.delete("sworld.save") if File.exists?("sworld.save")
-    save_file = File.new("splayer.save", "w")
-    save_file.write @player.to_yaml
-    save_file.close
-    save_file = File.new("sworld.save", "w")
-    save_file.write @location.to_json
-    save_file.close
-    pa "#{Game_DB.tx(:other, 8)}", :green, :bright
-    pa "#{Game_DB.tx(:other, 7)}"
-    key = gets
-  end
-
-  def process_game_load_file
-    crc = []
-    crc[0] = File.exist?("splayer.save")
-    crc[0] = File.exist?("sworld.save")
-    if crc.any? {|i| i == false}
-      pa "Error! No save file found or missing files!", :red, :bright
-      key = gets
-      startup_titlecard
-    else
-      yaml_player = YAML.load(File.read("splayer.save"))
-      locdata = JSON.parse(File.read("sworld.save"))
-      locdata[0] = locdata[0].to_sym
-      locdata[1] = locdata[1].to_sym
-      @location = locdata
-      @player = Player.new
-      @player = yaml_player
-      @player.finish_reload
-      pa "SAVE FILE LOADED! Player Name: #{@player.playername}, Race: #{@player.race}, Level: #{@player.level}, Gold: #{@player.gold}", :cyan
-      pa "#{Game_DB.tx(:other, 7)}"
-      key = gets
-      @location[0] = @location[1]
-      @update = true
-      @init = false
-    end
-    update
   end
 
   #method call to reload title card and restart game if player gets game over.
@@ -110,12 +70,77 @@ class Game_Main
     @enemyhitfirst = false
     # used for update method function
     @update = false
-    # Used to navigate the player menu [stats, bag, spells, save game, exit game]
-    @submenu = [false, false, false, false, false]
+    # Used to navigate the player menu [stats, bag, spells, save game, exit game, quests]
+    @submenu = [false, false, false, false, false, false]
     # used to navigate item menu [weapons, armor, items]
     @itemmenu = [false, false, false]
     @shopmenu = [false, false, false]
+    @quests = {0 => nil, 1 => nil}
     startup_titlecard
+  end
+
+  def clr
+    system("cls")
+  end
+
+  def slp(amt=0.5)
+    sleep(amt)
+  end
+
+  # forces autosave when certian items are used
+  def autosave_itemuse(id)
+    if id > 6
+      process_game_file_save
+      pa " Your game has been autosaved!", :green, :bright
+    end
+  end
+
+  def process_game_file_save
+    File.delete("splayer.save") if File.exists?("splayer.save")
+    File.delete("sworld.save") if File.exists?("sworld.save")
+    File.delete("sgame.save") if File.exists?("sgame.save")
+    save_file = File.new("splayer.save", "w")
+    save_file.write @player.to_yaml
+    save_file.close
+    save_file = File.new("sworld.save", "w")
+    save_file.write @location.to_json
+    save_file.close
+    save_file = File.new("sgame.save", "w")
+    save_file.write @quests.to_yaml
+    save_file.close
+    pa "#{Game_DB.tx(:other, 8)}", :green, :bright
+    pa "#{Game_DB.tx(:other, 7)}"
+    key = gets
+  end
+
+  def process_game_load_file
+    crc = []
+    crc[0] = File.exist?("splayer.save")
+    crc[1] = File.exist?("sworld.save")
+    crc[1] = File.exist?("sgame.save")
+    if crc.any? {|i| i == false}
+      pa "Error! No save file found or missing files!", :red, :bright
+      key = gets
+      startup_titlecard
+    else
+      yaml_player = YAML.load(File.read("splayer.save"))
+      locdata = JSON.parse(File.read("sworld.save"))
+      gamedata = YAML.load(File.read("sgame.save"))
+      locdata[0] = locdata[0].to_sym
+      locdata[1] = locdata[1].to_sym
+      @location = locdata
+      @player = Player.new
+      @player = yaml_player
+      @player.finish_reload
+      @quests = gamedata
+      pa "SAVE FILE LOADED! Player Name: #{@player.playername}, Race: #{@player.race}, Level: #{@player.level}, Gold: #{@player.gold}", :cyan
+      pa "#{Game_DB.tx(:other, 7)}"
+      key = gets
+      @location[0] = @location[1]
+      @update = true
+      @init = false
+    end
+    update
   end
 
   def spawn_player
@@ -352,16 +377,18 @@ class Game_Main
       key = gets.chomp.to_i
       break if bag.key?(key) == false
       break if key == 0
-      break if bag.key?(key) && key > 6
       if bag.key?(key) && bag[key] > 0
         draw_flash(:green, 6)
         @player.use_item(key)
+        autosave_itemuse(key)
         key = gets
         @enemyturn = true
+        slp
         break
       end
     end
-    return key
+    return key if key <= 6
+    return 0 if key > 6
   end
 
   #return spell id
@@ -615,6 +642,31 @@ class Game_Main
     end
   end
 
+  def process_quests_iterate(type=:item, id)
+    @quests.each do |qid, val|
+      if type == :enemy
+        if @quests[qid] != nil #active
+          need = @quests[qid].is_needed?(:enemy, id)
+          if need
+            @quests[qid].iterate_progress(:enemy, id, 1)
+            pa " You killed an enemy you needed for a quest!", :green
+            key = gets
+          end
+        end
+      elsif type == :item
+        if @quests[qid] != nil #active
+          need = @quests[qid].is_needed?(:item, id)
+          if need
+            @quests[qid].iterate_progress(:item, id, 1)
+            pa " You found an item you need for a Quest. You set it aside...", :green
+            @player.remove_item(:item, id)
+            key = gets
+          end
+        end
+      end
+    end
+  end
+
   def process_alive_checking
     clr
     draw_stats_main
@@ -635,18 +687,21 @@ class Game_Main
       dropinfo = @enemy.dropinfo
       dropchance = @enemy.dropinfo(true)
       dice = rand(1..100); dice2 = rand(1..100)
+      process_quests_iterate(:enemy, @enemy.id)
       if dice <= dropchance
         id = dropinfo[0] if dice2 <= 70
         id = dropinfo[1] if dice2 > 70
         @player.add_item(:item, id)
         id = 1 if id == nil
         pa "                    #{@enemy.read_name} dropped an item! You found 1x #{Game_DB.items_array(id, 0)}", :yellow, :bright
+        process_quests_iterate(:item, id)
       elsif dice2 <= 2 || dice2 >= 97
-        dice2 = rand(0..3)
-        ary = [17, 18, 19, 20]
+        dice2 = rand(1..4)
+        ary = [3, 17, 18, 19, 20, 3]
         id = ary[dice2]
         @player.add_item(:item, id)
         pa "   ************  Whats this? You found a #{Game_DB.items_array(id, 0)} next to the corpse!!!  ************", :blue, :bright
+        process_quests_iterate(:item, id)
       end
       pa "#{Game_DB.tx(:other, 0)}"
       pa "                           #{Game_DB.tx(:other, 7)}"
@@ -668,6 +723,7 @@ class Game_Main
         end
         @arenabattle = false
       end
+      slp
       key = gets
       if @player.levelUP
         @player.levelUP = false
@@ -697,6 +753,7 @@ class Game_Main
           pa "                    You are now able to access Modove Swamp, west of Surgalic Forest", :yellow
         end
         pa "#{Game_DB.tx(:other, 0)}"
+        slp
         key = gets
       end
       if @enemy.id == :t1 || @enemy.id == :t2 ||@enemy.id == :t3 || @enemy.id == :t4
@@ -822,6 +879,7 @@ class Game_Main
         pa "              You took #{dmg} damage!!!", :red, :bright
         pa "#{Game_DB.tx(:other, 0)}"
         pa "              #{Game_DB.tx(:other, 7)}"
+        slp
         key = gets
         name = "#{readname[0]} - #{readname[2]}"
       end
@@ -831,7 +889,7 @@ class Game_Main
         clr
         draw_stats_main
         phpss = @player.read_cur_hpmp(:hp) / 3; phpss = phpss.to_i
-        dmgary = [7, 7, 9, 8, phpss]
+        dmgary = [7, phpss, 9, 8, phpss]
         dmg = dmgary[rand(0..4)]
         @player.damage(:hp, dmg)
         #@hunting = false
@@ -843,8 +901,9 @@ class Game_Main
         pa "              You took #{dmg} damage!!!", :red, :bright
         pa "#{Game_DB.tx(:other, 0)}"
         pa "              #{Game_DB.tx(:other, 7)}"
+        slp
         key = gets
-        name = "#{readname[0]} - #{readname[2]}"
+        name = "#{readname[1]} - #{readname[2]}"
       end
     end
     game_over_check(true, name)
@@ -870,6 +929,7 @@ class Game_Main
       pa "                  Total Damage Ratio: #{ratio}", :red
       pa "                  "
       pa "                  Final Grade: #{grade}", :red, :bright
+      slp
       key = gets
       re_initialize_game
     end
@@ -916,9 +976,39 @@ class Game_Main
     pa "#{Game_DB.tx(:other, 5)}"
   end
 
-  def clr
-    system("cls")
+
+  # [{:weapon => [4, 1]}, {:item => [19, 1]}, {:gold => 25}]
+  def reward_quest(id)
+    rewards = @quests[id].rewards
+    comptext = @quests[id].comptext
+    @quests[id] = nil
+    rewards.each do |i|
+      count = 1
+      if i.key?(:weapon) #weapon drop
+        count = i[:weapon][1]
+        while count >=1
+          @player.add_item(:weapon, i[:weapon][0])
+          count -=1
+        end
+      elsif i.key?(:armor) #armor drop
+        count = i[:armor][1]
+        while count >=1
+          @player.add_item(:armor, i[:armor][0])
+          count -=1
+        end
+      elsif i.key?(:item) #item drop
+        count = i[:item][1]
+        while count >=1
+          @player.add_item(:item, i[:item][0])
+          count -=1
+        end
+      elsif i.key?(:gold) #gold drop
+        @player.add_gold(i[:gold][0])
+      end
+    end
   end
+
+
   #locations: :town, :arena, :arena2, :arena3, :tavern, :shop, :forest, :menu
   def location_draw(area=:town)
     if area == :town
@@ -947,10 +1037,14 @@ class Game_Main
       pa "#{Game_DB.tx(:common, 11)}", :green
       pa " The Bartender offers you a room to sleep in for #{price} Gold.", :magenta, :bright
       pa "#{Game_DB.tx(:other, 0)}"
+      pa "#{Game_DB.tx(:common, 30)}", :blue, :bright if @player.level >= 4
+      pa "#{Game_DB.tx(:common, 31)}", :blue, :bright if @player.level <= 3 && @player.level >= 0
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:common, 12)}", :green, :bright
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:cmd, 27)} for #{price} Gold", :cyan
+      pa "#{Game_DB.tx(:cmd, 29)}", :cyan, :bright if @player.level <= 3 && @player.level >= 0
+      pa "#{Game_DB.tx(:cmd, 28)}", :cyan, :bright if @player.level >= 4
       pa "#{Game_DB.tx(:cmd, 2)}", :cyan
       process_input
       update
@@ -1070,7 +1164,9 @@ class Game_Main
       pa "                                 #{Game_DB.tx(:cmd, 12)}", :green, :bright
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "                                 #{Game_DB.tx(:cmd, 13)}", :red
+      pa "                                                          #{Game_DB.tx(:cmd, 105)}", :yellow, :bright
+      pa "#{Game_DB.tx(:other, 0)}"
+      pa "                                                          #{Game_DB.tx(:cmd, 13)}", :red
       pa "#{Game_DB.tx(:other, 0)}"
       process_input
       update
@@ -1428,9 +1524,99 @@ class Game_Main
           pa "#{Game_DB.tx(:other, 7)}"
           key = gets
           break
+        elsif keyi == 3 #talk to tiny
+          break unless @player.level <= 3 && @player.level >= 0
+          clr
+          draw_stats_main
+          qid = 1
+          initchk = false
+          @quests.each {|k,v| initchk = true if k == qid}
+          if @quests.size > 0 && @quests[qid] != nil
+            if initchk
+              if @quests[qid].complete? #quest complete
+                pa "#{Game_DB.tx(:quest, 2)}", :yellow
+                pa "#{@quests[qid].complete?(false)}", :yellow, :bright
+                reward_quest(qid)
+                key = gets
+                break
+              elsif !@quests[qid].complete? # quest not complete
+                pa "#{Game_DB.tx(:quest, 1)}", :green
+                key = gets
+                break
+              end
+            end
+          elsif @quests[qid] != nil #quest not complete
+            pa "#{Game_DB.tx(:quest, 1)}", :green
+            key = gets
+            break
+          elsif @quests[qid] == nil#quest not started
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa "#{Game_DB.tx(:quest, 0)}", :green #intro to quest
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa "#{Game_DB.tx(:cmd, 16)}", :cyan
+            pa "#{Game_DB.tx(:cmd, 17)}", :cyan
+            key = gets.chomp.to_i
+            case key
+            when 1 #yes
+              @quests[qid] = Quest.new(qid)
+              pa "#{Game_DB.tx(:quest, 3)}"
+              pa @quests[qid].name
+              pa @quests[qid].details
+              pa @quests[qid].rewards
+              key = gets
+              break
+            when 2 #no
+              break
+            end
+          end
+        elsif keyi == 4 #talk to rosco
+          break unless @player.level >= 4
+          clr
+          draw_stats_main
+          qid = 0
+          initchk = false
+          @quests.each {|k,v| initchk = true if k == qid}
+          if @quests.size > 0 && @quests[qid] != nil
+            if initchk
+              if @quests[qid].complete? #quest complete
+                pa "#{Game_DB.tx(:quest, 8)}", :yellow
+                pa "#{@quests[qid].complete?(false)}", :yellow, :bright
+                reward_quest(qid)
+                key = gets
+                break
+              elsif !@quests[qid].complete? # quest not complete
+                pa "#{Game_DB.tx(:quest, 7)}", :green
+                key = gets
+                break
+              end
+            end
+          elsif @quests[qid] != nil #quest not complete
+            pa "#{Game_DB.tx(:quest, 7)}", :green
+            key = gets
+            break
+          elsif @quests[qid] == nil#quest not started
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa "#{Game_DB.tx(:quest, 6)}", :green #intro to quest
+            pa "#{Game_DB.tx(:other, 0)}"
+            pa "#{Game_DB.tx(:cmd, 16)}", :cyan
+            pa "#{Game_DB.tx(:cmd, 17)}", :cyan
+            key = gets.chomp.to_i
+            case key
+            when 1 #yes
+              @quests[qid] = Quest.new(qid)
+              pa "#{Game_DB.tx(:quest, 3)}"
+              pa @quests[qid].name
+              pa @quests[qid].details
+              pa @quests[qid].rewards
+              key = gets
+              break
+            when 2 #no
+              break
+            end
+          end
         end
       end
-    elsif area == :menu # @submenu = [stats, bag, spells, save game, exit game]
+    elsif area == :menu # @submenu = [stats, bag, spells, save game, exit game, quests]
       loop do
         @update = true
         key = gets.chomp
@@ -1455,6 +1641,10 @@ class Game_Main
         end
         if keyst == "x"
           @submenu[4] = true
+          break
+        end
+        if keyst == "q"
+          @submenu[5] = true
           break
         end
       end
@@ -1641,6 +1831,7 @@ class Game_Main
                 pa "#{Game_DB.tx(:other, 0)}"
                 pa " You purchased #{weapstr} for #{shopbag[key][7]} gold!", :green, :bright
                 key = gets
+                process_quests_iterate(:item, id)
                 break
               else
                 pa " You don't have enough gold!", :red
@@ -1687,8 +1878,8 @@ class Game_Main
     draw_stats_main
   end
 
-        #      [    0,   1,     2,          3,         4,]
-  # @submenu = [stats, bag, spells, save game, exit game]
+        #      [    0,   1,     2,          3,         4,     5,]
+  # @submenu = [stats, bag, spells, save game, exit game, quests]
   def draw_sub_menu
     return if @submenu.all? { |v| v == false}
     clr
@@ -1755,29 +1946,45 @@ class Game_Main
       pa "                  Total Damage Taken: #{@player.damage_taken}", :green
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 3)}"
+      slp
       key = gets.chomp.downcase
-      @player.add_gold(75000) if key == "makemerich"
-      if key == "forcelvlexp"
-        p "type in lvl"
-        key = gets.chomp.to_i
-        @player.lvl_up_override(key)
-      end
-      if key == "forcebadge"
-        p "type in EXACT badge string"
-        key = gets.chomp
-        @player.force_badge(key)
-      end
-      if key =="ineedjewels"
-        ids = [17, 18, 19, 20]
-        ind = 0
-        ids.each do |i|
-          @player.add_item(:item, ids[ind])
-          @player.add_item(:item, ids[ind])
-          @player.add_item(:item, ids[ind])
-          @player.add_item(:item, ids[ind])
-          @player.add_item(:item, ids[ind])
-          ind += 1
+      if key == "debugcmd"
+        p "Input Command"
+        pa "Valid Commands:
+        makemerich  - type in, hit enter. +75k gold
+        forcelvlexp - type in, hit enter.
+                    - enter desired level. Max 20 (don't go out of range) then hit enter.
+        forcebadge  - type in, hit enter.
+                    - type in EXACT badge string then hit enter.
+                    - string example: <{2}>
+                    - will properly force prgogress to that badge
+        ineedjewels - type in, hit enter.
+                    - gives you 4 of each kind of jewel."
+        key = gets.chomp.downcase
+        if key == "forcelvlexp"
+          p "type in lvl"
+          key = gets.chomp.to_i
+          @player.lvl_up_override(key)
         end
+        @player.add_gold(75000) if key == "makemerich"
+        if key == "forcebadge"
+          p "type in EXACT badge string"
+          key = gets.chomp
+          @player.force_badge(key)
+        end
+        if key =="ineedjewels"
+          ids = [17, 18, 19, 20]
+          ind = 0
+          ids.each do |i|
+            @player.add_item(:item, ids[ind])
+            @player.add_item(:item, ids[ind])
+            @player.add_item(:item, ids[ind])
+            @player.add_item(:item, ids[ind])
+            @player.add_item(:item, ids[ind])
+            ind += 1
+          end
+        end
+        # bottom of debugcmd
       end
       @submenu[0] = false
     elsif @submenu[1] #player inventory
@@ -1859,6 +2066,7 @@ class Game_Main
           #save game file
           process_game_file_save
           @submenu[3] = false
+          slp
           break
         when 2
           #dont save
@@ -1875,6 +2083,7 @@ class Game_Main
       pa "#{Game_DB.tx(:other, 0)}"
       pa "          #{Game_DB.tx(:cmd, 16)}", :red
       pa "          #{Game_DB.tx(:cmd, 17)}", :red
+      slp
       loop do
         key = gets.chomp.to_i
         case key
@@ -1886,6 +2095,26 @@ class Game_Main
           @submenu[4] = false
           break
         end
+      end
+    elsif @submenu[5] #quest details
+      pa "#{Game_DB.tx(:other, 0)}"
+      if @quests.size > 0
+        @quests.each {|id, value|
+          if value != nil
+            str = @quests[id].read_current_progress
+            pa "#{@quests[id].name}", :blue
+            pa "#{str}", :blue, :bright
+            pa "#{Game_DB.tx(:quest, 4)}" if @quests[id].complete?
+            pa "#{Game_DB.tx(:quest, 5)}" if !@quests[id].complete?
+            pa "#{Game_DB.tx(:other, 0)}"
+          end
+         }
+         key = gets
+         @submenu[5] = false
+      else
+        pa " You don't currently have any quests...", :green
+        key = gets
+        @submenu[5] = false
       end
     end
     clr
@@ -2095,6 +2324,8 @@ class Game_Main
         if bag.key?(key) && bag[key] > 0
           draw_flash(:green, 6)
           @player.use_item(key)
+          autosave_itemuse(key)
+          slp
           key = gets
           break
         end

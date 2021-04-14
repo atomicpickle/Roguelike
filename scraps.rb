@@ -67,6 +67,15 @@ end
 logger = Logger.new('logfile.log')
 
 
+#level reqs:
+# Quest 0 -- level 4+
+# Quest 1 -- level 1 to 3
+
+3 == talk to tiny
+4 == talk to rosco
+
+
+
 " ██▀███   █    ██  ▄▄▄▄ ▓██   ██▓
 ▓██ ▒ ██▒ ██  ▓██▒▓█████▄▒██  ██▒
 ▓██ ░▄█ ▒▓██  ▒██░▒██▒ ▄██▒██ ██░

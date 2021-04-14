@@ -58,7 +58,15 @@ module Game_DB
   @textdb[:battle] = {}
   @textdb[:badges] = {}
   @textdb[:other] = {}
-  @playerdata = [0, 0]
+  @textdb[:quest] = {}
+  @playerdata = [0, [0, 0]] #stores the last valid/active player data
+  @quests = {}
+  @quests[:name] = {}
+  @quests[:details] = {}
+  @quests[:require] = {}
+  @quests[:rewards] = {}
+  @quests[:complete] = {}
+
 
   def populate_database
     populate_weapons_db
@@ -69,17 +77,45 @@ module Game_DB
     populate_experience_req_db
     populate_level_up_chart_db
     populate_text_db
+    populate_quest_db
   end
 
+
   def backup_player_data(playerobj, locationary)
-    @playerdata = Player.new if @playerdata == 0
-    @playerdata[0] = playerobj
-    @playerdata[1] = locationary
+    @playerdata[0] = Player.new if @playerdata[0] == 0
+    @playerdata[0] = playerobj unless @playerdata[0] == playerobj
+    @playerdata[1] = locationary unless @playerdata[1] = locationary
   end
 
   def debug_read_player_data
     return @playerdata
   end
+  # @quests[:require][0][0][:enemy] = [enemyid, amount]
+  def populate_quest_db
+    @quests[:name][0] = "Rosco: Kill 10 Tigers and 2 Rhinos"
+    @quests[:details][0] = "Kill 10 F**king Tigers and 2 Giant C**t of a Rhinos \n then return to Rosco the Drunk"
+    @quests[:require][0] = [{:enemy => [11, 10]}, {:enemy => [13, 10]}]
+    @quests[:rewards][0] = [{:item => [9, 1]}, {:gold => 250}]
+    @quests[:complete][0]= " Congrats! You Finished Rosco the Drunks quest! \n You have gained 1x Dragons-Talon and 250 gold!"
+
+    @quests[:name][1] = "Tiny: Kill 8 Large Rats and get 1 Mugwart-Root"
+    @quests[:details][1] = "Kill 8 Large Rats then return to Tiny"
+    @quests[:require][1] = [{:enemy => [3, 8]}, {:item => [1, 1]}]
+    @quests[:rewards][1] = [{:weapon => [4, 1]}, {:item => [19, 1]}, {:gold => 25}]
+    @quests[:complete][1]= " Congrats! You have finished Tinys quest! \n You have gained 1x Wooden-Club, 1x Fire-Jewel and 25 gold!"
+  end
+
+  def read_quest_array(id=nil, value=nil)
+    if value == nil && id != nil
+      pack = [@quests[:name][id], @quests[:details][id], @quests[:require][id], @quests[:rewards][id], @quests[:complete][id], nil]
+    elsif value.is_a? Symbol
+      pack = @quests[value][id]
+    else
+      pack = "error"
+    end
+    return pack
+  end
+
 
   def populate_text_db
    #@textdb[:area][id] = ["String"]
@@ -160,6 +196,19 @@ module Game_DB
     @textdb[:common][28] = " SLICE!!!! Ouch! While wandering in the forest you scratched \n yourself on a large branch!"
     @textdb[:common][29] = " SPLASH!!! THUD!!! Ouch! While slogging through the swamp, \n your foot gets stuck in some mud. You fall down into the\n water and smack your head on a log!"
 
+    @textdb[:common][30] = " You see Rosco the Drunk sitting at the bar. He glares at you."
+    @textdb[:common][31] = " You see Tiny sitting at a table. He stares, and waves you over."
+
+    @textdb[:quest][0] = " Me Tiny. Me need you to find me 1 Mugwart-root and kill 8\n Large Rats. Will you help me?"
+    @textdb[:quest][1] = " Me Tiny. You come back when you finish helping Tiny!!!"
+    @textdb[:quest][2] = " Me Tiny. You bring things Tiny need! Tiny thank you!!!"
+    @textdb[:quest][3] = "                       QUEST ACCEPTED!  "
+    @textdb[:quest][4] = "                       QUEST FINISHED!  "
+    @textdb[:quest][5] = "                      QUEST IN PROGRESS!"
+    @textdb[:quest][6] = " Rosco: Kill me 10 Tigers an *hic*... 2 Rhinos.."
+    @textdb[:quest][7] = " Rosco: finish what I want you to do.."
+    @textdb[:quest][8] = " Rosco: Ooooh.. *hic* thanks for taking care of that."
+
     @textdb[:cmd][0] = ["(N)orth"]
     @textdb[:cmd][1] = ["(W)est"]
     @textdb[:cmd][2] = ["(E)ast"]
@@ -175,11 +224,12 @@ module Game_DB
 
     @textdb[:cmd][7]  = ["(1) Menu"]
     @textdb[:cmd][8]  = "(1) PLAYER STATUS"
-    @textdb[:cmd][9]  = "  (2) INVENTORY"
-    @textdb[:cmd][10] = "    (3) SPELLS"
-    @textdb[:cmd][11] = "      (4) BACK TO GAME"
-    @textdb[:cmd][12] = "        (5) SAVE GAME"
-    @textdb[:cmd][13] = "          (X) EXIT GAME"
+    @textdb[:cmd][9]  = " (2) INVENTORY"
+    @textdb[:cmd][10] = "  (3) SPELLS"
+    @textdb[:cmd][11] = "   (4) BACK TO GAME"
+    @textdb[:cmd][12] = "    (5) SAVE GAME"
+    @textdb[:cmd][13] = "      (X) EXIT GAME"
+    @textdb[:cmd][105]= "      (Q) QUESTS"
     @textdb[:cmd][101]= ["(1) Use"]
     @textdb[:cmd][102]= ["(2) Back"]
 
@@ -200,6 +250,8 @@ module Game_DB
     @textdb[:cmd][26] = ["(4) Back"]
 
     @textdb[:cmd][27] = ["(2) Rent Room"]
+    @textdb[:cmd][28] = ["(4) Talk to Rosco"]
+    @textdb[:cmd][29] = ["(3) Talk to Tiny"]
 
     @textdb[:battle][6] = ["(A)ttack"]
     @textdb[:battle][7] = ["(S)pell"]
@@ -313,7 +365,7 @@ module Game_DB
           Special Thanks: Zaxero
           Special Thanks: Voxnee (twitch.tv)
           Icon Made by 'Good Ware' from www.flaticon.com"
-    @textdb[:other][12]= " Version: BETA 1.2.2            Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: BETA 1.3          Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section=nil, id=nil)
@@ -603,6 +655,8 @@ module Game_DB
     return true if name.include? "Sword"
     return false
   end
+
+
 
   def populate_weapons_db
     #             [Weapon name,              atk, spd, 2hand,  cost]

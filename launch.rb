@@ -8,6 +8,7 @@ require 'logger'
 require_relative 'Game_DB'
 require_relative 'Player'
 require_relative 'Enemy'
+require_relative 'Quest'
 require_relative 'Main'
 include Game_DB
 Game_DB.populate_database
