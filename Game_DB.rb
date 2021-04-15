@@ -105,7 +105,7 @@ module Game_DB
   def populate_quest_db
     @quests[:name][0] = "Rosco: Welcome to the Jungle"
     @quests[:details][0] = "Kill 10 F**king Tigers and 2 Giant C**t of a Rhinos \n then return to Rosco the Drunk"
-    @quests[:require][0] = [{:enemy => [11, 10]}, {:enemy => [13, 10]}]
+    @quests[:require][0] = [{:enemy => [11, 10]}, {:enemy => [13, 2]}]
     @quests[:rewards][0] = [{:item => [9, 1]}, {:gold => 250}]
     @quests[:complete][0]= " Congrats! You Finished Rosco the Drunks quest! \n You have gained 1x Dragons-Talon and 250 gold!"
 
@@ -240,7 +240,7 @@ module Game_DB
     @textdb[:cmd][2] = ["(E)ast"]
     @textdb[:cmd][3] = ["(S)outh"]
 
-    @textdb[:cmd][28] = ["(2) Step (F)orward"]
+    @textdb[:cmd][99] = ["(2) Step (F)orward"]
 
     @textdb[:cmd][4] = ["(1) Buy"]
     @textdb[:cmd][5] = ["(2) Sell"]
@@ -393,7 +393,7 @@ module Game_DB
           Special Thanks: Voxnee (twitch.tv)
           Icon Made by 'Good Ware' from www.flaticon.com
           ASCII Art generated using software made by Patrick Gillespie (@patorjk)"
-    @textdb[:other][12]= " Version: BETA 1.4          Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: BETA 1.5-A          Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section=nil, id=nil)

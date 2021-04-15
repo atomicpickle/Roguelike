@@ -7,6 +7,6 @@ forcelvlexp - type in, hit enter.
 forcebadge  - type in, hit enter.
             - type in EXACT badge string then hit enter.
             - string example: <{2}>
-            - will properly force prgogress to that badge
+            - will properly force progress to that badge
 ineedjewels - type in, hit enter.
             - gives you 4 of each kind of jewel.

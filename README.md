@@ -1,4 +1,4 @@
-# Ruby Arena version BETA 1.4
+# Ruby Arena version BETA 1.5-A
 
 To support this games development, you can buy it here for your choice
 of price: https://gumpnerd.itch.io/ruby-arena
@@ -16,6 +16,12 @@ Ruby, run the game with the RubyArena.exe file in the Compiled folder.
  Screenshots: https://imgur.com/gallery/Z8P1mB6
 
  BETA Versions updates and fixes:
+
+    BETA 1.5-A
+    - fixed Rosco's quest not triggering at level 4
+    - fixed wrong command printing when entering arena (string id conflict)
+    - this version is not complete, simply adding for the hotfixes.
+    - 1.5 will be out later today.
 
     BETA 1.4
     - added a new quest that can be started at level 5

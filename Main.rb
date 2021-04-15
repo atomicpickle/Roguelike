@@ -1094,7 +1094,7 @@ class Game_Main
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:common, 106)}", :green, :bright
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "#{Game_DB.tx(:cmd, 28)}", :cyan
+      pa "#{Game_DB.tx(:cmd, 99)}", :cyan
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:cmd, 3)}", :cyan
       pa "#{Game_DB.tx(:other, 0)}"
@@ -1110,7 +1110,7 @@ class Game_Main
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:common, 103)}", :green, :bright
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "#{Game_DB.tx(:cmd, 28)}", :cyan
+      pa "#{Game_DB.tx(:cmd, 99)}", :cyan
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:cmd, 3)}", :cyan
       pa "#{Game_DB.tx(:other, 0)}"
@@ -1612,7 +1612,7 @@ class Game_Main
             key = gets
             break
           elsif @quests[qid] == nil#quest not started
-            if @player.level <= 4
+            if @player.level < 4
               pa "#{Game_DB.tx(:common, 33)}", :green
               key = gets
               break
