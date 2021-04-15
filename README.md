@@ -17,6 +17,12 @@ Ruby, run the game with the RubyArena.exe file in the Compiled folder.
 
  BETA Versions updates and fixes:
 
+    BETA 1.5
+      - fixed Rosco's quest not triggering at level 4
+      - fixed wrong command printing when entering arena (string id conflict)
+      - added new enemies, up to level 14
+
+
     BETA 1.5-A
     - fixed Rosco's quest not triggering at level 4
     - fixed wrong command printing when entering arena (string id conflict)

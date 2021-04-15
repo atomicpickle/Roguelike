@@ -821,6 +821,12 @@ module Game_DB
     @enemies[27] =  ["Cataran General",         2,  12,  486,   65,  145,  124,   79,  1000,   1050, [8, 11],    5,   [13, 8],  25]
     @enemies[28] =  ["Big Blue Dragon",         4,  12,  504,  186,  152,  122,   82,  1125,   1425, [8, 10],    5,   [2, 14],  30]
 
+    @enemies[29] =  ["Captian Riker",           2,  13,  546,   74,  150,  116,   84,  1250,   1150, [8, 11],    5,   [13, 8],  25]
+    @enemies[30] =  ["Ensign Kim",              2,  13,  580,  142,  140,  106,   80,  1311,   1256, [8, 11],    5,   [13,10],  35]
+
+    @enemies[31] =  ["F**king Picard",          2,  14,  666,   88,  166,  124,   88,  1566,   1450, [8, 11],    5,   [13,10],  25]
+    @enemies[32] =  ["Big Red Dragon",          2,  14,  700,  182,  154,  118,   84,  1418,   1556, [8, 11],    5,   [13,12],  35]
+
     #              #[Enemy name,             race, lvl,  mhp,  mmp,  atk,  def,  spd,   exp,   gold, [drops],drop%,  [spells], sp%]
 
     @enemies[:b0] = ["Rosco the Drunk",         2,   4,  120,   24,   38,   15,   15,   150,    100, [3, 10],   10,    [1, 0],  35]
@@ -1025,6 +1031,7 @@ module Game_DB
   def items_array(id=nil, i=nil)
     return @items if id == nil
     return @items[id] if i == nil
+    return if id == [] or i == []
     return @items[id][i]
   end
 
