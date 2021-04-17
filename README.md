@@ -1,4 +1,4 @@
-# Ruby Arena version BETA 1.5
+# Ruby Arena version BETA 1.6
 
 To support this games development, you can buy it here for your choice
 of price: https://gumpnerd.itch.io/ruby-arena
@@ -16,6 +16,10 @@ Ruby, run the game with the RubyArena.exe file in the Compiled folder.
  Screenshots: https://imgur.com/gallery/Z8P1mB6
 
  BETA Versions updates and fixes:
+
+    BETA 1.6
+      - fixed sale bug for rare items
+      - fixed item use in battle crashing in some instances
 
     BETA 1.5
       - fixed Rosco's quest not triggering at level 4

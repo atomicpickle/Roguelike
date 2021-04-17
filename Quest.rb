@@ -10,6 +10,7 @@
 #level reqs:
 # Quest 0 -- level 4+
 # Quest 1 -- level 1 to 3
+# Quest 2 -- level 5+
 
 
 

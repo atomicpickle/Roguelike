@@ -393,7 +393,7 @@ module Game_DB
           Special Thanks: Voxnee (twitch.tv)
           Icon Made by 'Good Ware' from www.flaticon.com
           ASCII Art generated using software made by Patrick Gillespie (@patorjk)"
-    @textdb[:other][12]= " Version: BETA 1.5          Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: BETA 1.6          Author: Matt Sully(@GumpNerd)"
   end
 
   def tx(section=nil, id=nil)

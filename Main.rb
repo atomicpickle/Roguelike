@@ -391,8 +391,7 @@ class Game_Main
         break
       end
     end
-    return key if key <= 6
-    return 0 if key > 6
+    return key
   end
 
   #return spell id
@@ -695,8 +694,8 @@ class Game_Main
       if dice <= dropchance
         id = dropinfo[0] if dice2 <= 70
         id = dropinfo[1] if dice2 > 70
-        @player.add_item(:item, id)
         id = 1 if id == nil
+        @player.add_item(:item, id)
         pa "                    #{@enemy.read_name} dropped an item! You found 1x #{Game_DB.items_array(id, 0)}", :yellow, :bright
         process_quests_iterate(:item, id)
       elsif dice2 <= 2 || dice2 >= 97
@@ -1920,6 +1919,7 @@ class Game_Main
           pbag.delete_if{|k, v| k == 0}
           pbagkeys = pbag.keys
           fullbag = Game_DB.items_array
+          return if pbag == nil || pbag == nil
           pbag.each {|k, v| pa "(#{k}): #{fullbag[k][0]}, Amount Owned: x#{v}\n    > SELL PRICE: #{fullbag[k][7]/2.to_i} Gold", :green unless pbag[k] == 0}
           pa "#{Game_DB.tx(:other, 0)}"
           pa "#{Game_DB.tx(:common, 23)}", :green, :bright
