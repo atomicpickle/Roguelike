@@ -171,9 +171,11 @@ class Game_Main
     end
   end
 
-  # :red, :blue, :level, :green
+  # :red, :blue, :level, :green, :blue_strike
   def draw_flash(color=:red, ticks=6)
     flashbar = Game_DB.tx(:other, 11)
+    flashbar2 = Game_DB.tx(:other, 21)
+    flashbar3 = Game_DB.tx(:other, 22)
     flasher = 0
     if color == :red
       ticks.times do
@@ -259,6 +261,27 @@ class Game_Main
         pa "\r#{flashbar}", :green if flasher.odd?
         pa "\r#{flashbar}", :green if flasher.odd?
         pa "\r#{flashbar}", :green, :bright if flasher.odd?
+        sleep 0.01
+      end
+      clr
+      draw_stats_main
+    elsif color == :blue_strike
+      ticks.times do
+        clr
+        draw_stats_main
+        flasher += 1
+        pa "\n"
+        pa "\n"
+        pa "\r#{flashbar2}", :blue, :bright if flasher.even?
+        pa "\r#{flashbar3}", :blue if flasher.even?
+        pa "\r#{flashbar2}", :blue, :bright if flasher.even?
+        pa "\n"
+        pa "\n"
+        pa "\n"
+        pa "\n"
+        pa "\r#{flashbar3}", :blue if flasher.odd?
+        pa "\r#{flashbar2}", :blue, :bright if flasher.odd?
+        pa "\r#{flashbar3}", :blue if flasher.odd?
         sleep 0.01
       end
       clr
@@ -444,7 +467,7 @@ class Game_Main
             pa "             #{@enemy.read_name} cast the spell #{Game_DB.spellbook(en_spells[0], 0)} and healed #{amount} HP!!!!", :green
             pa "             #{Game_DB.spellbook(en_spells[0], 4)}", :green
           else #enemy doesnt heal, uses attack spell
-            draw_flash(:blue, 6)
+            draw_flash(:blue_strike, 6)
             spcost = Game_DB.spellbook(en_spells[1], 3)
             sprange = Game_DB.spellbook(en_spells[1], 2)
             amount = Game_DB.calc_enemy_spell_damage(sprange, @enemy.read_stat(:lvl), @player.final_stat(:def), @player.level, false, @player.race)
@@ -502,7 +525,7 @@ class Game_Main
             pa "             #{@enemy.read_name} cast the spell #{Game_DB.spellbook(en_spells[0], 0)} and healed #{amount} HP!!!!", :green
             pa "             #{Game_DB.spellbook(en_spells[0], 4)}", :green
           else #enemy attack spell
-            draw_flash(:blue, 6)
+            draw_flash(:blue_strike, 6)
             spcost = Game_DB.spellbook(en_spells[1], 3)
             sprange = Game_DB.spellbook(en_spells[1], 2)
             amount = Game_DB.calc_enemy_spell_damage(sprange, @enemy.read_stat(:lvl), @player.final_stat(:def), @player.level, false, @player.race)
@@ -591,7 +614,7 @@ class Game_Main
             pa "             You cast the spell #{Game_DB.spellbook(spellid, 0)} and healed #{amount} HP!!!!", :green
             pa "             #{Game_DB.spellbook(spellid, 4)}", :green
           else
-            draw_flash(:blue, 6)
+            draw_flash(:blue_strike, 6)
             pa "             You cast the spell #{Game_DB.spellbook(spellid, 0)} and did #{amount} damage!!!!", :red, :bright
             pa "             #{Game_DB.spellbook(spellid, 4)}", :red, :bright
             @player.total_damage += amount unless Game_DB.enemy_is_itembag?(@enemy.id)
@@ -642,6 +665,16 @@ class Game_Main
       @enemyturn = false
       @hunting = false
       @location[0] = @location[1]
+    end
+  end
+
+  def quest_need_enemy?(id)
+    @quests.each do |qid, val|
+      if @quests[qid] != nil
+        need = @quests[qid].is_needed?(:enemy, id)
+        return true if need
+        return false if !need
+      end
     end
   end
 
@@ -798,6 +831,11 @@ class Game_Main
       plvl = @player.level
       enemy_lib = Game_DB.enemies_array
       lvlmax = 5
+      quest_enemies = []
+      quest_crc = false
+      enemy_lib.each {|k, v|
+        quest_crc = quest_need_enemy?(k)
+        quest_enemies << k if quest_crc }
       valid_enemies = enemy_lib.select { |k, v| v[2] <= lvlmax }
       valid_enemies.reject! { |k,v| k == 0}
       valid_enemies.reject! { |k,v| k.is_a? Symbol}
@@ -807,6 +845,11 @@ class Game_Main
         trand = rand(0..3)
         dice5 = rand(1..100)
         @enemies[:wandering] << trary[trand] if dice5 <= 66
+      end
+      if quest_enemies.size > 0
+        quest_enemies.each do |i|
+          @enemies[:wandering] << i
+        end
       end
       enemies_keys.each do |i|
         break if @enemies[:wandering].length >= 5
@@ -828,6 +871,11 @@ class Game_Main
       plvl = @player.level
       enemy_lib = Game_DB.enemies_array
       lvlmax = plvl +2
+      quest_enemies = []
+      quest_crc = false
+      enemy_lib.each {|k, v|
+        quest_crc = quest_need_enemy?(k)
+        quest_enemies << k if quest_crc }
       valid_enemies = enemy_lib.select {|k,v| v[2] <= lvlmax}
       valid_enemies.reject! {|k,v| k == 0}
       valid_enemies.reject! {|k,v| k.is_a? Symbol}
@@ -839,6 +887,11 @@ class Game_Main
         @enemies[:wandering] << trary[trand] if dice5 <= 66
         @enemies[:wandering] << :g2 if dice5 > 66 && dice5 <= 76
         @enemies[:wandering] << :g3 if dice5 > 93
+      end
+      if quest_enemies.size > 0
+        quest_enemies.each do |i|
+          @enemies[:wandering] << i
+        end
       end
       enemies_keys.each do |i|
         break if @enemies[:wandering].length >= 5
@@ -2029,7 +2082,9 @@ class Game_Main
                     - string example: <{2}>
                     - will properly force prgogress to that badge
         ineedjewels - type in, hit enter.
-                    - gives you 4 of each kind of jewel."
+                    - gives you 4 of each kind of jewel.
+        makemedead  - type in, hit enter
+                    - does 999 damage to the player"
         key = gets.chomp.downcase
         if key == "forcelvlexp"
           p "type in lvl"
@@ -2053,6 +2108,9 @@ class Game_Main
             @player.add_item(:item, ids[ind])
             ind += 1
           end
+        end
+        if key =="makemedead"
+          @player.damage(:hp, 999)
         end
         # bottom of debugcmd
       end
@@ -2242,22 +2300,27 @@ class Game_Main
               id = key
               twohd = Game_DB.weapons_array(id, 3)
               oldtwohd = Game_DB.weapons_array(@player.get_equipment_id(:lh), 3)
-              pa " (1) Left hand or (2) Right hand?     (0): Cancel", :red
-              key = gets.chomp.to_i
-              if key == 1
+              if twohd
                 @player.unequip_weapon(3) if oldtwohd
-                @player.equip_weapon(id, 1) unless twohd
-                @player.equip_weapon(id, 3) if twohd
+                @player.equip_weapon(id, 3)
                 pa " Weapon #{@player.get_equipment_text(:left)[0]} has been equipped!", :red
                 key = gets
-              elsif key == 2
-                @player.unequip_weapon(3) if oldtwohd
-                @player.equip_weapon(id, 2) unless twohd
-                @player.equip_weapon(id, 3) if twohd
-                pa " Weapon #{@player.get_equipment_text(:right)[0]} has been equipped!", :red
-                key = gets
               else
-                break
+                pa " (1) Left hand or (2) Right hand?     (0): Cancel", :red
+                key = gets.chomp.to_i
+                if key == 1
+                  @player.unequip_weapon(3) if oldtwohd
+                  @player.equip_weapon(id, 1)
+                  pa " Weapon #{@player.get_equipment_text(:left)[0]} has been equipped!", :red
+                  key = gets
+                elsif key == 2
+                  @player.unequip_weapon(3) if oldtwohd
+                  @player.equip_weapon(id, 2)
+                  pa " Weapon #{@player.get_equipment_text(:right)[0]} has been equipped!", :red
+                  key = gets
+                else
+                  break
+                end
               end
               break
             end

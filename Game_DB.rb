@@ -393,7 +393,9 @@ module Game_DB
           Special Thanks: Voxnee (twitch.tv)
           Icon Made by 'Good Ware' from www.flaticon.com
           ASCII Art generated using software made by Patrick Gillespie (@patorjk)"
-    @textdb[:other][12]= " Version: BETA 1.6          Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: BETA 1.7          Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][21]= "████     █████     █████     █████     █████     █████     █████     ████  "
+    @textdb[:other][22]= "    █████     █████     █████     █████     █████     █████     █████    ██"
   end
 
   def tx(section=nil, id=nil)
@@ -752,21 +754,21 @@ module Game_DB
   def populate_spells_db
     #            [Spell name,             Heal?,   [Minmax], Cost,   Description]
     @spells[0] = ["Burp!",                false,     [0, 0],    0,   "Drunkenly misprounounce the heal spell and cause minor damage"]
-    @spells[1] = ["Heal",                  true,    [7, 24],    4,   "Simple healing spell"]
+    @spells[1] = ["Heal",                  true,    [9, 24],    4,   "Simple healing spell"]
     @spells[2] = ["Greater Heal",          true,  [45, 125],    9,   "Less simple healing spell"]
-    @spells[3] = ["Tremor",               false,   [10, 30],    6,   "Sends a tremor out and throws the target"]
-    @spells[4] = ["Gust",                 false,   [15, 30],    7,   "A sharp gust of wind impacts the target"]
-    @spells[5] = ["Water Talons",         false,   [15, 40],    9,   "Pull water out of the air into talons and shoot at target"]
+    @spells[3] = ["Tremor",               false,   [15, 30],    6,   "Sends a tremor out and throws the target"]
+    @spells[4] = ["Gust",                 false,   [16, 35],    7,   "A sharp gust of wind impacts the target"]
+    @spells[5] = ["Water Talons",         false,   [19, 40],    9,   "Pull water out of the air into talons and shoot at target"]
     @spells[6] = ["Shock",                false,   [28, 40],    9,   "Electricity shoots from your mouth and strikes"]
-    @spells[7] = ["Blizzard",             false,   [32, 86],   12,   "Blizzard swirls up around the target"]
-    @spells[8] = ["Fireball",             false,  [75, 125],   16,   "A fireball pops into existance and strikes"]
-    @spells[9] = ["Quake",                false,  [50, 185],   10,   "Earth opens and crushes your target"]
-    @spells[10]= ["Hurricane",            false,  [95, 175],   16,   "A hurricaine hits the target, then disappears"]
-    @spells[11]= ["Bolt",                 false, [125, 180],   24,   "Electricity shoots from all of your orifices and strikes"]
-    @spells[12]= ["Wall of Fire",         false, [100, 256],   32,   "A Wall of Fire emerges and envelopes everything"]
-    @spells[13]= ["Mega Heal",             true, [200, 320],   33,   "Complicated healing spell"]
-    @spells[14]= ["Tsunami",              false, [200, 275],   42,   "A massive Tsunami appears out of thin air and drowns the target"]
-    @spells[15]= ["Deathknell",           false,   [1, 800],   66,   "The target is either ripped apart, or somewhat damaged by Death himself"]
+    @spells[7] = ["Blizzard",             false,   [38, 80],   12,   "Blizzard swirls up around the target"]
+    @spells[8] = ["Fireball",             false,   [65, 90],   16,   "A fireball pops into existance and strikes"]
+    @spells[9] = ["Quake",                false,  [50, 116],   10,   "Earth opens and crushes your target"]
+    @spells[10]= ["Hurricane",            false,  [95, 125],   16,   "A hurricaine hits the target, then disappears"]
+    @spells[11]= ["Bolt",                 false, [100, 155],   24,   "Electricity shoots from all of your orifices and strikes"]
+    @spells[12]= ["Wall of Fire",         false,  [75, 256],   32,   "A Wall of Fire emerges and envelopes everything"]
+    @spells[13]= ["Mega Heal",             true, [105, 265],   33,   "Complicated healing spell"]
+    @spells[14]= ["Tsunami",              false, [125, 275],   42,   "A massive Tsunami appears out of thin air and drowns the target"]
+    @spells[15]= ["Deathknell",           false,   [1, 500],   66,   "The target is either ripped apart, or somewhat damaged by Death himself"]
   end
 
   def populate_enemies_db #races: ghost(0), dwarf(1), human(2), elf(3), animal(4), demon(5)
@@ -804,28 +806,28 @@ module Game_DB
 
     @enemies[16] =  ["Bit-too-Happy Jinn",      5,   7,  152,   42,   60,   52,   35,   186,    165, [19, 7],    9,   [2, 11],  48]
     @enemies[17] =  ["Baby Velociraptor",       4,   7,  156,   14,   64,   50,   38,   144,     90, [9, 20],    7,    [2, 0],  25]
-    @enemies[18] =  ["Cute Velociraptor",       4,   7,  188,   22,   69,   58,   40,   224,    204, [9, 10],    6,    [2, 0],  25]
+    @enemies[18] =  ["Cute Velociraptor",       4,   7,  174,   22,   69,   58,   40,   224,    204, [9, 10],    6,    [2, 0],  25]
 
-    @enemies[19] =  ["Electric Floating Skull", 5,   8,  196,   70,   81,   56,   32,   300,    225, [18,19],   15,   [2, 11],  40]
-    @enemies[20] =  ["F**king Lion",            4,   8,  224,    0,   89,   64,   48,   310,    240, [9, 10],   12,    [0, 0],   0]
+    @enemies[19] =  ["Electric Floating Skull", 5,   8,  180,   70,   81,   56,   32,   300,    225, [18,19],   15,   [2, 11],  40]
+    @enemies[20] =  ["F**king Lion",            4,   8,  188,    0,   89,   64,   48,   310,    240, [9, 10],   12,    [0, 0],   0]
 
-    @enemies[21] =  ["Lunatic Vagrant",         2,   9,  275,   56,  109,   86,   54,   375,    360, [3, 19],   15,    [2, 9],  25]
-    @enemies[22] =  ["Land Dolphin",            4,   9,  290,   90,  113,   91,   56,   420,    420, [18, 6],   15,   [2, 11],  20]
+    @enemies[21] =  ["Lunatic Vagrant",         2,   9,  200,   56,  109,   86,   54,   375,    360, [3, 19],   15,    [2, 9],  25]
+    @enemies[22] =  ["Land Dolphin",            4,   9,  224,   90,  113,   91,   56,   420,    420, [18, 6],   15,   [2, 11],  20]
 
-    @enemies[23] =  ["Psycho Tom",              2,  10,  325,   75,  126,  100,   66,   500,    560, [9, 10],   15,    [2, 8],  25]
-    @enemies[24] =  ["Komodo Dragon",           4,  10,  375,    0,  132,  112,   69,   525,    515, [9, 10],   15,    [0, 0],   0]
+    @enemies[23] =  ["Psycho Tom",              2,  10,  265,   75,  126,  100,   66,   500,    560, [9, 10],   15,    [2, 8],  25]
+    @enemies[24] =  ["Komodo Dragon",           4,  10,  325,    0,  132,  112,   69,   525,    515, [9, 10],   15,    [0, 0],   0]
 
-    @enemies[25] =  ["Cataran Knight",          2,  11,  425,   35,  138,  115,   73,   850,    950, [9, 11],    5,    [2, 8],  25]
-    @enemies[26] =  ["Big Red Dragon",          4,  11,  450,  128,  140,  112,   75,   825,   1215, [9, 11],    5,   [2, 12],  30]
+    @enemies[25] =  ["Cataran Knight",          2,  11,  376,   35,  136,  115,   73,   850,    950, [9, 11],    5,    [2, 8],  25]
+    @enemies[26] =  ["Big Red Dragon",          4,  11,  390,  128,  140,  112,   75,   825,   1215, [9, 11],    5,   [2, 12],  30]
 
-    @enemies[27] =  ["Cataran General",         2,  12,  486,   65,  145,  124,   79,  1000,   1050, [8, 11],    5,   [13, 8],  25]
-    @enemies[28] =  ["Big Blue Dragon",         4,  12,  504,  186,  152,  122,   82,  1125,   1425, [8, 10],    5,   [2, 14],  30]
+    @enemies[27] =  ["Cataran General",         2,  12,  420,   65,  144,  124,   79,  1000,   1050, [8, 11],    5,   [13, 8],  25]
+    @enemies[28] =  ["Big Blue Dragon",         4,  12,  444,  186,  150,  122,   82,  1125,   1425, [8, 10],    5,   [2, 14],  30]
 
-    @enemies[29] =  ["Captian Riker",           2,  13,  546,   74,  150,  116,   84,  1250,   1150, [8, 11],    5,   [13, 8],  25]
-    @enemies[30] =  ["Ensign Kim",              2,  13,  580,  142,  140,  106,   80,  1311,   1256, [8, 11],    5,   [13,10],  35]
+    @enemies[29] =  ["Captian Riker",           2,  13,  475,   74,  150,  116,   84,  1250,   1150, [8, 11],    5,   [13, 8],  25]
+    @enemies[30] =  ["Ensign Kim",              2,  13,  484,  142,  140,  106,   80,  1311,   1256, [8, 11],    5,   [13,10],  35]
 
-    @enemies[31] =  ["F**king Picard",          2,  14,  666,   88,  166,  124,   88,  1566,   1450, [8, 11],    5,   [13,10],  25]
-    @enemies[32] =  ["Big Red Dragon",          2,  14,  700,  182,  154,  118,   84,  1418,   1556, [8, 11],    5,   [13,12],  35]
+    @enemies[31] =  ["F**king Picard",          2,  14,  500,   88,  166,  124,   88,  1566,   1450, [8, 11],    5,   [13,10],  25]
+    @enemies[32] =  ["Big Red Dragon",          2,  14,  600,  182,  154,  118,   84,  1418,   1556, [8, 11],    5,   [13,12],  35]
 
     #              #[Enemy name,             race, lvl,  mhp,  mmp,  atk,  def,  spd,   exp,   gold, [drops],drop%,  [spells], sp%]
 

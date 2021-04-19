@@ -1,4 +1,4 @@
-# Ruby Arena version BETA 1.6
+# Ruby Arena version BETA 1.7
 
 To support this games development, you can buy it here for your choice
 of price: https://gumpnerd.itch.io/ruby-arena
@@ -16,6 +16,14 @@ Ruby, run the game with the RubyArena.exe file in the Compiled folder.
  Screenshots: https://imgur.com/gallery/Z8P1mB6
 
  BETA Versions updates and fixes:
+
+    BETA 1.7
+      - adjusted various late game (level 8+) enemies, nerfed HP and some attacks
+      - adjusted spell damage heavily, late game spells nerfed
+      - updated magic spell animation flash
+      - fixed human sword bonus error when a sword was only in your right hand
+      - removed left/right hand prompt when equipping a 2 handed weapon
+      - forced enemies to spawn if out of level range but needed for a quest
 
     BETA 1.6
       - fixed sale bug for rare items

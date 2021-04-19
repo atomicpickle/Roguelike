@@ -164,8 +164,11 @@ class Player
     mult = 0.0
     hand = get_equipment_id(:lh)
     rhand = get_equipment_id(:rh)
-    mult += 0.07 if Game_DB.item_isa_sword?(hand)
-    mult += 0.03 if Game_DB.item_isa_sword?(rhand)
+    if Game_DB.item_isa_sword?(hand) && Game_DB.item_isa_sword?(rhand)
+      mult = 0.1
+    elsif Game_DB.item_isa_sword?(hand) || Game_DB.item_isa_sword?(rhand)
+      mult = 0.07
+    end
     return mult
   end
 

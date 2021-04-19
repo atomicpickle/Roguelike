@@ -10,3 +10,5 @@ forcebadge  - type in, hit enter.
             - will properly force progress to that badge
 ineedjewels - type in, hit enter.
             - gives you 4 of each kind of jewel.
+makemedead  - type in, hit enter
+            - does 999 damage to the player

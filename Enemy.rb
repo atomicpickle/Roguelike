@@ -43,7 +43,7 @@ class Enemy
   end
 
   def knows_heal_spells?
-    return true if @spells.any? {|spell| spell == 1 || spell == 2}
+    return true if @spells.any? {|spell| spell == 1 || spell == 2 || spell == 13}
     return false
   end
 
