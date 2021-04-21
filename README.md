@@ -1,4 +1,4 @@
-# Ruby Arena version BETA 1.7
+# Ruby Arena version BETA 1.8
 
 To support this games development, you can buy it here for your choice
 of price: https://gumpnerd.itch.io/ruby-arena
@@ -16,6 +16,10 @@ Ruby, run the game with the RubyArena.exe file in the Compiled folder.
  Screenshots: https://imgur.com/gallery/Z8P1mB6
 
  BETA Versions updates and fixes:
+
+    BETA 1.8
+      - repaired spawn logic that was borked when adding quest mobs forced spawn
+      - item drop code has been reviewed, the rare item bag crash SHOULD be fixed
 
     BETA 1.7
       - adjusted various late game (level 8+) enemies, nerfed HP and some attacks

@@ -36,7 +36,7 @@ class Game_Main
     # used to navigate item menu [weapons, armor, items]
     @itemmenu = [false, false, false]
     @shopmenu = [false, false, false]
-    @quests = {0 => nil, 1 => nil}
+    @quests = {0 => nil, 1 => nil, 2 => nil}
     startup_titlecard
   end
 
@@ -75,7 +75,7 @@ class Game_Main
     # used to navigate item menu [weapons, armor, items]
     @itemmenu = [false, false, false]
     @shopmenu = [false, false, false]
-    @quests = {0 => nil, 1 => nil}
+    @quests = {0 => nil, 1 => nil, 2 => nil}
     startup_titlecard
   end
 
@@ -725,12 +725,15 @@ class Game_Main
       dice = rand(1..100); dice2 = rand(1..100)
       process_quests_iterate(:enemy, @enemy.id)
       if dice <= dropchance
+        id = 0
         id = dropinfo[0] if dice2 <= 70
         id = dropinfo[1] if dice2 > 70
         id = 1 if id == nil
-        @player.add_item(:item, id)
-        pa "                    #{@enemy.read_name} dropped an item! You found 1x #{Game_DB.items_array(id, 0)}", :yellow, :bright
-        process_quests_iterate(:item, id)
+        if id != nil && id != 0
+          @player.add_item(:item, id)
+          pa "                    #{@enemy.read_name} dropped an item! You found 1x #{Game_DB.items_array(id, 0)}", :yellow, :bright
+          process_quests_iterate(:item, id)
+        end
       elsif dice2 <= 2 || dice2 >= 97
         dice2 = rand(1..4)
         ary = [3, 17, 18, 19, 20, 3]
@@ -835,7 +838,7 @@ class Game_Main
       quest_crc = false
       enemy_lib.each {|k, v|
         quest_crc = quest_need_enemy?(k)
-        quest_enemies << k if quest_crc }
+        quest_enemies << k if quest_crc == true }
       valid_enemies = enemy_lib.select { |k, v| v[2] <= lvlmax }
       valid_enemies.reject! { |k,v| k == 0}
       valid_enemies.reject! { |k,v| k.is_a? Symbol}
@@ -875,7 +878,7 @@ class Game_Main
       quest_crc = false
       enemy_lib.each {|k, v|
         quest_crc = quest_need_enemy?(k)
-        quest_enemies << k if quest_crc }
+        quest_enemies << k if quest_crc == true }
       valid_enemies = enemy_lib.select {|k,v| v[2] <= lvlmax}
       valid_enemies.reject! {|k,v| k == 0}
       valid_enemies.reject! {|k,v| k.is_a? Symbol}

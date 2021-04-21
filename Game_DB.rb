@@ -95,7 +95,7 @@ module Game_DB
   def backup_player_data(playerobj, locationary)
     @playerdata[0] = Player.new if @playerdata[0] == 0
     @playerdata[0] = playerobj unless @playerdata[0] == playerobj
-    @playerdata[1] = locationary unless @playerdata[1] = locationary
+    @playerdata[1] = locationary unless @playerdata[1] == locationary
   end
 
   def debug_read_player_data
@@ -393,7 +393,7 @@ module Game_DB
           Special Thanks: Voxnee (twitch.tv)
           Icon Made by 'Good Ware' from www.flaticon.com
           ASCII Art generated using software made by Patrick Gillespie (@patorjk)"
-    @textdb[:other][12]= " Version: BETA 1.7          Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: BETA 1.8          Author: Matt Sully(@GumpNerd)"
     @textdb[:other][21]= "████     █████     █████     █████     █████     █████     █████     ████  "
     @textdb[:other][22]= "    █████     █████     █████     █████     █████     █████     █████    ██"
   end
