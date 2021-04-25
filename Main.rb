@@ -738,6 +738,7 @@ class Game_Main
         dice2 = rand(1..4)
         ary = [3, 17, 18, 19, 20, 3]
         id = ary[dice2]
+        id = 1 if id == nil || id == 0
         @player.add_item(:item, id)
         pa "   ************  Whats this? You found a #{Game_DB.items_array(id, 0)} next to the corpse!!!  ************", :blue, :bright
         process_quests_iterate(:item, id)
@@ -1221,19 +1222,19 @@ class Game_Main
       pa "                                 #{Game_DB.tx(:cmd, 8)}", :blue, :bright
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "                                 #{Game_DB.tx(:cmd, 9)}", :blue
+      pa "                                 #{Game_DB.tx(:cmd, 9)}", :blue, :bright
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "                                 #{Game_DB.tx(:cmd, 10)}", :magenta, :bright
+      pa "                                 #{Game_DB.tx(:cmd, 10)}", :blue, :bright
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "                                 #{Game_DB.tx(:cmd, 11)}", :magenta
+      pa "                                 #{Game_DB.tx(:cmd, 11)}", :blue, :bright
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "                                 #{Game_DB.tx(:cmd, 12)}", :green, :bright
+      pa "                                 #{Game_DB.tx(:cmd, 12)}", :blue, :bright
       pa "#{Game_DB.tx(:other, 0)}"
       pa "#{Game_DB.tx(:other, 0)}"
-      pa "                                                          #{Game_DB.tx(:cmd, 105)}", :yellow, :bright
+      pa "                                                          #{Game_DB.tx(:cmd, 105)}", :green, :bright
       pa "#{Game_DB.tx(:other, 0)}"
       pa "                                                          #{Game_DB.tx(:cmd, 13)}", :red
       pa "#{Game_DB.tx(:other, 0)}"
@@ -1761,15 +1762,15 @@ class Game_Main
           @location[0] = @location[1]
           break
         when 5
-          @submenu[3] = true
+          @submenu[5] = true
           break
         end
         if keyst == "x"
           @submenu[4] = true
           break
         end
-        if keyst == "q"
-          @submenu[5] = true
+        if keyst == "s"
+          @submenu[3] = true
           break
         end
       end
@@ -1796,7 +1797,31 @@ class Game_Main
           shopbag = Game_DB.weapons_array
           bagkeys = shopbag.keys
           bagkeys.delete_if {|i| i == 0}
-          shopbag.each {|id, value| pa  "(#{id}): #{value[0]}, ATTACK: #{value[1]}, SPEED: #{value[2]}, 2-HANDED: #{value[3]}\n   > COST: #{value[4]}", :green unless id == 0 }
+          shopbag.each { |id, value|
+            if id != 0
+              if id >= 10
+                string1 = " (" + id.to_s + ")" + " " + value[0]
+                str1 = string1.size
+              else
+                string1 = "  (" + id.to_s + ")" + " " + value[0]
+                str1 = string1.size
+              end
+              string2 = "ATTACK: #{value[1]}"; str2 = string2.size
+              string3 = "SPEED: #{value[2]}"; str3 = string3.size
+              string4 = "" if !value[3]
+              string4 = "TWO HANDED WEAPON" if value[3]
+              str3 = string3.size
+              pa "#{string1}"
+              pa "\033[1A \033[#{str1}C #{string2}", :red, :bright
+              pa "\033[1A \033[#{str1+str2+4}C #{string3}", :yellow, :bright if value[1] < 10
+              pa "\033[1A \033[#{str1+str2+str3+9}C #{string4}", :red if value[1] < 10
+              pa "\033[1A \033[#{str1+str2+3}C #{string3}", :yellow, :bright if value[1] > 10 && value[1] < 100
+              pa "\033[1A \033[#{str1+str2+str3+8}C #{string4}", :red if value[1] > 10 && value[1] < 100
+              pa "\033[1A \033[#{str1+str2+2}C #{string3}", :yellow, :bright if value[1] >= 100
+              pa "\033[1A \033[#{str1+str2+str3+7}C #{string4}", :red if value[1] >= 100
+              pa "        >> Cost: #{value[4]}", :yellow
+            end
+          }
           pa "#{Game_DB.tx(:other, 0)}"
           pa "#{Game_DB.tx(:common, 22)}", :green, :bright
           loop do
@@ -1868,7 +1893,26 @@ class Game_Main
           shopbag = Game_DB.armor_array
           bagkeys = shopbag.keys
           bagkeys.delete_if {|i| i == 0}
-          shopbag.each {|id, value| pa  "(#{id}): #{value[0]},  DEFENSE: #{value[1]}, SPEED: #{value[2]}\n   > COST: #{value[3]}", :green unless id == 0 }
+          #shopbag.each {|id, value| pa  "(#{id}): #{value[0]},  DEFENSE: #{value[1]}, SPEED: #{value[2]}\n   > COST: #{value[3]}", :green unless id == 0 }
+          shopbag.each { |id, value|
+            if id != 0
+              if id >= 10
+                string1 = " (" + id.to_s + ")" + " " + value[0]
+                str1 = string1.size
+              else
+                string1 = "  (" + id.to_s + ")" + " " + value[0]
+                str1 = string1.size
+              end
+              string2 = "DEFENSE: #{value[1]}"; str2 = string2.size
+              string3 = "SPEED: #{value[2]}"; str3 = string3.size
+              pa "#{string1}"
+              pa "\033[1A \033[#{str1}C #{string2}", :green, :bright
+              pa "\033[1A \033[#{str1+str2+4}C #{string3}", :yellow, :bright if value[1] < 10
+              pa "\033[1A \033[#{str1+str2+3}C #{string3}", :yellow, :bright if value[1] > 10 && value[1] < 100
+              pa "\033[1A \033[#{str1+str2+2}C #{string3}", :yellow, :bright if value[1] >= 100
+              pa "        >> Cost: #{value[3]}", :yellow
+            end
+          }
           pa "#{Game_DB.tx(:other, 0)}"
           pa "#{Game_DB.tx(:common, 22)}", :green, :bright
           loop do
@@ -2047,14 +2091,14 @@ class Game_Main
       pa "                  Exp:            #{@player.exp}/#{expneed[1]}", :blue, :bright
       pa "                  HP:             #{@stats[1]}/#{@stats[2]}", :blue, :bright
       pa "                  MP:             #{@stats[3]}/#{@stats[4]}", :blue, :bright
-      pa "                  Base Strength:  #{@player.read_stat(:atk, :base)}", :red, :bright
-      pa "                  Bonus Strength: #{@player.read_stat(:atk, :bonus)}", :red, :bright
+      pa "                  Base Strength:  #{@player.read_stat(:atk, :base)} (+#{@player.read_stat(:atk, :bonus)})", :red, :bright
+      #pa "                  Bonus Strength: #{@player.read_stat(:atk, :bonus)}", :red, :bright
       pa "                  Attack Power:   #{@player.final_stat(:atk)}", :red, :bright
-      pa "                  Base Defense:   #{@player.read_stat(:def, :base)}", :green, :bright
-      pa "                  Bonus Defense:  #{@player.read_stat(:def, :bonus)}", :green, :bright
+      pa "                  Base Defense:   #{@player.read_stat(:def, :base)} (+#{@player.read_stat(:def, :bonus)})", :green, :bright
+      #pa "                  Bonus Defense:  #{@player.read_stat(:def, :bonus)}", :green, :bright
       pa "                  Defense Power:  #{@player.final_stat(:def)}", :green, :bright
-      pa "                  Base Speed:     #{@player.read_stat(:spd, :base)}", :yellow, :bright
-      pa "                  Bonus Speed:    #{@player.read_stat(:spd, :bonus)}", :yellow, :bright
+      pa "                  Base Speed:     #{@player.read_stat(:spd, :base)} (+#{@player.read_stat(:spd, :bonus)})", :yellow, :bright
+      #pa "                  Bonus Speed:    #{@player.read_stat(:spd, :bonus)}", :yellow, :bright
       pa "                  Total Speed:    #{@player.final_stat(:spd)}", :yellow, :bright
       pa "                  Spells Known:   #{names_conc}", :yellow, :bright
       pa "                  Equipment and Bonuses:", :magenta
@@ -2087,12 +2131,18 @@ class Game_Main
         ineedjewels - type in, hit enter.
                     - gives you 4 of each kind of jewel.
         makemedead  - type in, hit enter
-                    - does 999 damage to the player"
+                    - does 999 damage to the player
+        goditems    - adds 5x Godspeck to inventory"
         key = gets.chomp.downcase
         if key == "forcelvlexp"
           p "type in lvl"
           key = gets.chomp.to_i
           @player.lvl_up_override(key)
+        end
+        if key == "goditems"
+          5.times do
+            @player.add_item(:item, 11)
+          end
         end
         @player.add_gold(75000) if key == "makemerich"
         if key == "forcebadge"

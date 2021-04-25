@@ -66,7 +66,37 @@ end
 
 logger = Logger.new('logfile.log')
 
+Paint%['Yellow string with a %{blue_text} in it', :yellow,
+  blue_text: ["blue text", :blue]
+]
 
+
+if id != 0
+  pa  "(#{id}): #{value[0]} ATTACK: #{value[1]} SPEED: #{value[2]} TWO-HANDED", :green if value[3]
+  pa "(#{id}): #{value[0]}"; pa "\033[1A ATTACK: #{value[2]}", :red, :bright; pa "\033[1A SPEED: #{value[2]}", :green, :bright if !value[3]
+  pa "> COST: #{value[4]}", :green, :bright
+end
+
+
+
+if id != 0
+  pa  "(#{id}): #{value[0]} ATTACK: #{value[1]} SPEED: #{value[2]} TWO-HANDED", :green if value[3]
+  pa  "(#{id}): #{value[0]} ATTACK: #{value[1]} SPEED: #{value[2]}", :green if !value[3]
+  pa "> COST: #{value[4]}", :green, :bright
+end
+
+ pa "(#{id}): #{value[0]}"; pa "\033[1A ATTACK: #{value[2]}", :red, :bright; pa "\033[1A SPEED: #{value[2]}", :green, :bright if !value[3]
+ pa "(#{id}): #{value[0]}"; pa "^H ATTACK: #{value[1]}", :red, :bright; pa "^H SPEED: #{value[2]}", :green, :bright
+
+string1 = "(#{id}): #{value[0]}"; str1 = string1.size
+string2 = "ATTACK: #{value[1]}"; str2 = string2.size
+string3 = "SPEED: #{value[2]}"; str3 = string3.size
+pa string1; pa "\033[1A \033[#{str1}C #{string2}", :red, :bright; pa "\033[1A \033[#{str2}C #{string3}", :green, :bright
+
+ - Move the cursor forward N columns:
+   \033[<N>C
+
+ 10) Broad-L
 #level reqs:
 # Quest 0 -- level 4+
 # Quest 1 -- level 1 to 3

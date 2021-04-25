@@ -62,10 +62,19 @@ class Enemy
     return @dropchance if read_chance
   end
 
-
+  #races: ghost(0), dwarf(1), human(2), elf(3), animal(4), demon(5)
   #stats symbols :race :lvl :hp :mhp :mp :mmp :atk :def :spd :exp :gold :drops :droprate :spells :spellchance
   def read_stat(stat=:race)
-    return @race if stat == :race
+    if stat == :race
+      retval = ""
+      retval = "Ghost" if @race == 0
+      retval = "Dwarf" if @race == 1
+      retval = "Human" if @race == 2
+      retval = "Elf" if @race == 3
+      retval = "Animal" if @race == 4
+      retval = "Demon" if @race == 5
+      return retval
+    end
     return @level if stat == :lvl || stat == :level
     return @hp if stat == :hp
     return @mhp if stat == :mhp

@@ -173,7 +173,7 @@ module Game_DB
     @textdb[:common][4]  = " To your SOUTH is the town exit, you see Surgalic Forest.  \n various sounds come from Surgalic Forest which gives you some    \n various forms of anxiety."
 
     @textdb[:common][5]  = " You are standing in Surgalic Forest. The deeper you go, the more \n strange the sounds get. Surely if you venture in, you will \n find something you can kill, or something that will eat you."
-    @textdb[:common][6]  = " To your NORTH, you see the city gates and the entrance to  \n Dracilix City. A Sentinal stares at you from the gates."
+    @textdb[:common][6]  = " To your NORTH, you see the city gates and the entrance to  \n Dracilix City. A Sentinel stares at you from the gates."
     @textdb[:common][110]= " To your WEST, you see a massive swamp. A sign in front of a \n narrow trail leading in reads 'Modove Swamp'. "
     @textdb[:common][7]  = " All other directions seemed covered in overgrowth. Will you \n (L)ook (A)round the Forest, or go NORTH back to the city?"
     @textdb[:common][109]= " "
@@ -219,7 +219,7 @@ module Game_DB
 
     @textdb[:common][32] = " Me Tiny. Me see you in Arena one day."
     @textdb[:common][33] = " Rosco: Whaddaya want ya weak *hic* looking sad excuse for \n *hic* a person. Come back when you're level 4 or higher."
-    @textdb[:common][34] = " Lana: Stay out of my person bubble! I'd have some work for \n you but you're not strong enough yet. Come back at level 5."
+    @textdb[:common][34] = " Lana: Stay out of my personal bubble! I'd have some work for \n you but you're not strong enough yet. Come back at level 5."
 
     @textdb[:quest][0] = " Me Tiny. Me need you to find me 1 Mugwart-root and kill 8\n Large Rats. Will you help me?"
     @textdb[:quest][1] = " Me Tiny. You come back when you finish helping Tiny!!!"
@@ -253,9 +253,9 @@ module Game_DB
     @textdb[:cmd][9]  = " (2) INVENTORY"
     @textdb[:cmd][10] = "  (3) SPELLS"
     @textdb[:cmd][11] = "   (4) BACK TO GAME"
-    @textdb[:cmd][12] = "    (5) SAVE GAME"
+    @textdb[:cmd][12] = "    (5) QUESTS"
     @textdb[:cmd][13] = "      (X) EXIT GAME"
-    @textdb[:cmd][105]= "      (Q) QUESTS"
+    @textdb[:cmd][105]= "      (S) SAVE GAME"
     @textdb[:cmd][101]= ["(1) Use"]
     @textdb[:cmd][102]= ["(2) Back"]
 
@@ -387,13 +387,14 @@ module Game_DB
     @textdb[:other][20]= "                    Credits
           Game Programmed and developed by Matt Sully (@GumpNerd)
           Special Thanks: Teague Hammell
+          Special Thanks: Ryan Finney
           Special Thanks: _powder_ (reddit.com)
           Special Thanks: Andrek8 (reddit.com)
           Special Thanks: Zaxero
           Special Thanks: Voxnee (twitch.tv)
           Icon Made by 'Good Ware' from www.flaticon.com
           ASCII Art generated using software made by Patrick Gillespie (@patorjk)"
-    @textdb[:other][12]= " Version: BETA 1.8          Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: BETA 1.9          Author: Matt Sully(@GumpNerd)"
     @textdb[:other][21]= "████     █████     █████     █████     █████     █████     █████     ████  "
     @textdb[:other][22]= "    █████     █████     █████     █████     █████     █████     █████    ██"
   end
@@ -688,8 +689,8 @@ module Game_DB
 
 
 
-  def populate_weapons_db
-    #             [Weapon name,              atk, spd, 2hand,  cost]
+  def populate_weapons_db    #                                   4
+    #             [Weapon name,              atk, spd, 2hand,    cost]
     @weapons[0] = ["Fists           ",          0,   0, false,      0]
     @weapons[1] = ["Pole            ",          2,   3, false,     10]
     @weapons[2] = ["Wooden-Sword    ",          5,   5, false,     25]
@@ -724,7 +725,7 @@ module Game_DB
 
   def populate_items_db
     #           [Item Name,              +HP,  +MP,  +PHP, +PMP, +PATK, +PDEF,     cost,    Item Description]
-    @items[0]  = ["Missingo",               0,    0,     0,    0,     0,     0,        0,    "..."]
+    @items[0]  = ["Missingno",              0,    0,     0,    0,     0,     0,        0,    "..."]
     @items[1]  = ["Mugwart-Root",          25,    0,     0,    0,     0,     0,       20,    "Heals +25 HP"]
     @items[2]  = ["Vervain-Flower",         0,   25,     0,    0,     0,     0,       45,    "Heals +25 MP"]
     @items[3]  = ["Rose-Hipp-Potion",     120,    0,     0,    0,     0,     0,       75,    "Heals +120 HP"]
@@ -1033,7 +1034,7 @@ module Game_DB
   def items_array(id=nil, i=nil)
     return @items if id == nil
     return @items[id] if i == nil
-    return if id == [] or i == []
+    #return if id == [] or i == []
     return @items[id][i]
   end
 

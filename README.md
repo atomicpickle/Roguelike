@@ -1,4 +1,4 @@
-# Ruby Arena version BETA 1.8
+# Ruby Arena version BETA 1.9
 
 To support this games development, you can buy it here for your choice
 of price: https://gumpnerd.itch.io/ruby-arena
@@ -16,6 +16,15 @@ Ruby, run the game with the RubyArena.exe file in the Compiled folder.
  Screenshots: https://imgur.com/gallery/Z8P1mB6
 
  BETA Versions updates and fixes:
+
+    BETA 1.9
+      - Enemies now display a text value for their Race instead of a number
+      - fixed jewel drop exception where the game didn't reward it sometimes
+      - fixed some spelling errors
+      - updated weapons and armor shop coloring and format
+      - updated how two-handed weapons are displayed in the shop
+      - updated main menu layout and coloring
+      - updated player status menu, made it easier to read and understand
 
     BETA 1.8
       - repaired spawn logic that was borked when adding quest mobs forced spawn
