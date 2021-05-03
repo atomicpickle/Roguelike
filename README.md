@@ -14,19 +14,17 @@ Ruby, run the game with the RubyArena.exe file in the Compiled folder.
 
  Screenshots: https://imgur.com/gallery/Z8P1mB6
 
- FINAL Version updates:
+ Version updates and fixes:
 
-   FINAL 0.13
-     - added autosave on player level up
+    FINAL 0.13
+      - added autosave on player level up
 
-   FINAL 0.12
-     - possible fix for item bag crash
+    FINAL 0.12
+      - possible fix for item bag crash
 
-   FINAL 0.1
-     - reformatting of various text things
-     - spell damage adjustment across the board
-
- BETA Versions updates and fixes:
+    FINAL 0.1
+      - reformatting of various text things
+      - spell damage adjustment across the board
 
     BETA 1.9
       - Enemies now display a text value for their Race instead of a number
