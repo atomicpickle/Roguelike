@@ -386,15 +386,16 @@ module Game_DB
                                                    "
     @textdb[:other][20]= "                    Credits
           Game Programmed and developed by Matt Sully (@GumpNerd)
-          Special Thanks: Teague Hammell
-          Special Thanks: Ryan Finney
-          Special Thanks: _powder_ (reddit.com)
-          Special Thanks: Andrek8 (reddit.com)
-          Special Thanks: Zaxero
+          Special Thanks: Teague Hammell (naming, system ideas and more)
+          Special Thanks: Ryan Finney (system ideas)
+          Special Thanks: Jake Aune (system ideas and testing)
+          Special Thanks: _powder_ (reddit.com) (ideas and help)
+          Special Thanks: Andrek8 (reddit.com) (testing and ideas)
+          Special Thanks: Zaxero (testing)
           Special Thanks: Voxnee (twitch.tv)
           Icon Made by 'Good Ware' from www.flaticon.com
           ASCII Art generated using software made by Patrick Gillespie (@patorjk)"
-    @textdb[:other][12]= " Version: BETA 1.9          Author: Matt Sully(@GumpNerd)"
+    @textdb[:other][12]= " Version: FINAL 0.13          Author: Matt Sully(@GumpNerd)"
     @textdb[:other][21]= "████     █████     █████     █████     █████     █████     █████     ████  "
     @textdb[:other][22]= "    █████     █████     █████     █████     █████     █████     █████    ██"
   end
@@ -687,6 +688,11 @@ module Game_DB
     return false
   end
 
+  def spell_heals?(id)
+    data = spellbook(id, 1)
+    return data
+  end
+
 
 
   def populate_weapons_db    #                                   4
@@ -757,19 +763,19 @@ module Game_DB
     @spells[0] = ["Burp!",                false,     [0, 0],    0,   "Drunkenly misprounounce the heal spell and cause minor damage"]
     @spells[1] = ["Heal",                  true,    [9, 24],    4,   "Simple healing spell"]
     @spells[2] = ["Greater Heal",          true,  [45, 125],    9,   "Less simple healing spell"]
-    @spells[3] = ["Tremor",               false,   [15, 30],    6,   "Sends a tremor out and throws the target"]
-    @spells[4] = ["Gust",                 false,   [16, 35],    7,   "A sharp gust of wind impacts the target"]
-    @spells[5] = ["Water Talons",         false,   [19, 40],    9,   "Pull water out of the air into talons and shoot at target"]
-    @spells[6] = ["Shock",                false,   [28, 40],    9,   "Electricity shoots from your mouth and strikes"]
-    @spells[7] = ["Blizzard",             false,   [38, 80],   12,   "Blizzard swirls up around the target"]
-    @spells[8] = ["Fireball",             false,   [65, 90],   16,   "A fireball pops into existance and strikes"]
+    @spells[3] = ["Tremor",               false,   [18, 32],    6,   "Sends a tremor out and throws the target"]
+    @spells[4] = ["Gust",                 false,   [25, 45],    7,   "A sharp gust of wind impacts the target"]
+    @spells[5] = ["Water Talons",         false,   [29, 49],    8,   "Pull water out of the air into talons and shoot at target"]
+    @spells[6] = ["Shock",                false,   [36, 56],    9,   "Electricity shoots from your mouth and strikes"]
+    @spells[7] = ["Blizzard",             false,   [49, 84],   12,   "Blizzard swirls up around the target"]
+    @spells[8] = ["Fireball",             false,   [75, 98],   16,   "A fireball pops into existance and strikes"]
     @spells[9] = ["Quake",                false,  [50, 116],   10,   "Earth opens and crushes your target"]
     @spells[10]= ["Hurricane",            false,  [95, 125],   16,   "A hurricaine hits the target, then disappears"]
     @spells[11]= ["Bolt",                 false, [100, 155],   24,   "Electricity shoots from all of your orifices and strikes"]
     @spells[12]= ["Wall of Fire",         false,  [75, 256],   32,   "A Wall of Fire emerges and envelopes everything"]
     @spells[13]= ["Mega Heal",             true, [105, 265],   33,   "Complicated healing spell"]
     @spells[14]= ["Tsunami",              false, [125, 275],   42,   "A massive Tsunami appears out of thin air and drowns the target"]
-    @spells[15]= ["Deathknell",           false,   [1, 500],   66,   "The target is either ripped apart, or somewhat damaged by Death himself"]
+    @spells[15]= ["Deathknell",           false,   [1, 999],   66,   "The target is either ripped apart, or somewhat damaged by Death himself"]
   end
 
   def populate_enemies_db #races: ghost(0), dwarf(1), human(2), elf(3), animal(4), demon(5)

@@ -1,4 +1,4 @@
-# Ruby Arena version BETA 1.9
+# Ruby Arena version FINAL 0.13
 
 To support this games development, you can buy it here for your choice
 of price: https://gumpnerd.itch.io/ruby-arena
@@ -6,14 +6,25 @@ of price: https://gumpnerd.itch.io/ruby-arena
 This is a Roguelike text adventure game I have made while teaching myself Ruby.
 This game is in active development.
 
-The Beta version is now available, which means all core systems are completed.
-More content, formatting and stuff is now being added to the game. It is Now
-in a playable state with all the core stuff.
+This is considered the final version of the game. It is getting some small things
+added to it but overall it is considered complete.
 
 If you have Ruby installed, run the name by starting launch.rb If you don't have
 Ruby, run the game with the RubyArena.exe file in the Compiled folder.
 
  Screenshots: https://imgur.com/gallery/Z8P1mB6
+
+ FINAL Version updates:
+
+   FINAL 0.13
+     - added autosave on player level up
+
+   FINAL 0.12
+     - possible fix for item bag crash
+
+   FINAL 0.1
+     - reformatting of various text things
+     - spell damage adjustment across the board
 
  BETA Versions updates and fixes:
 

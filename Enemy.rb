@@ -43,8 +43,12 @@ class Enemy
   end
 
   def knows_heal_spells?
-    return true if @spells.any? {|spell| spell == 1 || spell == 2 || spell == 13}
-    return false
+    #return true if @spells.any? {|spell| spell == 1 || spell == 2 || spell == 13}
+    retval = false
+    @spells.each {|s|
+     val = Game_DB.spell_heals?(s)
+     retval = true if val == true}
+    return retval
   end
 
   def enemy_casting?

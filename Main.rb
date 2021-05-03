@@ -729,7 +729,7 @@ class Game_Main
         id = dropinfo[0] if dice2 <= 70
         id = dropinfo[1] if dice2 > 70
         id = 1 if id == nil
-        if id != nil && id != 0
+        if id != nil && id != 0 && id != nil
           @player.add_item(:item, id)
           pa "                    #{@enemy.read_name} dropped an item! You found 1x #{Game_DB.items_array(id, 0)}", :yellow, :bright
           process_quests_iterate(:item, id)
@@ -793,6 +793,7 @@ class Game_Main
           pa "                    You are now able to access Modove Swamp, west of Surgalic Forest", :yellow
         end
         pa "#{Game_DB.tx(:other, 0)}"
+        autosave_itemuse(0, true)
         slp
         key = gets
       end
